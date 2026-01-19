@@ -13,6 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use UnitEnum;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Support\Enums\FontWeight;
@@ -99,6 +100,56 @@ class AccountResource extends Resource
                     ])
                     ->extraAttributes([
                         'style' => 'padding: 48px 0; align-items: start;',
+                    ])
+                    ->columnSpanFull(),
+
+                // Evaluations Section (below profile, full width)
+                \Filament\Infolists\Components\RepeatableEntry::make('evaluations_cards')
+                    ->label('Participated Councils')
+                    ->state(function ($record) {
+                        // Get all evaluations where user is adviser or participant
+                        $adviserEvals = $record->evaluations()->with('council')->get();
+                        $participantEvals = $record->participatingEvaluations()->with('council')->get();
+                        $allEvals = $adviserEvals->merge($participantEvals)->unique('id');
+                        return $allEvals->map(function ($eval) {
+                            return [
+                                'council_logo' => $eval->council?->logo_url ?? null,
+                                'council_name' => $eval->council?->name ?? 'Council Name',
+                                'academic_year' => $eval->academic_year ?? 'Academic Year',
+                                'position' => $eval->pivot->position ?? 'Position',
+                            ];
+                        })->values()->toArray();
+                    })
+                    ->schema([
+                        \Filament\Schemas\Components\Section::make('')
+                            ->schema([
+                                \Filament\Infolists\Components\ImageEntry::make('council_logo')
+                                    ->height(64)
+                                    ->width(64)
+                                    ->circular()
+                                    ->hiddenLabel()
+                                    ->alignCenter()
+                                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
+                                    ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
+                                \Filament\Infolists\Components\TextEntry::make('council_name')
+                                    ->hiddenLabel()
+                                    ->alignCenter()
+                                    ->weight('bold'),
+                                \Filament\Infolists\Components\TextEntry::make('academic_year')
+                                    ->label('Academic Year: ')
+                                    ->inlineLabel(),
+                                \Filament\Infolists\Components\TextEntry::make('position')
+                                    ->label('Position: ')
+                                    ->inlineLabel(),
+                            ])  
+                    ])
+                    ->contained(false)
+                    ->grid([
+                        'default' => 1,
+                        'sm' => 1,
+                        'md' => 2,
+                        'lg' => 3,
+                        'xl' => 4,
                     ])
                     ->columnSpanFull(),
             ]);
