@@ -6,6 +6,7 @@ use App\Models\EvaluationPeerEvaluator;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ColumnGroup;
 
@@ -46,16 +47,21 @@ class StudentsRelationManager extends RelationManager
             ColumnGroup::make('Evaluation Scores', [
                 TextColumn::make('self_score')
                     ->label('Self')
-                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'self')),
+                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'self'))
+                    ->tooltip('Self evaluation score'),
                 TextColumn::make('peer_score')
                     ->label('Peer')
-                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'peer')),
+                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'peer'))
+                    ->tooltip('Peer evaluation score'),
                 TextColumn::make('adviser_score')
                     ->label('Adviser')
-                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'adviser')),
+                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'adviser'))
+                    ->tooltip('Adviser evaluation score'),
             ]),
         ];
     }
+
+
 
     protected function getHeaderActions(): array
     {

@@ -16,12 +16,21 @@ use Filament\Actions\EditAction;
 use Filament\Actions\Action;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ColumnGroup;
 use Filament\Notifications\Notification;
 
+/**
+ * Relation manager for displaying and managing students in MyEvaluations.
+ */
 class StudentsRelationManager extends RelationManager
 {
+    /**
+     * The relationship managed by this relation manager.
+     *
+     * @var string
+     */
     protected static string $relationship = 'users';
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $title = 'Students';
@@ -54,21 +63,34 @@ class StudentsRelationManager extends RelationManager
                     ->label('Position')
                     ->placeholder('No position assigned'),
             ]),
-            ColumnGroup::make('Evaluation Scores', [
-                TextColumn::make('self_score')
+            ColumnGroup::make('Evaluation Status', [
+                IconColumn::make('self_status')
                     ->label('Self')
-                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'self'))
-                    ->tooltip('Self evaluation score'),
-                TextColumn::make('peer_score')
+                    ->state(fn () => true)
+                    ->icon(fn ($record) => $this->getEvaluationStatus($record->id, 'self') === 'submitted' ? 'heroicon-o-check-circle' : 'heroicon-o-clock')
+                    ->color(fn ($record) => $this->getEvaluationStatus($record->id, 'self') === 'submitted' ? 'success' : 'warning'),
+                IconColumn::make('peer_status')
                     ->label('Peer')
-                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'peer'))
-                    ->tooltip('Peer evaluation score'),
-                TextColumn::make('adviser_score')
+                    ->state(fn () => true)
+                    ->icon(fn ($record) => $this->getEvaluationStatus($record->id, 'peer') === 'submitted' ? 'heroicon-o-check-circle' : 'heroicon-o-clock')
+                    ->color(fn ($record) => $this->getEvaluationStatus($record->id, 'peer') === 'submitted' ? 'success' : 'warning'),
+                IconColumn::make('adviser_status')
                     ->label('Adviser')
-                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'adviser'))
-                    ->tooltip('Adviser evaluation score'),
+                    ->state(fn () => true)
+                    ->icon(fn ($record) => $this->getEvaluationStatus($record->id, 'adviser') === 'submitted' ? 'heroicon-o-check-circle' : 'heroicon-o-clock')
+                    ->color(fn ($record) => $this->getEvaluationStatus($record->id, 'adviser') === 'submitted' ? 'success' : 'warning'),
             ]),
         ];
+    }
+
+
+    protected function getEvaluationStatus(int $userId, string $evaluatorType): string
+    {
+        $status = \App\Models\EvaluationForm::where('evaluation_id', $this->ownerRecord->id)
+            ->where('user_id', $userId)
+            ->where('evaluator_type', $evaluatorType)
+            ->value('status');
+        return $status ?? 'pending';
     }
 
     protected function getHeaderActions(): array
