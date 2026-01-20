@@ -16,7 +16,7 @@ class EditMyEvaluation extends EditRecord
     {
         return [
             \Filament\Actions\ViewAction::make()
-                ->label('Back to Evaluation'),
+                ->label('Back to Evaluation Details'),
         ];
     }
 

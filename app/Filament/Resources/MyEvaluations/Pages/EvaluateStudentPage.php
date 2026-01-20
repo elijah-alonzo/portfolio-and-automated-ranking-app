@@ -165,10 +165,9 @@ class EvaluateStudentPage extends Page
     {
         return [
             Action::make('back')
-                ->label('Back to Evaluation')
+                ->label('Back to Evaluation Details')
                 ->url(MyEvaluationResource::getUrl('view', ['record' => $this->evaluation]))
-                ->color('gray')
-                ->icon('heroicon-o-arrow-left'),
+                ->color('gray'),
         ];
     }
 
