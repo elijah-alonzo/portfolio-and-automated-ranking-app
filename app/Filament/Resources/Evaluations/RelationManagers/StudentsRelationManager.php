@@ -43,15 +43,16 @@ class StudentsRelationManager extends RelationManager
                     ->label('Position')
                     ->placeholder('No position assigned'),
             ]),
-            ColumnGroup::make('Peer Assignments', [
-                TextColumn::make('peer_evaluatees_count')
-                    ->label('Evaluating')
-                    ->getStateUsing(fn ($record) => $this->getPeerEvaluateesCount($record->id))
-                    ->tooltip('Number of peers this student will evaluate'),
-                TextColumn::make('peer_evaluators_count')
-                    ->label('Evaluated By')
-                    ->getStateUsing(fn ($record) => $this->getPeerEvaluatorsCount($record->id))
-                    ->tooltip('Number of peers who will evaluate this student'),
+            ColumnGroup::make('Evaluation Scores', [
+                TextColumn::make('self_score')
+                    ->label('Self')
+                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'self')),
+                TextColumn::make('peer_score')
+                    ->label('Peer')
+                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'peer')),
+                TextColumn::make('adviser_score')
+                    ->label('Adviser')
+                    ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'adviser')),
             ]),
         ];
     }
@@ -70,21 +71,12 @@ class StudentsRelationManager extends RelationManager
         return [];
     }
 
-    protected function getPeerEvaluateesCount(int $userId): string
+    protected function getEvaluationScore(int $userId, string $evaluatorType): string
     {
-        $count = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
-            ->where('evaluator_user_id', $userId)
-            ->count();
-
-        return $count > 0 ? $count : '-';
-    }
-
-    protected function getPeerEvaluatorsCount(int $userId): string
-    {
-        $count = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
-            ->where('evaluatee_user_id', $userId)
-            ->count();
-
-        return $count > 0 ? $count : '-';
+        $score = \App\Models\EvaluationForm::where('evaluation_id', $this->ownerRecord->id)
+            ->where('user_id', $userId)
+            ->where('evaluator_type', $evaluatorType)
+            ->value('evaluator_score');
+        return $score !== null ? number_format($score, 2) : '-';
     }
 }
