@@ -9,15 +9,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
+/**
+ * Handles evaluation form submissions and status updates.
+ */
 class EvaluationSubmissionController extends Controller
 {
+    /**
+     * Submit an evaluation form and mark as submitted.
+     *
+     * @param Request $request
+     * @param int $evaluation
+     * @param int $user
+     * @param string $type
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function submit(Request $request, $evaluation, $user, $type)
     {
         $evaluation = Evaluation::findOrFail($evaluation);
         $evaluatee = User::findOrFail($user);
         $evaluationType = $type;
 
-        // Permission checks (similar to your Filament page)
+        // Permission checks
         $authUser = Auth::user();
         switch ($evaluationType) {
             case 'adviser':
@@ -26,7 +38,7 @@ class EvaluationSubmissionController extends Controller
                 }
                 break;
             case 'peer':
-                // Add your peer permission logic here if needed
+                // Add peer permission logic if needed
                 break;
             case 'self':
                 if ($evaluatee->id !== $authUser->id) {
@@ -45,6 +57,7 @@ class EvaluationSubmissionController extends Controller
             }
         }
 
+        // Save or update the evaluation form and mark as submitted
         EvaluationForm::updateOrCreate(
             [
                 'evaluation_id' => $evaluation->id,
@@ -54,6 +67,7 @@ class EvaluationSubmissionController extends Controller
             ],
             [
                 'answers' => $answers,
+                'status' => 'submitted',
             ]
         );
 
