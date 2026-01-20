@@ -17,20 +17,20 @@ class ViewMyEvaluation extends ViewRecord
     {
         $user = auth()->user();
         $record = $this->getRecord();
-        
         $actions = [];
-        
+
+        // Back button for everyone
+        $actions[] = \Filament\Actions\Action::make('back')
+            ->label('Back to My Evaluations')
+            ->color('gray')
+            ->url(\App\Filament\Resources\MyEvaluations\MyEvaluationResource::getUrl('index'));
+
         // Council adviser can edit (add students)
         if ($user && $record && $record->council_adviser_id === $user->id) {
             $actions[] = \Filament\Actions\EditAction::make()
                 ->label('Add Student Officers');
         }
-        
-        // Students: No header actions for self/peer evaluation (handled in table row)
-        if ($user && $record && $user->role === 'student') {
-            // No header actions for students
-        }
-        
+
         return $actions;
     }
     
