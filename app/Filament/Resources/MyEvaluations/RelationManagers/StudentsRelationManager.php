@@ -21,16 +21,8 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ColumnGroup;
 use Filament\Notifications\Notification;
 
-/**
- * Relation manager for displaying and managing students in MyEvaluations.
- */
 class StudentsRelationManager extends RelationManager
 {
-    /**
-     * The relationship managed by this relation manager.
-     *
-     * @var string
-     */
     protected static string $relationship = 'users';
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?string $title = 'Students';
@@ -321,9 +313,6 @@ class StudentsRelationManager extends RelationManager
         ];
     }
 
-    /**
-     * Get the evaluation score for a user and evaluator type
-     */
     protected function getEvaluationScore(int $userId, string $evaluatorType): string
     {
         $score = EvaluationFormModel::where('evaluation_id', $this->ownerRecord->id)
@@ -375,9 +364,6 @@ class StudentsRelationManager extends RelationManager
         }
     }
 
-    /**
-     * Check if current user is the council adviser for this evaluation
-     */
     protected function isCouncilAdviser(): bool
     {
         $user = auth()->user();
