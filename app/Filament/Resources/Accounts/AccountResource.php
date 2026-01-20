@@ -107,40 +107,39 @@ class AccountResource extends Resource
                 \Filament\Infolists\Components\RepeatableEntry::make('evaluations_cards')
                     ->label('Participated Councils')
                     ->state(function ($record) {
-                        // Get all evaluations where user is adviser or participant
                         $adviserEvals = $record->evaluations()->with('council')->get();
                         $participantEvals = $record->participatingEvaluations()->with('council')->get();
                         $allEvals = $adviserEvals->merge($participantEvals)->unique('id');
-                        return $allEvals->map(function ($eval) {
-                            return [
-                                'council_logo' => $eval->council?->logo_url ?? null,
-                                'council_name' => $eval->council?->name ?? 'Council Name',
-                                'academic_year' => $eval->academic_year ?? 'Academic Year',
-                                'position' => $eval->pivot->position ?? 'Position',
-                            ];
+                        return $allEvals->map(function ($eval) use ($record) {
+                            $isAdviser = $eval->council_adviser_id === $record->id;
+                            // Pass the full evaluation model, with loaded council relationship
+                            $eval->is_adviser = $isAdviser;
+                            return $eval;
                         })->values()->toArray();
                     })
                     ->schema([
                         \Filament\Schemas\Components\Section::make('')
                             ->schema([
-                                \Filament\Infolists\Components\ImageEntry::make('council_logo')
+                                \Filament\Infolists\Components\ImageEntry::make('council.logo')
                                     ->height(64)
                                     ->width(64)
                                     ->circular()
                                     ->hiddenLabel()
                                     ->alignCenter()
-                                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
+                                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->council->name ?? 'Council') . '&color=7F9CF5&background=EBF4FF')
                                     ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
-                                \Filament\Infolists\Components\TextEntry::make('council_name')
+                                \Filament\Infolists\Components\TextEntry::make('council.name')
                                     ->hiddenLabel()
                                     ->alignCenter()
                                     ->weight('bold'),
                                 \Filament\Infolists\Components\TextEntry::make('academic_year')
                                     ->label('Academic Year: ')
-                                    ->inlineLabel(),
+                                    ->inlineLabel()
+                                    ->default(fn ($record) => $record->academic_year ?? 'Academic Year'),
                                 \Filament\Infolists\Components\TextEntry::make('position')
                                     ->label('Position: ')
-                                    ->inlineLabel(),
+                                    ->inlineLabel()
+                                    ->default(fn ($record) => $record->is_adviser ? 'Council Adviser' : ($record->pivot->position ?? 'Position')),
                             ])  
                     ])
                     ->contained(false)
