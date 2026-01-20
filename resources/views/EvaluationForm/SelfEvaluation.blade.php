@@ -107,7 +107,7 @@
                         <strong>Evaluation Completed:</strong> This evaluation has already been submitted and cannot be edited.
                     </div>
                 @endif
-                <form method="POST" id="evaluation-form">
+                <form method="POST" id="evaluation-form" action="{{ route('evaluation.submit', [$evaluation->id, $evaluatee->id, $evaluationType]) }}">
                     @csrf
                     @php
                         $rubric = \App\Models\EvaluationForm::getRubricStructure();
