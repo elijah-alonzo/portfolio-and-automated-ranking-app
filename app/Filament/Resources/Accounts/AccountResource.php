@@ -139,7 +139,7 @@ class AccountResource extends Resource
                                 \Filament\Infolists\Components\TextEntry::make('position')
                                     ->label('Position: ')
                                     ->inlineLabel()
-                                    ->default(fn ($record) => $record->is_adviser ? 'Council Adviser' : ($record->pivot->position ?? 'Position')),
+                                    ->default(fn ($record) => $record->pivot->position ?? 'Council Adviser'),
                             ])  
                     ])
                     ->contained(false)
