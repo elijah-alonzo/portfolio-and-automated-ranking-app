@@ -43,14 +43,7 @@ class EvaluateStudentPage extends Page
      */
     public function mount(Evaluation $evaluation, User $user, string $type): void
     {
-        // Handle POST submission
-        if (request()->isMethod('post')) {
-            $this->evaluation = $evaluation;
-            $this->evaluatee = $user;
-            $this->evaluationType = $type;
-            $this->handleFormSubmission();
-            return;
-        }
+
 
         $this->evaluation = $evaluation;
         $this->evaluatee = $user;
@@ -82,17 +75,7 @@ class EvaluateStudentPage extends Page
         }
     }
 
-    protected function handleFormSubmission(): void
-    {
-        $this->evaluationType = request('type', 'self');
-        $this->validatePermissions();
-        $this->questions = EvaluationForm::getQuestionsForEvaluator($this->evaluationType);
-        $this->loadExistingEvaluation();
-        $this->isLocked = $this->existingForm !== null;
-        
-        // Now handle the submission
-        $this->submit();
-    }
+
 
     protected function validatePermissions(): void
     {
@@ -154,62 +137,7 @@ class EvaluateStudentPage extends Page
         $this->existingForm = $query->first();
     }
 
-    public function submit(): void
-    {
-        if ($this->isLocked) {
-            Notification::make()
-                ->title('Evaluation Already Submitted')
-                ->body('This evaluation has already been submitted and cannot be edited.')
-                ->warning()
-                ->send();
-            return;
-        }
 
-        $answers = request('answers', []);
-        
-        // Validate all questions answered
-        foreach (array_keys($this->questions) as $questionKey) {
-            if (!isset($answers[$questionKey]) || $answers[$questionKey] === '') {
-                Notification::make()
-                    ->title('Please answer all questions')
-                    ->body('All evaluation questions must be answered before submitting.')
-                    ->danger()
-                    ->send();
-                return;
-            }
-        }
-
-        try {
-            EvaluationForm::updateOrCreate(
-                [
-                    'evaluation_id' => $this->evaluation->id,
-                    'user_id' => $this->evaluatee->id,
-                    'evaluator_type' => $this->evaluationType,
-                    'evaluator_id' => $this->evaluationType === 'peer' ? auth()->id() : null,
-                ],
-                [
-                    'answers' => $answers,
-                ]
-            );
-
-            $evaluationTypeLabel = ucfirst($this->evaluationType);
-            
-            Notification::make()
-                ->title("{$evaluationTypeLabel} Evaluation Submitted Successfully")
-                ->body('Your evaluation has been recorded and scoring calculated.')
-                ->success()
-                ->send();
-
-            $this->redirect(MyEvaluationResource::getUrl('view', ['record' => $this->evaluation]));
-            
-        } catch (\Exception $e) {
-            Notification::make()
-                ->title('Error Submitting Evaluation')
-                ->body('There was an error saving your evaluation. Please try again.')
-                ->danger()
-                ->send();
-        }
-    }
 
     public function getTitle(): string|Htmlable
     {
