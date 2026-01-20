@@ -9,20 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
-/**
- * Handles evaluation form submissions and status updates.
- */
 class EvaluationSubmissionController extends Controller
 {
-    /**
-     * Submit an evaluation form and mark as submitted.
-     *
-     * @param Request $request
-     * @param int $evaluation
-     * @param int $user
-     * @param string $type
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function submit(Request $request, $evaluation, $user, $type)
     {
         $evaluation = Evaluation::findOrFail($evaluation);

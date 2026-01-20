@@ -6,29 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * App\Models\EvaluationForm
- *
- * @property int $id
- * @property int $evaluation_id
- * @property int $user_id
- * @property string $evaluator_type
- * @property int|null $evaluator_id
- * @property array|null $answers
- * @property float|null $evaluator_score
- * @property string $status
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
- */
 class EvaluationForm extends Model
 {
 	use HasFactory;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array<int, string>
-	 */
 	protected $fillable = [
 		'evaluation_id',
 		'user_id',
@@ -39,11 +20,6 @@ class EvaluationForm extends Model
 		'status',
 	];
 
-	/**
-	 * The attributes that should be cast.
-	 *
-	 * @var array<string, string>
-	 */
 	protected $casts = [
 		'answers' => 'array',
 		'evaluator_score' => 'decimal:3',
@@ -69,10 +45,6 @@ class EvaluationForm extends Model
 	// ========================================
 
 
-	/**
-	 * Returns a flat array of questions for the given evaluator type, preserving the old interface.
-	 * Each question includes: text, domain, strand, criteria, and a unique key.
-	 */
 	public static function getQuestionsForEvaluator(string $evaluatorType): array
 	{
 		$rubric = self::getRubricStructure();
@@ -125,9 +97,6 @@ class EvaluationForm extends Model
 		return $questions;
 	}
 
-	/**
-	 * Returns all question keys in the rubric as [domain|strand|qkey] strings.
-	 */
 	protected static function getAllQuestionKeys(array $rubric): array
 	{
 		$keys = [];
