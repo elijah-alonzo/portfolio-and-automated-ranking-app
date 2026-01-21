@@ -16,6 +16,7 @@ class Evaluation extends Model
         'council_id',
         'council_adviser_id',
         'academic_year',
+        'status',
     ];
 
     public function council(): BelongsTo
