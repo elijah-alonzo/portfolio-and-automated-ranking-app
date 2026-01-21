@@ -29,17 +29,17 @@ class EvaluationsTable
                     ->alignCenter()
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->council->name ?? 'Council') . '&color=7F9CF5&background=EBF4FF')
                     ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
-                
+
                 \Filament\Tables\Columns\TextColumn::make('council.name')
                     ->label('Council')
                     ->searchable()
                     ->sortable(),
-                    
+
                 \Filament\Tables\Columns\TextColumn::make('adviser.name')
                     ->label('Adviser')
                     ->searchable()
                     ->sortable(),
-                    
+
                 \Filament\Tables\Columns\ImageColumn::make('students_images')
                     ->label('Students')
                     ->stacked()
@@ -58,13 +58,29 @@ class EvaluationsTable
                         }
                         return 'Students: ' . implode(', ', $userNames);
                     }),
-                    
+
                 \Filament\Tables\Columns\TextColumn::make('academic_year')
                     ->label('Academic Year')
                     ->searchable()
                     ->sortable(),
+
+                \Filament\Tables\Columns\ToggleColumn::make('status')
+                    ->label('Status')
+                    ->onColor('success')
+                    ->offColor('warning')
+                    ->onIcon('heroicon-o-check-circle')
+                    ->offIcon('heroicon-o-clock')
+                    ->sortable(),
             ])
             ->filters([
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        true => 'Completed',
+                        false => 'Pending',
+                    ])
+                    ->placeholder('All Statuses'),
+
                 \Filament\Tables\Filters\SelectFilter::make('academic_year')
                     ->label('Academic Year')
                     ->options(function () {
@@ -75,14 +91,14 @@ class EvaluationsTable
                     })
                     ->placeholder('All Years')
                     ->searchable(),
-                    
+
                 \Filament\Tables\Filters\SelectFilter::make('council')
                     ->label('Council')
                     ->relationship('council', 'name')
                     ->placeholder('All Councils')
                     ->searchable()
                     ->preload(),
-                    
+
                 \Filament\Tables\Filters\SelectFilter::make('adviser')
                     ->label('Adviser')
                     ->relationship('adviser', 'name')
