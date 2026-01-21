@@ -12,6 +12,10 @@ class ViewEvaluation extends ViewRecord
 
     protected function getHeaderActions(): array
     {
+        $record = $this->getRecord();
+        if ($record->status) {
+            return [];
+        }
         return [
             EditAction::make()
                 ->label('Edit Evaluation')
