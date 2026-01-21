@@ -22,17 +22,17 @@ class MyEvaluationsTable
                     ->alignCenter()
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->council->name ?? 'Council') . '&color=7F9CF5&background=EBF4FF')
                     ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
-                
+
                 \Filament\Tables\Columns\TextColumn::make('council.name')
                     ->label('Council')
                     ->searchable()
                     ->sortable(),
-                    
+
                 \Filament\Tables\Columns\TextColumn::make('adviser.name')
                     ->label('Adviser')
                     ->searchable()
                     ->sortable(),
-                    
+
                 \Filament\Tables\Columns\ImageColumn::make('students_images')
                     ->label('Students')
                     ->stacked()
@@ -51,10 +51,21 @@ class MyEvaluationsTable
                         }
                         return 'Students: ' . implode(', ', $userNames);
                     }),
-                    
+
                 \Filament\Tables\Columns\TextColumn::make('academic_year')
                     ->label('Academic Year')
                     ->searchable()
+                    ->sortable(),
+
+                \Filament\Tables\Columns\ToggleColumn::make('status')
+                    ->label('Status')
+                    ->onColor('success')
+                    ->offColor('warning')
+                    ->onIcon('heroicon-o-check-circle')
+                    ->offIcon('heroicon-o-clock')
+                    ->trueValue('completed')
+                    ->falseValue('pending')
+                    ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id)
                     ->sortable(),
             ])
             ->filters([
