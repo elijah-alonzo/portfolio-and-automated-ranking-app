@@ -19,6 +19,10 @@ class Evaluation extends Model
         'status',
     ];
 
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
     public function council(): BelongsTo
     {
         return $this->belongsTo(Council::class);
