@@ -19,14 +19,8 @@ class ViewMyEvaluation extends ViewRecord
         $record = $this->getRecord();
         $actions = [];
 
-        // Back button for everyone
-        $actions[] = \Filament\Actions\Action::make('back')
-            ->label('Back to My Evaluations')
-            ->color('gray')
-            ->url(\App\Filament\Resources\MyEvaluations\MyEvaluationResource::getUrl('index'));
-
-        // Council adviser can edit (add students)
-        if ($user && $record && $record->council_adviser_id === $user->id) {
+        // Only show Add Student Officers if adviser and not completed
+        if ($user && $record && $record->council_adviser_id === $user->id && !$record->status) {
             $actions[] = \Filament\Actions\EditAction::make()
                 ->label('Add Student Officers');
         }
