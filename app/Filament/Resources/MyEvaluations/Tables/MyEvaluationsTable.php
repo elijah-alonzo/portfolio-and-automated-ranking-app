@@ -63,12 +63,18 @@ class MyEvaluationsTable
                     ->offColor('warning')
                     ->onIcon('heroicon-o-check-circle')
                     ->offIcon('heroicon-o-clock')
-                    ->trueValue('completed')
-                    ->falseValue('pending')
                     ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id)
                     ->sortable(),
             ])
             ->filters([
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        true => 'Completed',
+                        false => 'Pending',
+                    ])
+                    ->placeholder('All Statuses'),
+
                 \Filament\Tables\Filters\SelectFilter::make('academic_year')
                     ->label('Academic Year')
                     ->options(function () {
@@ -79,7 +85,7 @@ class MyEvaluationsTable
                     })
                     ->placeholder('All Years')
                     ->searchable(),
-                    
+
                 \Filament\Tables\Filters\SelectFilter::make('council')
                     ->label('Council')
                     ->relationship('council', 'name')
