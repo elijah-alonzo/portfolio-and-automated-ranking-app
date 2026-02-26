@@ -5,7 +5,6 @@ namespace App\Filament\Widgets;
 use App\Models\Evaluation;
 use App\Models\EvaluationForm;
 use App\Models\EvaluationPeerEvaluator;
-use App\Models\User;
 use App\Filament\Resources\MyEvaluations\Pages\ListMyEvaluations;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -13,38 +12,14 @@ use Illuminate\Support\Facades\DB;
 
 class StatsOverview extends StatsOverviewWidget
 {
+    protected static ?int $sort = 1;
+
     protected function getStats(): array
     {
         $user = auth()->user();
 
         if (! $user) {
             return [];
-        }
-
-        if ($user->role === 'admin') {
-            return [
-                Stat::make('Users', User::count())
-                    ->icon('heroicon-o-user')
-                    ->color('primary')
-                    ->chart([1, 2, 3, 4, 5, 6, 7])
-                    ->description('Total registered users')
-                    ->descriptionIcon('heroicon-m-arrow-trending-up')
-                    ->url(\App\Filament\Resources\Users\Pages\ListUsers::getUrl()),
-                Stat::make('Councils', \App\Models\Council::count())
-                    ->icon('heroicon-o-building-library')
-                    ->color('primary')
-                    ->chart([1, 2, 3, 4, 5, 6, 7])
-                    ->description('Active councils')
-                    ->descriptionIcon('heroicon-m-arrow-trending-up')
-                    ->url(\App\Filament\Resources\Councils\Pages\ListCouncils::getUrl()),
-                Stat::make('Evaluations', Evaluation::count())
-                    ->icon('heroicon-o-clipboard-document-list')
-                    ->color('primary')
-                    ->chart([1, 2, 3, 4, 5, 6, 7])
-                    ->description('Evaluations made')
-                    ->descriptionIcon('heroicon-m-arrow-trending-up')
-                    ->url(\App\Filament\Resources\Evaluations\Pages\ListEvaluations::getUrl()),
-            ];
         }
 
         $submittedCriteria = EvaluationForm::query()
@@ -117,7 +92,7 @@ class StatsOverview extends StatsOverviewWidget
             ->unique()
             ->count();
 
-        return [
+        $sharedStats = [
             Stat::make('Submitted Criteria', $submittedCriteria)
                 ->icon('heroicon-o-check-circle')
                 ->color('primary')
@@ -140,5 +115,7 @@ class StatsOverview extends StatsOverviewWidget
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->url(ListMyEvaluations::getUrl()),
         ];
+
+        return $sharedStats;
     }
 }

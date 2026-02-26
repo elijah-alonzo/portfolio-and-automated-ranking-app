@@ -13,6 +13,8 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class TableWidget extends BaseTableWidget
 {
+    protected static ?int $sort = 2;
+
     protected int|string|array $columnSpan = 'full';
 
     protected function getTableHeading(): string|Htmlable|null
@@ -91,11 +93,6 @@ class TableWidget extends BaseTableWidget
             })
             ->columns($columns)
             ->filters([])
-            ->headerActions([
-                Action::make('viewMyEvaluations')
-                    ->label('Go to my Evaluations')
-                    ->url(MyEvaluationResource::getUrl('index')),
-            ])
             ->recordActions([])
             ->toolbarActions([]);
     }
