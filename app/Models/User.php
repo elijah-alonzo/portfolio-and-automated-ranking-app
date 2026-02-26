@@ -86,4 +86,12 @@ class User extends Authenticatable
         return $this->hasMany(EvaluationPeerEvaluator::class, 'evaluatee_user_id');
     }
 
+    /**
+     * Get certificates uploaded by this user.
+     */
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
+
 }
