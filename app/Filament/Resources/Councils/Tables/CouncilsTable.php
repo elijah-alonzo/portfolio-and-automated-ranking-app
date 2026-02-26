@@ -5,6 +5,10 @@ namespace App\Filament\Resources\Councils\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class CouncilsTable
@@ -14,7 +18,7 @@ class CouncilsTable
         return $table
             ->recordUrl(fn ($record) => \App\Filament\Resources\Councils\CouncilResource::getUrl('edit', ['record' => $record]))
             ->columns([
-                \Filament\Tables\Columns\ImageColumn::make('logo')
+                ImageColumn::make('logo')
                     ->label(' ')
                     ->circular()
                     ->size(40)
@@ -23,18 +27,18 @@ class CouncilsTable
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
                     ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
 
-                \Filament\Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Council Name')
                     ->weight('medium')
                     ->searchable(),
 
-                \Filament\Tables\Columns\TextColumn::make('code')
+                TextColumn::make('code')
                     ->label('Council Code')
                     ->searchable()
                     ->badge()
                     ->color('primary'),
 
-                \Filament\Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')
                     ->trueIcon('heroicon-o-check-circle')
@@ -42,14 +46,14 @@ class CouncilsTable
                     ->trueColor('success')
                     ->falseColor('danger'),
 
-                \Filament\Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Registered')
                     ->dateTime()
             ])
             ->emptyStateHeading('No councils yet')
             ->emptyStateDescription('Councils will appear here once they are created.')
             ->filters([
-                \Filament\Tables\Filters\TernaryFilter::make('is_active')
+                TernaryFilter::make('is_active')
                     ->label('Active Status')
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),

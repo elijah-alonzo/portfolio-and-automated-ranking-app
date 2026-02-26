@@ -5,6 +5,11 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 
@@ -15,7 +20,7 @@ class UsersTable
         return $table
             ->recordUrl(fn ($record) => \App\Filament\Resources\Users\UserResource::getUrl('edit', ['record' => $record]))
             ->columns([
-                \Filament\Tables\Columns\ImageColumn::make('pfp')
+                ImageColumn::make('pfp')
                     ->label(' ')
                     ->circular()
                     ->size(40)
@@ -24,23 +29,23 @@ class UsersTable
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
                     ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
 
-                \Filament\Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->weight('medium')
                     ->searchable(),
 
-                \Filament\Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable()
                     ->copyable()
                     ->icon('heroicon-o-envelope')
                     ->label('Email'),
 
-                \Filament\Tables\Columns\TextColumn::make('contact_number')
+                TextColumn::make('contact_number')
                     ->icon('heroicon-o-phone')
                     ->label('Contact')
                     ->placeholder('No contact')
                     ->copyable(),
 
-                \Filament\Tables\Columns\IconColumn::make('role')
+                IconColumn::make('role')
                     ->label('Role')
                     ->icon(fn (string $state): string => match ($state) {
                         'admin' => 'heroicon-o-shield-check',
@@ -56,7 +61,7 @@ class UsersTable
                     })
                     ->tooltip(fn (string $state): string => ucfirst($state)),
 
-                \Filament\Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')
                     ->trueIcon('heroicon-o-check-circle')
@@ -64,21 +69,21 @@ class UsersTable
                     ->trueColor('success')
                     ->falseColor('danger'),
 
-                \Filament\Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->label('Registered'),
             ])
             ->emptyStateHeading('No users yet')
             ->emptyStateDescription('Users will appear here once they are registered.')
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('role')
+                SelectFilter::make('role')
                     ->label('Role')
                     ->options([
                         'admin' => 'Admin',
                         'adviser' => 'Adviser',
                         'student' => 'Student',
                     ]),
-                \Filament\Tables\Filters\TernaryFilter::make('is_active')
+                TernaryFilter::make('is_active')
                     ->label('Active Status')
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),
