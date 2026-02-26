@@ -34,6 +34,11 @@ class MyEvaluationResource extends Resource
     protected static ?string $pluralModelLabel = 'My Evaluations';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getEloquentQuery()->count();
+    }
 
     protected static UnitEnum|string|null $navigationGroup = 'Personal Management';
 
@@ -172,7 +177,7 @@ class MyEvaluationResource extends Resource
               ->orWhereHas('users', function ($subQ) use ($user) {
                   $subQ->where('user_id', $user->id);
               });
-        });
+        })->where('status', false);
     }
 
     public static function canCreate(): bool
