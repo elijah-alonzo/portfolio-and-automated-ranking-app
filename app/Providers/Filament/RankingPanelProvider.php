@@ -101,8 +101,8 @@ class RankingPanelProvider extends PanelProvider
                     </style>
                     HTML
             )
-            ->brandLogo(asset('logo.png'))
-            ->brandLogoHeight('2rem')
+            ->brandLogo(asset('ranking-sys.png'))
+            ->brandLogoHeight('2.3rem')
             ->breadcrumbs()
             
             ->navigationGroups([
