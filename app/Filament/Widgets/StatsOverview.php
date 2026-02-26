@@ -105,7 +105,7 @@ class StatsOverview extends StatsOverviewWidget
                 ->color('primary')
                 ->chart([1, 2, 3, 4, 5, 6, 7])
                 ->description('Assigned evaluation forms not yet submitted')
-                ->descriptionIcon('heroicon-m-arrow-trending-down')
+                ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->url(ListMyEvaluations::getUrl()),
             Stat::make('Councils Involved', $totalCouncilsInvolved)
                 ->icon('heroicon-o-building-library')
