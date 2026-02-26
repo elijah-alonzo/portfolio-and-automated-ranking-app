@@ -33,6 +33,13 @@ class EvaluationResource extends Resource
 
     protected static UnitEnum|string|null $navigationGroup = 'Adviser Settings';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getEloquentQuery()
+            ->where('status', false)
+            ->count();
+    }
+
     protected static ?int $navigationSort = 5;
 
     public static function shouldRegisterNavigation(): bool
