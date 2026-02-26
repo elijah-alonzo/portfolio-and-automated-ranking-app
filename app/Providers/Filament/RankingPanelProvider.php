@@ -31,7 +31,6 @@ class RankingPanelProvider extends PanelProvider
             ->id('ranking')
             ->path('ranking')
             ->login()
-            ->registration()
             ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
             ->colors([
                 'primary' => [

@@ -29,6 +29,41 @@ class UserResource extends Resource
         return $user && in_array($user->role, ['admin']);
     }
 
+    public static function canViewAny(): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->role === 'admin';
+    }
+
+    public static function canCreate(): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->role === 'admin';
+    }
+
+    public static function canEdit($record): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->role === 'admin';
+    }
+
+    public static function canDelete($record): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->role === 'admin';
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        $user = Auth::user();
+
+        return $user && $user->role === 'admin';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);
