@@ -161,9 +161,9 @@ class AccountResource extends Resource
         return AccountForm::configure($schema);
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'Personal Management';
+    protected static UnitEnum|string|null $navigationGroup = 'Portfolio Management';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     public static function getRelations(): array
     {

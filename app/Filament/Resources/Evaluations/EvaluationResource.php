@@ -31,7 +31,9 @@ class EvaluationResource extends Resource
         return $user && $user->role === 'admin';
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'Adviser Settings';
+    protected static UnitEnum|string|null $navigationGroup = 'Evaluation Management';
+
+    protected static ?string $navigationLabel = 'All Evaluations';
 
     public static function getNavigationBadge(): ?string
     {
