@@ -5,6 +5,10 @@ namespace App\Filament\Resources\Evaluations\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class EvaluationsTable
@@ -21,7 +25,7 @@ class EvaluationsTable
                 return $query;
             })
             ->columns([
-                \Filament\Tables\Columns\ImageColumn::make('council.logo')
+                ImageColumn::make('council.logo')
                     ->label(' ')
                     ->circular()
                     ->size(40)
@@ -30,17 +34,17 @@ class EvaluationsTable
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->council->name ?? 'Council') . '&color=7F9CF5&background=EBF4FF')
                     ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
 
-                \Filament\Tables\Columns\TextColumn::make('council.name')
+                TextColumn::make('council.name')
                     ->label('Council')
                     ->searchable()
                     ->sortable(),
 
-                \Filament\Tables\Columns\TextColumn::make('adviser.name')
+                TextColumn::make('adviser.name')
                     ->label('Adviser')
                     ->searchable()
                     ->sortable(),
 
-                \Filament\Tables\Columns\ImageColumn::make('students_images')
+                ImageColumn::make('students_images')
                     ->label('Students')
                     ->stacked()
                     ->limit(4)
@@ -59,12 +63,12 @@ class EvaluationsTable
                         return 'Students: ' . implode(', ', $userNames);
                     }),
 
-                \Filament\Tables\Columns\TextColumn::make('academic_year')
+                TextColumn::make('academic_year')
                     ->label('Academic Year')
                     ->searchable()
                     ->sortable(),
 
-                \Filament\Tables\Columns\ToggleColumn::make('status')
+                ToggleColumn::make('status')
                     ->label('Status')
                     ->onColor('success')
                     ->offColor('warning')
@@ -73,7 +77,7 @@ class EvaluationsTable
                     ->sortable(),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->label('Status')
                     ->options([
                         true => 'Completed',
@@ -81,7 +85,7 @@ class EvaluationsTable
                     ])
                     ->placeholder('All Statuses'),
 
-                \Filament\Tables\Filters\SelectFilter::make('academic_year')
+                SelectFilter::make('academic_year')
                     ->label('Academic Year')
                     ->options(function () {
                         return \App\Models\Evaluation::distinct()
@@ -92,7 +96,7 @@ class EvaluationsTable
                     ->placeholder('All Years')
                     ->searchable(),
 
-                \Filament\Tables\Filters\SelectFilter::make('council')
+                SelectFilter::make('council')
                     ->label('Council')
                     ->relationship('council', 'name')
                     ->placeholder('All Councils')
