@@ -19,6 +19,10 @@ class EvaluationSubmissionController extends Controller
 
         // Permission checks
         $authUser = Auth::user();
+        if (!$authUser) {
+            abort(401, 'Authentication required.');
+        }
+
         switch ($evaluationType) {
             case 'adviser':
                 if ($evaluation->council_adviser_id !== $authUser->id) {
@@ -51,7 +55,7 @@ class EvaluationSubmissionController extends Controller
                 'evaluation_id' => $evaluation->id,
                 'user_id' => $evaluatee->id,
                 'evaluator_type' => $evaluationType,
-                'evaluator_id' => $evaluationType === 'peer' ? $authUser->id : null,
+                'evaluator_id' => $authUser->id,
             ],
             [
                 'answers' => $answers,

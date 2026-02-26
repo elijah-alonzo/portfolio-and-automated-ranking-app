@@ -123,16 +123,8 @@ class EvaluateStudentPage extends Page
             'evaluation_id' => $this->evaluation->id,
             'user_id' => $this->evaluatee->id,
             'evaluator_type' => $this->evaluationType,
+            'evaluator_id' => auth()->id(),
         ]);
-
-        if ($this->evaluationType === 'peer') {
-            $query->where('evaluator_id', auth()->id());
-        } else {
-            $query->where(function ($q) {
-                $q->whereNull('evaluator_id')
-                  ->orWhere('evaluator_id', auth()->id());
-            });
-        }
 
         $this->existingForm = $query->first();
     }
