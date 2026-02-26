@@ -100,7 +100,7 @@ class StudentsRelationManager extends RelationManager
                 ->modalDescription('Add a new student and optionally assign peer evaluatees')
                 ->modalWidth('lg')
                 ->before(function (AttachAction $action, array $data) {
-                    // Check if user is already assigned to this evaluation
+                    
                     $existingUser = $this->ownerRecord->users()
                         ->where('user_id', $data['recordId'])
                         ->exists();

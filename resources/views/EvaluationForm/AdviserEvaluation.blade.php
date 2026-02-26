@@ -12,87 +12,30 @@
             box-sizing: border-box;
         }
         .ef-evaluation-header { margin-bottom: 24px; }
-        .ef-evaluation-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .ef-evaluation-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem; color: #036635; }
         .ef-evaluation-subheading { color: #555; font-size: 1.1rem; margin-bottom: 0; }
         .ef-domain-section { margin-bottom: 32px; border-radius: 10px; border: 1px solid #f1f1f1; background: #fff; }
-        .ef-domain-header { border-bottom: 1px solid #f1f1f1; padding: 20px 24px 10px 24px; }
-        .ef-domain-title { font-size: 1.25rem; font-weight: 700; color: #222; }
+        .ef-domain-header { border-bottom: 1px solid #f1f1f1; padding: 20px 24px 10px 24px; background: #f0f9f4; }
+        .ef-domain-title { font-size: 1.25rem; font-weight: 700; color: #036635; }
         .ef-domain-description { font-size: 1rem; color: #444; margin-top: 4px; }
         .ef-strand { padding: 16px 24px 0 24px; }
-        .ef-strand-title { font-size: 1.05rem; font-weight: 600; color: #222; margin-bottom: 8px; }
+        .ef-strand-title { font-size: 1.05rem; font-weight: 600; color: #036635; margin-bottom: 8px; }
         .ef-questions-container { margin-bottom: 12px; }
         .ef-question-item { margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #f1f1f1; }
         .ef-question-text { font-size: 1.08rem; color: #222; margin-bottom: 10px; font-weight: 500; }
         .ef-rating-scale { display: flex; gap: 32px; margin-left: 0; margin-top: 4px; }
         .ef-rating-option { display: flex; align-items: center; cursor: pointer; font-size: 1rem; }
-        .ef-rating-option input[type="radio"] { accent-color: #22C55E; width: 18px; height: 18px; margin-right: 6px; }
+        .ef-rating-option input[type="radio"] { accent-color: #036635; width: 18px; height: 18px; margin-right: 6px; }
         .ef-rating-label { display: flex; align-items: center; gap: 4px; }
-        .ef-rating-value { font-weight: 600; color: #22C55E; margin-right: 2px; }
+        .ef-rating-value { font-weight: 600; color: #036635; margin-right: 2px; }
         .ef-rating-criteria { color: #444; font-size: 0.97rem; }
         .ef-form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
-        .ef-btn { padding: 8px 20px; border-radius: 6px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
-        .ef-btn-primary { background: #22C55E; color: #fff; }
-        .ef-btn-primary:hover { background: #16a34a; }
-        .ef-locked-message { background: #f8fafc; color: #22C55E; border-left: 4px solid #22C55E; padding: 12px 18px; margin-bottom: 18px; border-radius: 6px; font-weight: 500; }
+        .ef-btn { padding: 10px 24px; border-radius: 6px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+        .ef-btn-primary { background: #036635; color: #fff; }
+        .ef-btn-primary:hover { background: #024d27; box-shadow: 0 4px 12px rgba(3, 102, 53, 0.3); }
+        .ef-locked-message { background: #f0f9f4; color: #036635; border-left: 4px solid #036635; padding: 12px 18px; margin-bottom: 18px; border-radius: 6px; font-weight: 500; }
         @media (max-width: 600px) {
             .ef-rating-scale { flex-direction: column; gap: 10px; align-items: flex-start; }
-        }
-        /* Dark mode overrides */
-        .dark .ef-evaluation-card,
-        [data-theme="dark"] .ef-evaluation-card {
-            background: #18181b;
-            border-color: #27272a;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-        }
-        .dark .ef-domain-section,
-        [data-theme="dark"] .ef-domain-section {
-            background: #18181b;
-            border-color: #27272a;
-        }
-        .dark .ef-domain-header,
-        [data-theme="dark"] .ef-domain-header {
-            border-bottom-color: #27272a;
-        }
-        .dark .ef-domain-title,
-        .dark .ef-strand-title,
-        .dark .ef-question-text,
-        [data-theme="dark"] .ef-domain-title,
-        [data-theme="dark"] .ef-strand-title,
-        [data-theme="dark"] .ef-question-text {
-            color: #fafafa;
-        }
-        .dark .ef-domain-description,
-        .dark .ef-rating-criteria,
-        [data-theme="dark"] .ef-domain-description,
-        [data-theme="dark"] .ef-rating-criteria {
-            color: #a1a1aa;
-        }
-        .dark .ef-question-item,
-        [data-theme="dark"] .ef-question-item {
-            border-bottom-color: #27272a;
-        }
-        .dark .ef-rating-value,
-        [data-theme="dark"] .ef-rating-value {
-            color: #4ade80;
-        }
-        .dark .ef-form-actions,
-        [data-theme="dark"] .ef-form-actions {
-            /* no color override needed */
-        }
-        .dark .ef-btn-primary,
-        [data-theme="dark"] .ef-btn-primary {
-            background: #22C55E;
-            color: #18181b;
-        }
-        .dark .ef-btn-primary:hover,
-        [data-theme="dark"] .ef-btn-primary:hover {
-            background: #16a34a;
-        }
-        .dark .ef-locked-message,
-        [data-theme="dark"] .ef-locked-message {
-            background: #27272a;
-            color: #4ade80;
-            border-left-color: #4ade80;
         }
     </style>
     <div class="ef-evaluation-card">
