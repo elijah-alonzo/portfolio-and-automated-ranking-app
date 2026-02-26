@@ -32,6 +32,7 @@ class RankingPanelProvider extends PanelProvider
             ->path('ranking')
             ->login()
             ->registration()
+            ->profile()
             ->colors([
                 'primary' => [
                     50 => '#036635',

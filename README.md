@@ -1,1 +1,1 @@
-![ranking-sys](public/logo.png)
+![ranking-sys](public/ranking-sys.png)
