@@ -32,7 +32,7 @@ class RankingPanelProvider extends PanelProvider
             ->path('ranking')
             ->login()
             ->registration()
-            ->profile()
+            ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
             ->colors([
                 'primary' => [
                     50 => '#036635',
