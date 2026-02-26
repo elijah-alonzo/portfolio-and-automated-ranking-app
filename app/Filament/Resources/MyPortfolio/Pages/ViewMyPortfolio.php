@@ -40,7 +40,7 @@ class ViewMyPortfolio extends ViewRecord
     {
         return $schema
             ->components([
-                Grid::make(3)
+                Grid::make(2)
                     ->schema([
                         // Left Column - Profile Card
                         Section::make('Profile')
@@ -84,87 +84,96 @@ class ViewMyPortfolio extends ViewRecord
                             ])
                             ->columnSpan(1),
 
-                        // Right Column - Leadership Experience
-                        Section::make('Leadership Experience')
-                            ->description('Your evaluations and positions in student organizations')
-                            ->icon('heroicon-o-academic-cap')
+                        // Right Column - Leadership Experience and Certificates stacked
+                        Grid::make(1)
                             ->schema([
-                                RepeatableEntry::make('participatingEvaluations')
-                                    ->label('')
+                                Section::make('Leadership Experience')
+                                    ->description('Your evaluations and positions in student organizations')
+                                    ->icon('heroicon-o-academic-cap')
                                     ->schema([
-                                        Grid::make(2)
+                                        RepeatableEntry::make('participatingEvaluations')
+                                            ->label('')
                                             ->schema([
-                                                TextEntry::make('council.name')
-                                                    ->label('Organization')
-                                                    ->icon('heroicon-o-building-office-2')
-                                                    ->weight('bold')
-                                                    ->color('primary'),
-                                                TextEntry::make('academic_year')
-                                                    ->label('Academic Year')
-                                                    ->icon('heroicon-o-calendar')
-                                                    ->badge()
-                                                    ->color('success'),
-                                            ]),
-                                        Grid::make(2)
-                                            ->schema([
-                                                TextEntry::make('pivot.position')
-                                                    ->label('Position')
-                                                    ->icon('heroicon-o-briefcase')
-                                                    ->badge()
-                                                    ->color('warning')
-                                                    ->default('Member'),
-                                                TextEntry::make('status')
-                                                    ->label('Status')
-                                                    ->icon('heroicon-o-clipboard-document-check')
-                                                    ->badge()
-                                                    ->color(fn ($state) => $state ? 'success' : 'warning')
-                                                    ->formatStateUsing(fn ($state) => $state ? 'Completed' : 'Pending'),
-                                            ]),
-                                        TextEntry::make('adviser.name')
-                                            ->label('Council Adviser')
-                                            ->icon('heroicon-o-user-group')
-                                            ->columnSpanFull(),
+                                                Grid::make(2)
+                                                    ->schema([
+                                                        TextEntry::make('council.name')
+                                                            ->label('Organization')
+                                                            ->icon('heroicon-o-building-office-2')
+                                                            ->weight('bold')
+                                                            ->color('primary'),
+                                                        TextEntry::make('academic_year')
+                                                            ->label('Academic Year')
+                                                            ->icon('heroicon-o-calendar')
+                                                            ->badge()
+                                                            ->color('success'),
+                                                    ]),
+                                                Grid::make(2)
+                                                    ->schema([
+                                                        TextEntry::make('pivot.position')
+                                                            ->label('Position')
+                                                            ->icon('heroicon-o-briefcase')
+                                                            ->badge()
+                                                            ->color('warning')
+                                                            ->default('Member'),
+                                                        TextEntry::make('status')
+                                                            ->label('Status')
+                                                            ->icon('heroicon-o-clipboard-document-check')
+                                                            ->badge()
+                                                            ->color(fn ($state) => $state ? 'success' : 'warning')
+                                                            ->formatStateUsing(fn ($state) => $state ? 'Completed' : 'Pending'),
+                                                    ]),
+                                                TextEntry::make('adviser.name')
+                                                    ->label('Council Adviser')
+                                                    ->icon('heroicon-o-user-group')
+                                                    ->columnSpanFull(),
+                                            ])
+                                            ->columnSpanFull()
+                                            ->contained(false)
+                                            ->placeholder('No leadership experience recorded yet.'),
                                     ])
-                                    ->columnSpanFull()
-                                    ->contained(false),
-                            ])
-                            ->columnSpan(2),
-                    ])->columnSpanFull(),
+                                    ->collapsible()
+                                    ->collapsed()
+                                    ->columns(1),
 
-                Section::make('Certificates & Achievements')
-                    ->description('Your uploaded certificates and recognitions')
-                    ->icon('heroicon-o-trophy')
-                    ->schema([
-                        RepeatableEntry::make('certificates')
-                            ->label('')
-                            ->schema([
-                                Grid::make(3)
+                                Section::make('Certificates & Achievements')
+                                    ->description('Your uploaded certificates and recognitions')
+                                    ->icon('heroicon-o-trophy')
                                     ->schema([
-                                        TextEntry::make('certification_name')
-                                            ->label('Certificate Name')
-                                            ->icon('heroicon-o-document-text')
-                                            ->weight('bold')
-                                            ->color('primary'),
-                                        TextEntry::make('date_issued')
-                                            ->label('Date Issued')
-                                            ->icon('heroicon-o-calendar-days')
-                                            ->date('F j, Y')
-                                            ->badge()
-                                            ->color('success'),
-                                        TextEntry::make('file_path')
-                                            ->label('File')
-                                            ->icon('heroicon-o-paper-clip')
-                                            ->url(fn ($state) => asset('storage/' . $state))
-                                            ->openUrlInNewTab()
-                                            ->color('primary')
-                                            ->formatStateUsing(fn () => 'View Certificate'),
-                                    ]),
+                                        RepeatableEntry::make('certificates')
+                                            ->label('')
+                                            ->schema([
+                                                Grid::make(3)
+                                                    ->schema([
+                                                        TextEntry::make('certification_name')
+                                                            ->label('Certificate Name')
+                                                            ->icon('heroicon-o-document-text')
+                                                            ->weight('bold')
+                                                            ->color('primary'),
+                                                        TextEntry::make('date_issued')
+                                                            ->label('Date Issued')
+                                                            ->icon('heroicon-o-calendar-days')
+                                                            ->date('F j, Y')
+                                                            ->badge()
+                                                            ->color('success'),
+                                                        TextEntry::make('file_path')
+                                                            ->label('File')
+                                                            ->icon('heroicon-o-paper-clip')
+                                                            ->url(fn ($state) => asset('storage/' . $state))
+                                                            ->openUrlInNewTab()
+                                                            ->color('primary')
+                                                            ->formatStateUsing(fn () => 'View Certificate'),
+                                                    ]),
+                                            ])
+                                            ->columnSpanFull()
+                                            ->contained(false)
+                                            ->placeholder('No certificates uploaded yet.'),
+                                    ])
+                                    ->collapsible()
+                                    ->collapsed()
+                                    ->columns(1),
                             ])
-                            ->columnSpanFull()
-                            ->contained(false),
-                    ])
-                    ->columns(1)
-                    ->columnSpanFull(),
+                            ->columnSpan(1),
+                    ])->columnSpanFull(),
             ]);
     }
 }
