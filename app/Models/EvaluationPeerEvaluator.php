@@ -45,6 +45,7 @@ class EvaluationPeerEvaluator extends Model
 
     /**
      * Check if a user can evaluate another user as peer
+     * Returns true if the evaluator is assigned to evaluate the evaluatee
      */
     public static function canEvaluateAsPeer(int $evaluationId, int $evaluatorUserId, int $evaluateeUserId): bool
     {
@@ -61,28 +62,36 @@ class EvaluationPeerEvaluator extends Model
     }
 
     /**
-     * Get all users that a specific user can evaluate as peer in an evaluation
+     * Get the student that a specific peer evaluator is assigned to evaluate
+     * Returns the evaluatee user ID or null if not assigned
+     * NOTE: Each peer evaluator can only evaluate ONE student per evaluation
      */
-    public static function getEvaluatableUsers(int $evaluationId, int $evaluatorUserId): array
+    public static function getAssignedEvaluatee(int $evaluationId, int $evaluatorUserId): ?int
     {
         return static::where('evaluation_id', $evaluationId)
             ->where('evaluator_user_id', $evaluatorUserId)
-            ->with('evaluateeUser')
-            ->get()
-            ->pluck('evaluateeUser.id')
-            ->toArray();
+            ->value('evaluatee_user_id');
     }
 
     /**
-     * Get all peer evaluators assigned to evaluate a specific user
+     * Get the peer evaluator assigned to a specific student
+     * Returns the evaluator user ID or null if not assigned
+     * NOTE: Each student can only have ONE peer evaluator per evaluation
      */
-    public static function getAssignedPeerEvaluators(int $evaluationId, int $evaluateeUserId): array
+    public static function getAssignedPeerEvaluator(int $evaluationId, int $evaluateeUserId): ?int
     {
         return static::where('evaluation_id', $evaluationId)
             ->where('evaluatee_user_id', $evaluateeUserId)
-            ->with('evaluatorUser')
-            ->get()
-            ->pluck('evaluatorUser.id')
-            ->toArray();
+            ->value('evaluator_user_id');
+    }
+
+    /**
+     * Check if a student already has a peer evaluator assigned
+     */
+    public static function hasAssignedPeerEvaluator(int $evaluationId, int $evaluateeUserId): bool
+    {
+        return static::where('evaluation_id', $evaluationId)
+            ->where('evaluatee_user_id', $evaluateeUserId)
+            ->exists();
     }
 }

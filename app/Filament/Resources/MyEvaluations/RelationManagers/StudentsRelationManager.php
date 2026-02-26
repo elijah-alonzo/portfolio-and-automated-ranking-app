@@ -8,7 +8,6 @@ use App\Models\EvaluationForm as EvaluationFormModel;
 use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
@@ -117,9 +116,9 @@ class StudentsRelationManager extends RelationManager
                     }
                 })
                 ->after(function (AttachAction $action, array $data, $record) {
-                    // Assign peer evaluatees if provided
-                    if (isset($data['peer_evaluatees']) && !empty($data['peer_evaluatees'])) {
-                        $this->assignPeerEvaluatees($data['recordId'], $data['peer_evaluatees']);
+                    // Assign peer evaluatee if provided
+                    if (isset($data['peer_evaluatee']) && !empty($data['peer_evaluatee'])) {
+                        $this->assignPeerEvaluatee($data['recordId'], $data['peer_evaluatee']);
                     }
                 }),
         ];
@@ -202,9 +201,9 @@ class StudentsRelationManager extends RelationManager
                     // Update student position
                     $record->pivot->update(['position' => $data['position']]);
 
-                    // Update peer evaluator assignments
-                    if (isset($data['peer_evaluatees'])) {
-                        $this->assignPeerEvaluatees($record->id, $data['peer_evaluatees']);
+                    // Update peer evaluator assignment
+                    if (isset($data['peer_evaluatee'])) {
+                        $this->assignPeerEvaluatee($record->id, $data['peer_evaluatee']);
                     }
                 })
                 ->modalHeading(fn ($record) => 'Edit ' . $record->name)
@@ -250,16 +249,24 @@ class StudentsRelationManager extends RelationManager
                 ->placeholder('e.g., President, Secretary, Member')
                 ->prefixIcon('heroicon-m-identification'),
 
-            CheckboxList::make('peer_evaluatees')
-                ->label('Assign Peer Evaluatees')
+            Select::make('peer_evaluatee')
+                ->label('Assign Student to Evaluate (Peer Evaluatee)')
                 ->options(function () {
-                    // Get all current students in the evaluation
+                    // Get all students in evaluation that DON'T already have a peer evaluator
+                    $allStudentIds = $this->ownerRecord->users()->pluck('users.id')->toArray();
+                    $assignedEvaluateeIds = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+                        ->pluck('evaluatee_user_id')
+                        ->toArray();
+                    $availableIds = array_diff($allStudentIds, $assignedEvaluateeIds);
+                    
                     return $this->ownerRecord->users()
+                        ->whereIn('users.id', $availableIds)
                         ->pluck('name', 'users.id')
                         ->toArray();
                 })
-                ->columns(2)
-                ->helperText('Optional: Select which students this peer evaluator will evaluate. You can also assign this later through the edit action'),
+                ->searchable()
+                ->placeholder('Select one student for this peer evaluator')
+                ->helperText('⚠️ Each student can only have ONE peer evaluator. Only unassigned students are shown.'),
         ];
     }
 
@@ -272,44 +279,47 @@ class StudentsRelationManager extends RelationManager
                 ->maxLength(255)
                 ->prefixIcon('heroicon-m-identification'),
 
-            CheckboxList::make('peer_evaluatees')
-                ->label('Select Peer Evaluatees')
+            Select::make('peer_evaluatee')
+                ->label('Assign Student to Evaluate (Peer Evaluatee)')
                 ->options(function ($record) {
-                    // Get all students in the evaluation except the current student (evaluator)
+                    // Get all students in the evaluation except the current student (they can't evaluate themselves)
                     $allUserIds = $this->ownerRecord->users()
                         ->where('users.id', '!=', $record->id)
                         ->pluck('users.id')
                         ->toArray();
 
+                    // Get students already assigned to OTHER evaluators (not this one)
                     $alreadyAssignedIds = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
                         ->whereIn('evaluatee_user_id', $allUserIds)
                         ->where('evaluator_user_id', '!=', $record->id)
                         ->pluck('evaluatee_user_id')
                         ->toArray();
 
-                    // Get students not already assigned as evaluatees to another evaluator
+                    // Get students not already assigned to another evaluator
                     $eligibleIds = array_diff($allUserIds, $alreadyAssignedIds);
 
-                    // Always include students already assigned to this evaluator (for editing)
-                    $currentAssignedIds = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+                    // Always include the student currently assigned to this evaluator (so they can edit it)
+                    $currentAssignedId = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
                         ->where('evaluator_user_id', $record->id)
-                        ->pluck('evaluatee_user_id')
-                        ->toArray();
+                        ->value('evaluatee_user_id');
 
-                    $finalIds = array_unique(array_merge($eligibleIds, $currentAssignedIds));
+                    if ($currentAssignedId) {
+                        $eligibleIds[] = $currentAssignedId;
+                    }
 
                     return $this->ownerRecord->users()
-                        ->whereIn('users.id', $finalIds)
+                        ->whereIn('users.id', $eligibleIds)
                         ->pluck('name', 'users.id')
                         ->toArray();
                 })
                 ->default(function ($record) {
                     return EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
                         ->where('evaluator_user_id', $record->id)
-                        ->pluck('evaluatee_user_id')
-                        ->toArray();
+                        ->value('evaluatee_user_id');
                 })
-                ->columns(2)
+                ->searchable()
+                ->placeholder('Select one student to evaluate')
+                ->helperText('⚠️ One-to-one assignment: Each student can only have ONE peer evaluator. Only unassigned students are shown.')
         ];
     }
 
@@ -327,16 +337,34 @@ class StudentsRelationManager extends RelationManager
         return '-';
     }
 
-    protected function assignPeerEvaluatees(int $evaluatorUserId, array $evaluateeIds): void
+    protected function assignPeerEvaluatee(int $evaluatorUserId, ?int $evaluateeId): void
     {
         try {
-            // Remove existing assignments for this evaluator
+            // Remove any existing assignment for this evaluator
             EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
                 ->where('evaluator_user_id', $evaluatorUserId)
                 ->delete();
 
-            // Create new assignments
-            foreach ($evaluateeIds as $evaluateeId) {
+            // Create new assignment if an evaluatee was selected
+            if ($evaluateeId) {
+                // Double-check that this student doesn't already have a peer evaluator
+                // (Database constraint will prevent this, but we check to give a better error message)
+                $existingEvaluator = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+                    ->where('evaluatee_user_id', $evaluateeId)
+                    ->first();
+
+                if ($existingEvaluator) {
+                    $currentEvaluatorName = User::find($existingEvaluator->evaluator_user_id)->name;
+                    $evaluateeName = User::find($evaluateeId)->name;
+                    
+                    Notification::make()
+                        ->title('Student Already Has a Peer Evaluator')
+                        ->body("{$evaluateeName} is already being evaluated by {$currentEvaluatorName}. Each student can only have ONE peer evaluator.")
+                        ->warning()
+                        ->send();
+                    return;
+                }
+
                 EvaluationPeerEvaluator::create([
                     'evaluation_id' => $this->ownerRecord->id,
                     'evaluatee_user_id' => $evaluateeId,
@@ -344,21 +372,27 @@ class StudentsRelationManager extends RelationManager
                     'assigned_by_user_id' => auth()->id(),
                     'assigned_at' => now(),
                 ]);
-            }
 
-            $evaluatorName = User::find($evaluatorUserId)->name;
-            $evaluateeNames = User::whereIn('id', $evaluateeIds)->pluck('name')->join(', ');
-            
-            Notification::make()
-                ->title('Peer Evaluatees Assigned Successfully')
-                ->body("Assigned {$evaluatorName} to evaluate: {$evaluateeNames}")
-                ->success()
-                ->send();
+                $evaluatorName = User::find($evaluatorUserId)->name;
+                $evaluateeName = User::find($evaluateeId)->name;
+                
+                Notification::make()
+                    ->title('Peer Evaluator Assigned Successfully')
+                    ->body("{$evaluatorName} will evaluate {$evaluateeName} (one-to-one assignment)")
+                    ->success()
+                    ->send();
+            } else {
+                Notification::make()
+                    ->title('Peer Evaluation Assignment Removed')
+                    ->body('The peer evaluator assignment has been removed.')
+                    ->info()
+                    ->send();
+            }
                 
         } catch (\Exception $e) {
             Notification::make()
-                ->title('Error Assigning Peer Evaluatees')
-                ->body('There was an error assigning the peer evaluatees. Please try again.')
+                ->title('Error Assigning Peer Evaluator')
+                ->body('Error: ' . $e->getMessage())
                 ->danger()
                 ->send();
         }
