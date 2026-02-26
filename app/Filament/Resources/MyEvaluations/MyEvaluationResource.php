@@ -40,7 +40,7 @@ class MyEvaluationResource extends Resource
         return (string) static::getEloquentQuery()->count();
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'Personal Management';
+    protected static UnitEnum|string|null $navigationGroup = 'Evaluation Management';
 
     protected static ?int $navigationSort = 1;
 
@@ -74,7 +74,6 @@ class MyEvaluationResource extends Resource
                         RepeatableEntry::make('peer_evaluators')
                             ->label('Students')
                             ->state(function ($record) {
-                                // Get all unique peer evaluators for this evaluation
                                 $peerEvaluators = EvaluationPeerEvaluator::where('evaluation_id', $record->id)
                                     ->with(['evaluatorUser'])
                                     ->get()
@@ -88,7 +87,6 @@ class MyEvaluationResource extends Resource
                                     $evaluator = $assignments->first()->evaluatorUser;
                                     if (!$evaluator) return null;
 
-                                    // Get the user's position in this evaluation
                                     $position = $record->users()
                                         ->where('user_id', $evaluatorId)
                                         ->first()
@@ -167,13 +165,11 @@ class MyEvaluationResource extends Resource
         $user = auth()->user();
         
         if (!$user) {
-            return $query->whereRaw('1 = 0'); // No access if not authenticated
+            return $query->whereRaw('1 = 0'); 
         }
 
         return $query->where(function ($q) use ($user) {
-            // Show evaluations where user is the council adviser
             $q->where('council_adviser_id', $user->id)
-              // OR show evaluations where user is participating as a student
               ->orWhereHas('users', function ($subQ) use ($user) {
                   $subQ->where('user_id', $user->id);
               });
@@ -182,7 +178,6 @@ class MyEvaluationResource extends Resource
 
     public static function canCreate(): bool
     {
-        // Users cannot create evaluations through MyEvaluations - only manage assigned ones
         return false;
     }
 
@@ -194,18 +189,15 @@ class MyEvaluationResource extends Resource
             return false;
         }
 
-        // Both admins and advisers can edit evaluations where they are the council adviser
         if (in_array($user->role, ['admin', 'adviser'])) {
             return $record->council_adviser_id === $user->id;
         }
 
-        // Students cannot edit evaluations
         return false;
     }
 
     public static function canDelete($record): bool
     {
-        // Users cannot delete evaluations through MyEvaluations
         return false;
     }
 
@@ -222,7 +214,6 @@ class MyEvaluationResource extends Resource
             'index' => ListMyEvaluations::route('/'),
             'view' => ViewMyEvaluation::route('/{record}'),
             'edit' => EditMyEvaluation::route('/{record}/edit'),
-            // Use explicit model binding for evaluation, user, and type
             'evaluate-student' => EvaluateStudentPage::route('/{evaluation}/evaluate/{user}/{type}'),
         ];
     }

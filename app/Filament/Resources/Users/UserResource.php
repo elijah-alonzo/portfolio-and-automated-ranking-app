@@ -26,7 +26,7 @@ class UserResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && in_array($user->role, ['admin', 'adviser']);
+        return $user && in_array($user->role, ['admin']);
     }
 
     public static function form(Schema $schema): Schema
@@ -34,7 +34,7 @@ class UserResource extends Resource
         return UserForm::configure($schema);
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'Adviser Settings';
+    protected static UnitEnum|string|null $navigationGroup = 'Admin Settings';
 
     protected static ?int $navigationSort = 3;
 

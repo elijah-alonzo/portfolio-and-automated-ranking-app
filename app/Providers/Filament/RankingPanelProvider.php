@@ -106,8 +106,9 @@ class RankingPanelProvider extends PanelProvider
             ->breadcrumbs()
             
             ->navigationGroups([
-                'Personal Management',
-                'Adviser Settings',
+                'Portfolio Management',
+                'Evaluation Management',
+                'Admin Settings',
             ])
             ->collapsibleNavigationGroups(false)
             
