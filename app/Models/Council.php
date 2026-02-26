@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Council extends Model
 {
@@ -27,9 +28,16 @@ class Council extends Model
     /**
      * Get the users for the council.
      */
-    public function users()
+    public function users(): HasManyThrough
     {
-        return $this->hasMany(User::class);
+        return $this->hasManyThrough(
+            User::class,
+            Evaluation::class,
+            'council_id',
+            'id',
+            'id',
+            'council_adviser_id'
+        )->distinct();
     }
 
     /**

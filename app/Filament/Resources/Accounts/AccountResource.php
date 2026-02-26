@@ -6,7 +6,7 @@ use App\Filament\Resources\Accounts\Pages\EditAccount;
 use App\Filament\Resources\Accounts\Pages\IndexAccounts;
 use App\Filament\Resources\Accounts\Pages\ViewAccount;
 use App\Filament\Resources\Accounts\Schemas\AccountForm;
-use App\Models\Account;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -21,7 +21,7 @@ use Filament\Support\Enums\TextSize;
 
 class AccountResource extends Resource
 {
-    protected static ?string $model = Account::class;
+    protected static ?string $model = User::class;
         public static function infolist(Schema $schema): Schema
         {
             return $schema->components([
