@@ -1,43 +1,6 @@
 <x-filament-panels::page>
-    <style>
-        .ef-evaluation-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            border: 1px solid #f1f1f1;
-            margin: 32px auto;
-            max-width: 900px;
-            width: 100%;
-            padding: 32px 32px 24px 32px;
-            box-sizing: border-box;
-        }
-        .ef-evaluation-header { margin-bottom: 24px; }
-        .ef-evaluation-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem; color: #036635; }
-        .ef-evaluation-subheading { color: #555; font-size: 1.1rem; margin-bottom: 0; }
-        .ef-domain-section { margin-bottom: 32px; border-radius: 10px; border: 1px solid #f1f1f1; background: #fff; }
-        .ef-domain-header { border-bottom: 1px solid #f1f1f1; padding: 20px 24px 10px 24px; background: #f0f9f4; }
-        .ef-domain-title { font-size: 1.25rem; font-weight: 700; color: #036635; }
-        .ef-domain-description { font-size: 1rem; color: #444; margin-top: 4px; }
-        .ef-strand { padding: 16px 24px 0 24px; }
-        .ef-strand-title { font-size: 1.05rem; font-weight: 600; color: #036635; margin-bottom: 8px; }
-        .ef-questions-container { margin-bottom: 12px; }
-        .ef-question-item { margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #f1f1f1; }
-        .ef-question-text { font-size: 1.08rem; color: #222; margin-bottom: 10px; font-weight: 500; }
-        .ef-rating-scale { display: flex; gap: 32px; margin-left: 0; margin-top: 4px; }
-        .ef-rating-option { display: flex; align-items: center; cursor: pointer; font-size: 1rem; }
-        .ef-rating-option input[type="radio"] { accent-color: #036635; width: 18px; height: 18px; margin-right: 6px; }
-        .ef-rating-label { display: flex; align-items: center; gap: 4px; }
-        .ef-rating-value { font-weight: 600; color: #036635; margin-right: 2px; }
-        .ef-rating-criteria { color: #444; font-size: 0.97rem; }
-        .ef-form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
-        .ef-btn { padding: 10px 24px; border-radius: 6px; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
-        .ef-btn-primary { background: #036635; color: #fff; }
-        .ef-btn-primary:hover { background: #024d27; box-shadow: 0 4px 12px rgba(3, 102, 53, 0.3); }
-        .ef-locked-message { background: #f0f9f4; color: #036635; border-left: 4px solid #036635; padding: 12px 18px; margin-bottom: 18px; border-radius: 6px; font-weight: 500; }
-        @media (max-width: 600px) {
-            .ef-rating-scale { flex-direction: column; gap: 10px; align-items: flex-start; }
-        }
-    </style>
+    @include('EvaluationForm.EvaluationFormLayout')
+
     <div class="ef-evaluation-card">
         <div class="ef-evaluation-header">
             <h1 class="ef-evaluation-title">{{ $this->getTitle() }}</h1>
