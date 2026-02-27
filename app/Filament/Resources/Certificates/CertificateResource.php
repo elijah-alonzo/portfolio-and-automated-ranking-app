@@ -31,7 +31,13 @@ class CertificateResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::check();
+        $user = Auth::user();
+        return $user && $user->role === 'student';
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return self::canAccess();
     }
 
     public static function form(Schema $schema): Schema
@@ -46,42 +52,28 @@ class CertificateResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->with('user');
-        $user = Auth::user();
-
-        if (! $user) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        if ($user->role === 'admin') {
-            return $query;
-        }
-
-        return $query->where('user_id', $user->id);
+        // Only show the current user's certificates
+        return parent::getEloquentQuery()->where('user_id', Auth::id());
     }
 
     public static function canViewAny(): bool
     {
-        return Auth::check();
+        return self::canAccess();
     }
 
     public static function canCreate(): bool
     {
-        return Auth::check();
+        return self::canAccess();
     }
 
     public static function canEdit($record): bool
     {
-        $user = Auth::user();
-
-        return $user && ($user->role === 'admin' || $record->user_id === $user->id);
+        return self::canAccess();
     }
 
     public static function canDelete($record): bool
     {
-        $user = Auth::user();
-
-        return $user && ($user->role === 'admin' || $record->user_id === $user->id);
+        return self::canAccess();
     }
 
     public static function getRelations(): array

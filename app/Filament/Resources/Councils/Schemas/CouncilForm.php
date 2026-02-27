@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Councils\Schemas;
 
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -19,17 +18,6 @@ class CouncilForm
                     ->description('Create or edit council details')
                     ->columnSpanFull()
                     ->schema([
-                        FileUpload::make('logo')
-                            ->label('Council Logo')
-                            ->image()
-                            ->disk('public')
-                            ->directory('council-logos')
-                            ->visibility('public')
-                            ->imageEditor()
-                            ->imagePreviewHeight('100')
-                            ->maxSize(2048)
-                            ->columnSpanFull(),
-
                         TextInput::make('name')
                             ->label('Council Name')
                             ->prefixIcon('heroicon-o-building-office')

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->boolean('is_active')->default(true);
             $table->text('description')->nullable();
-            $table->string('logo')->nullable()->comment('Logo image path or URL');
             $table->timestamps();
         });
     }

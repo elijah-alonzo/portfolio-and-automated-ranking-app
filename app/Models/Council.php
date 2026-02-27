@@ -15,7 +15,6 @@ class Council extends Model
         'code',
         'is_active',
         'description',
-        'logo',
     ];
 
     protected function casts(): array
