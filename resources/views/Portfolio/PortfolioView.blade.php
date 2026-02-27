@@ -6,11 +6,17 @@
         <div class="portfolio-grid">
             <!-- Image -->
             <div class="profile-image-container">
-                @if($record->pfp)
-                    <img src="{{ asset('storage/' . $record->pfp) }}" alt="{{ $record->name }}" class="profile-image">
-                @else
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($record->name) }}&color=036635&background=E8F5E9&size=250" alt="{{ $record->name }}" class="profile-image">
-                @endif
+                @php
+                    $imageUrl = $record->pfp 
+                        ? (str_starts_with($record->pfp, 'http') 
+                            ? $record->pfp 
+                            : asset('storage/' . $record->pfp))
+                        : 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=036635&background=E8F5E9&size=250';
+                @endphp
+                <img src="{{ $imageUrl }}" 
+                     alt="{{ $record->name }}" 
+                     class="profile-image"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($record->name) }}&color=036635&background=E8F5E9&size=250';">
             </div>
             
             <!-- About and Contacts -->
