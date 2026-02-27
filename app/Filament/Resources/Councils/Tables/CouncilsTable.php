@@ -18,15 +18,6 @@ class CouncilsTable
         return $table
             ->recordUrl(fn ($record) => \App\Filament\Resources\Councils\CouncilResource::getUrl('edit', ['record' => $record]))
             ->columns([
-                ImageColumn::make('logo')
-                    ->label(' ')
-                    ->circular()
-                    ->size(40)
-                    ->grow(false)
-                    ->alignCenter()
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
-                    ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
-
                 TextColumn::make('name')
                     ->label('Council Name')
                     ->weight('medium')

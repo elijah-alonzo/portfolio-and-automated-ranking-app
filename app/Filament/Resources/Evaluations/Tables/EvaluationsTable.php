@@ -25,15 +25,6 @@ class EvaluationsTable
                 return $query;
             })
             ->columns([
-                ImageColumn::make('council.logo')
-                    ->label(' ')
-                    ->circular()
-                    ->size(40)
-                    ->grow(false)
-                    ->alignCenter()
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->council->name ?? 'Council') . '&color=7F9CF5&background=EBF4FF')
-                    ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
-
                 TextColumn::make('council.name')
                     ->label('Council')
                     ->searchable()
