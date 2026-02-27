@@ -32,7 +32,7 @@ class ViewMyPortfolio extends Page
     public function mount(int|string $record = null): void
     {
         // Always load the current user's record with relationships
-        $this->record = auth()->user()->load(['participatingEvaluations.council', 'participatingEvaluations.adviser', 'certificates']);
+        $this->record = auth()->user()->fresh()->load(['participatingEvaluations.council', 'participatingEvaluations.adviser', 'certificates']);
     }
 
     protected function getHeaderActions(): array
