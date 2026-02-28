@@ -11,8 +11,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Enums\ThemeMode;
 use Filament\View\PanelsRenderHook;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -65,9 +63,9 @@ class RankingPanelProvider extends PanelProvider
                         }
 
                         .fi-sidebar-item-badge-ctn .fi-badge {
-                            background-color: var(--warning-100);
-                            color: var(--warning-700);
-                            --tw-ring-color: var(--warning-600);
+                            background-color: var(--primary-100);
+                            color: var(--primary-700);
+                            --tw-ring-color: var(--primary-600);
                         }
 
                         .fi-ta,
@@ -107,10 +105,11 @@ class RankingPanelProvider extends PanelProvider
             
             ->navigationGroups([
                 'Portfolio Management',
-                'Evaluation Management',
+                'Council Management',
+                'User Management',
                 'Admin Settings',
             ])
-            ->collapsibleNavigationGroups(false)
+            ->collapsibleNavigationGroups()
             
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -119,8 +118,7 @@ class RankingPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                \App\Filament\Widgets\AccountWidget::class,
                 \App\Filament\Widgets\StatsOverview::class,
             ])
             ->middleware([

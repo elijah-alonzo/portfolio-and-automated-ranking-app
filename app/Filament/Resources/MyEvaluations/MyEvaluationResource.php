@@ -40,8 +40,6 @@ class MyEvaluationResource extends Resource
         return (string) static::getEloquentQuery()->count();
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'Evaluation Management';
-
     protected static ?int $navigationSort = 1;
 
     public static function infolist(Schema $schema): Schema

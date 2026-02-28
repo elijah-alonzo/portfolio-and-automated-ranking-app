@@ -69,7 +69,7 @@ class UserResource extends Resource
         return UserForm::configure($schema);
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'Admin Settings';
+    protected static UnitEnum|string|null $navigationGroup = 'User Management';
 
     protected static ?int $navigationSort = 3;
 
