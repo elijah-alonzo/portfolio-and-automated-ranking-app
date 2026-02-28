@@ -82,7 +82,7 @@ class ViewEvaluationForm extends Page
             default => 'Unknown'
         };
 
-        $targetName = $this->evaluationType === 'self' ? $this->evaluatee->name : $this->evaluatee->name;
+        $targetName = $this->evaluatee->name ?? 'Unknown';
         
         return "{$evaluationTypeLabel} Evaluation for {$targetName}";
     }

@@ -148,7 +148,7 @@ class EvaluateStudentPage extends Page
             default => 'Unknown'
         };
 
-        $targetName = $this->evaluationType === 'self' ? 'Yourself' : ($this->evaluatee->name ?? 'Unknown');
+        $targetName = $this->evaluatee->name ?? 'Unknown';
         
         return "{$evaluationTypeLabel} Evaluation for {$targetName}";
     }
