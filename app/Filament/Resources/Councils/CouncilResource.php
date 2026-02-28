@@ -28,7 +28,7 @@ class CouncilResource extends Resource
         return $user && $user->role === 'admin';
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'Admin Settings';
+    protected static UnitEnum|string|null $navigationGroup = 'Council Management';
 
     protected static ?int $navigationSort = 4;
 
