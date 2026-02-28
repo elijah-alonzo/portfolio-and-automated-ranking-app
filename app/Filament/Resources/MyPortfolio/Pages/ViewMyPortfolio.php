@@ -40,9 +40,12 @@ class ViewMyPortfolio extends Page
         return [
             Action::make('edit_profile')
                 ->label('Edit Profile')
-                ->icon('heroicon-o-pencil-square')
-                ->color('gray')
+                ->color('primary')
                 ->url(Filament::getProfileUrl()),
+            Action::make('view_certificates')
+                ->label('View Certificates')
+                ->color('gray')
+                ->url(\App\Filament\Resources\Certificates\CertificateResource::getUrl('index')),
         ];
     }
 }

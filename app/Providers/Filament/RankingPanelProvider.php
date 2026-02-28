@@ -104,7 +104,6 @@ class RankingPanelProvider extends PanelProvider
             ->breadcrumbs()
             
             ->navigationGroups([
-                'Portfolio Management',
                 'Council Management',
                 'User Management',
                 'Admin Settings',
