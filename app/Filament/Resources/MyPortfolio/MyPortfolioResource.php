@@ -18,8 +18,6 @@ class MyPortfolioResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
 
-    protected static UnitEnum|string|null $navigationGroup = 'Portfolio Management';
-
     protected static ?string $navigationLabel = 'My Portfolio';
 
     protected static ?int $navigationSort = 1;
@@ -37,7 +35,6 @@ class MyPortfolioResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // Only show the current user's portfolio
         return parent::getEloquentQuery()->where('id', Auth::id());
     }
 
