@@ -8,7 +8,6 @@ use App\Models\EvaluationForm;
 use App\Models\EvaluationPeerEvaluator;
 use App\Models\User;
 use Filament\Actions\Action;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -66,8 +65,8 @@ class EvaluateStudentPage extends Page
         // Load existing evaluation if any
         $this->loadExistingEvaluation();
 
-        // Lock form if already submitted
-        $this->isLocked = $this->existingForm !== null;
+        // Lock form if already submitted OR if admin is viewing
+        $this->isLocked = $this->existingForm !== null || auth()->user()->role === 'admin';
 
         // Pre-fill form data if exists
         if ($this->existingForm) {
@@ -80,6 +79,11 @@ class EvaluateStudentPage extends Page
     protected function validatePermissions(): void
     {
         $user = auth()->user();
+        
+        // Admin bypass - allow admins to view any evaluation (read-only)
+        if ($user->role === 'admin') {
+            return;
+        }
         
         switch ($this->evaluationType) {
             case 'adviser':
@@ -123,8 +127,12 @@ class EvaluateStudentPage extends Page
             'evaluation_id' => $this->evaluation->id,
             'user_id' => $this->evaluatee->id,
             'evaluator_type' => $this->evaluationType,
-            'evaluator_id' => auth()->id(),
         ]);
+
+        // For non-admin users, filter by evaluator_id
+        if (auth()->user()->role !== 'admin') {
+            $query->where('evaluator_id', auth()->id());
+        }
 
         $this->existingForm = $query->first();
     }

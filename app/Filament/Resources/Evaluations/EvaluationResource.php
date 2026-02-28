@@ -6,6 +6,7 @@ use App\Filament\Resources\Evaluations\Pages\CreateEvaluation;
 use App\Filament\Resources\Evaluations\Pages\EditEvaluation;
 use App\Filament\Resources\Evaluations\Pages\ListEvaluations;
 use App\Filament\Resources\Evaluations\Pages\ViewEvaluation;
+use App\Filament\Resources\Evaluations\Pages\ViewEvaluationForm;
 use App\Filament\Resources\Evaluations\RelationManagers;
 use App\Filament\Resources\Evaluations\Schemas\EvaluationForm;
 use App\Filament\Resources\Evaluations\Tables\EvaluationsTable;
@@ -80,6 +81,7 @@ class EvaluationResource extends Resource
             'create' => CreateEvaluation::route('/create'),
             'view' => ViewEvaluation::route('/{record}'),
             'edit' => EditEvaluation::route('/{record}/edit'),
+            'view-evaluation-form' => ViewEvaluationForm::route('/{evaluation}/evaluate/{user}/{type}'),
         ];
     }
 }
