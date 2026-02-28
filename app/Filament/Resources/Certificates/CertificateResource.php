@@ -37,7 +37,7 @@ class CertificateResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return self::canAccess();
+        return false; 
     }
 
     public static function form(Schema $schema): Schema
@@ -52,7 +52,6 @@ class CertificateResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // Only show the current user's certificates
         return parent::getEloquentQuery()->where('user_id', Auth::id());
     }
 
