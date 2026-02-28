@@ -105,10 +105,11 @@ class RankingPanelProvider extends PanelProvider
             
             ->navigationGroups([
                 'Portfolio Management',
-                'Evaluation Management',
+                'Council Management',
+                'User Management',
                 'Admin Settings',
             ])
-            ->collapsibleNavigationGroups(false)
+            ->collapsibleNavigationGroups()
             
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
