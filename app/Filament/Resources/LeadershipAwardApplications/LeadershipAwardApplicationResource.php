@@ -7,12 +7,12 @@ use App\Filament\Resources\LeadershipAwardApplications\Pages\ViewApplicantPortfo
 use App\Filament\Resources\LeadershipAwardApplications\Schemas\LeadershipAwardApplicationForm;
 use App\Filament\Resources\LeadershipAwardApplications\Tables\LeadershipAwardApplicationsTable;
 use App\Models\LeadershipAwardApplication;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Table;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
-use BackedEnum;
 use UnitEnum;
 
 class LeadershipAwardApplicationResource extends Resource
@@ -24,7 +24,7 @@ class LeadershipAwardApplicationResource extends Resource
     protected static ?string $navigationLabel = 'Award Applications';
 
     protected static ?string $modelLabel = 'Award Application';
-    
+
     protected static ?string $pluralModelLabel = 'Award Applications';
 
     protected static UnitEnum|string|null $navigationGroup = 'Award Management';
@@ -49,9 +49,7 @@ class LeadershipAwardApplicationResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

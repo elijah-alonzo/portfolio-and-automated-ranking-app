@@ -9,15 +9,13 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Enums\ThemeMode;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Filament\Navigation\NavigationGroup; 
+use Illuminate\View\Middleware\ShareErrorsFromSession; 
 
 
 class RankingPanelProvider extends PanelProvider
@@ -101,14 +99,12 @@ class RankingPanelProvider extends PanelProvider
             ->brandLogo(asset('ranking-sys.png'))
             ->brandLogoHeight('2.3rem')
             ->breadcrumbs()
-            
             ->navigationGroups([
-                'Council Management',
                 'User Management',
+                'Council Management',
                 'Award Management',
             ])
             ->collapsibleNavigationGroups()
-            
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

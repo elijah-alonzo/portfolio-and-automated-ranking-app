@@ -57,8 +57,7 @@ class LeadershipAwardApplicationsTable
                     ->color('info')
                     ->url(fn (LeadershipAwardApplication $record): string => 
                         \App\Filament\Resources\LeadershipAwardApplications\LeadershipAwardApplicationResource::getUrl('portfolio', ['application' => $record->id])
-                    )
-                    ->openUrlInNewTab(),
+                    ),
                 DeleteAction::make(),
             ])
             ->bulkActions([

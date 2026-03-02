@@ -11,7 +11,6 @@ class ListMyEvaluations extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        // Users cannot create evaluations through MyEvaluations
         return [];
     }
 }

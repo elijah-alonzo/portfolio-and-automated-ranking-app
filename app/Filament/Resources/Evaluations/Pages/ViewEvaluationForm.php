@@ -14,14 +14,14 @@ class ViewEvaluationForm extends Page
 {
     protected static string $resource = EvaluationResource::class;
     protected static bool $shouldRegisterNavigation = false;
-    
-    protected string $view = 'EvaluationForm.AdviserEvaluation'; // Will be set dynamically in mount()
+
+    protected string $view = 'EvaluationForm.AdviserEvaluation';
 
     public ?Evaluation $evaluation = null;
     public ?User $evaluatee = null;
     public string $evaluationType = '';
     public ?EvaluationForm $existingForm = null;
-    public bool $isLocked = true; // Always locked for admin view
+    public bool $isLocked = true;
     public array $data = [];
     public array $questions = [];
 
@@ -31,7 +31,6 @@ class ViewEvaluationForm extends Page
         $this->evaluatee = $user;
         $this->evaluationType = $type;
 
-        // Set the appropriate view based on evaluation type
         $this->view = match($this->evaluationType) {
             'self' => 'EvaluationForm.SelfEvaluation',
             'peer' => 'EvaluationForm.PeerEvaluation',
@@ -47,18 +46,14 @@ class ViewEvaluationForm extends Page
             abort(404, 'User not specified');
         }
 
-        // Only allow admin access
         if (auth()->user()->role !== 'admin') {
             abort(403, 'Admin access required');
         }
 
-        // Load questions for this evaluator type
         $this->questions = EvaluationForm::getQuestionsForEvaluator($this->evaluationType);
 
-        // Load existing evaluation
         $this->loadExistingEvaluation();
 
-        // Pre-fill form data if exists
         if ($this->existingForm) {
             $this->data = $this->existingForm->answers ?? [];
         }
