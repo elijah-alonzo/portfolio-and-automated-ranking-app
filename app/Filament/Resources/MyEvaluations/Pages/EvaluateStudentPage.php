@@ -11,18 +11,11 @@ use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
-/**
- * Unified Evaluate Student Page
- *
- * Provides dynamic evaluation forms based on evaluator type (adviser, peer, self).
- * Uses custom Blade views for clean evaluation forms.
- */
 class EvaluateStudentPage extends Page
 {
     protected static string $resource = MyEvaluationResource::class;
     protected static bool $shouldRegisterNavigation = false;
-    
-    // Use the main evaluation partial as the view (adviser/peer/self will be handled in the view logic)
+
     protected string $view = 'EvaluationForm.AdviserEvaluation';
 
     public ?Evaluation $evaluation = null;
@@ -33,17 +26,8 @@ class EvaluateStudentPage extends Page
     public array $data = [];
     public array $questions = [];
 
-    /**
-     * Mount the evaluation page with explicit model binding for evaluation, user, and type.
-     *
-     * @param Evaluation $evaluation
-     * @param User $user
-     * @param string $type
-     */
     public function mount(Evaluation $evaluation, User $user, string $type): void
     {
-
-
         $this->evaluation = $evaluation;
         $this->evaluatee = $user;
         $this->evaluationType = $type;
@@ -56,31 +40,23 @@ class EvaluateStudentPage extends Page
             abort(404, 'User not specified');
         }
 
-        // Validate permissions based on evaluation type
         $this->validatePermissions();
 
-        // Load questions for this evaluator type
         $this->questions = EvaluationForm::getQuestionsForEvaluator($this->evaluationType);
 
-        // Load existing evaluation if any
         $this->loadExistingEvaluation();
 
-        // Lock form if already submitted OR if admin is viewing
         $this->isLocked = $this->existingForm !== null || auth()->user()->role === 'admin';
 
-        // Pre-fill form data if exists
         if ($this->existingForm) {
             $this->data = $this->existingForm->answers ?? [];
         }
     }
 
-
-
     protected function validatePermissions(): void
     {
         $user = auth()->user();
-        
-        // Admin bypass - allow admins to view any evaluation (read-only)
+
         if ($user->role === 'admin') {
             return;
         }
@@ -129,15 +105,12 @@ class EvaluateStudentPage extends Page
             'evaluator_type' => $this->evaluationType,
         ]);
 
-        // For non-admin users, filter by evaluator_id
         if (auth()->user()->role !== 'admin') {
             $query->where('evaluator_id', auth()->id());
         }
 
         $this->existingForm = $query->first();
     }
-
-
 
     public function getTitle(): string|Htmlable
     {

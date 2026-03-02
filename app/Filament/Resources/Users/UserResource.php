@@ -18,10 +18,13 @@ use UnitEnum;
 
 class UserResource extends Resource
 {
-
     protected static ?string $model = User::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserPlus;
+
+    protected static UnitEnum|string|null $navigationGroup = 'User Management';
+
+    protected static ?int $navigationSort = 3;
 
     public static function canAccess(): bool
     {
@@ -69,10 +72,6 @@ class UserResource extends Resource
         return UserForm::configure($schema);
     }
 
-    protected static UnitEnum|string|null $navigationGroup = 'User Management';
-
-    protected static ?int $navigationSort = 3;
-
     public static function table(Table $table): Table
     {
         return UsersTable::configure($table);
@@ -80,9 +79,7 @@ class UserResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

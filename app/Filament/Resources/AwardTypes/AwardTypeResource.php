@@ -8,12 +8,12 @@ use App\Filament\Resources\AwardTypes\Pages\ListAwardTypes;
 use App\Filament\Resources\AwardTypes\Schemas\AwardTypeForm;
 use App\Filament\Resources\AwardTypes\Tables\AwardTypesTable;
 use App\Models\AwardType;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Table;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
-use BackedEnum;
 use UnitEnum;
 
 class AwardTypeResource extends Resource
@@ -23,7 +23,7 @@ class AwardTypeResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTrophy;
 
     protected static ?string $navigationLabel = 'Award Types';
-    
+
     protected static UnitEnum|string|null $navigationGroup = 'Award Management';
 
     protected static ?int $navigationSort = 5;
@@ -46,9 +46,7 @@ class AwardTypeResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

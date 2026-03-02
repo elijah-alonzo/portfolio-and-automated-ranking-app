@@ -2,12 +2,10 @@
 
 namespace App\Filament\Resources\AwardTypes\Tables;
 
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class AwardTypesTable
 {
@@ -32,9 +30,7 @@ class AwardTypesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
