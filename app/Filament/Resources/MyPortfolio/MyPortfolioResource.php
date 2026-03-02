@@ -18,7 +18,7 @@ class MyPortfolioResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
 
-    protected static ?string $navigationLabel = 'My Portfolio';
+    protected static ?string $navigationLabel = 'Portfolio';
 
     protected static ?int $navigationSort = 1;
 

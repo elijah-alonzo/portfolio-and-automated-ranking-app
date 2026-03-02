@@ -171,6 +171,67 @@
         text-align: justify;
         margin: 0;
     }
+
+    /* Rank Badges */
+    .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 8px 0;
+        text-transform: uppercase;
+    }
+
+    .rank-gold {
+        background: linear-gradient(135deg, #ffd700, #ffed4a);
+        color: #744210;
+        border: 1px solid #f3cc30;
+    }
+
+    .rank-silver {
+        background: linear-gradient(135deg, #c0c0c0, #e2e8f0);
+        color: #4a5568;
+        border: 1px solid #a0aec0;
+    }
+
+    .rank-bronze {
+        background: linear-gradient(135deg, #cd7f32, #d69e2e);
+        color: #744210;
+        border: 1px solid #b7791f;
+    }
+
+    .rank-text {
+        font-weight: 700;
+    }
+
+    .rank-score {
+        font-weight: 500;
+        opacity: 0.8;
+    }
+
+    /* Award Type Styling */
+    .award-type {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 12px 0;
+        border-left: 4px solid #036635;
+    }
+
+    .award-type strong {
+        color: #036635;
+        font-weight: 600;
+    }
+
+    .award-description {
+        margin: 6px 0 0 0;
+        font-size: 0.9rem;
+        color: #666;
+        font-style: italic;
+    }
     
     /* Empty States */
     .empty-state {
