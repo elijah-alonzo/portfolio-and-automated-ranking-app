@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\AwardTypes\Pages;
 
 use App\Filament\Resources\AwardTypes\AwardTypeResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditAwardType extends EditRecord
@@ -13,7 +13,12 @@ class EditAwardType extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

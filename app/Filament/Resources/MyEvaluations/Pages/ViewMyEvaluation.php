@@ -19,7 +19,6 @@ class ViewMyEvaluation extends ViewRecord
         $record = $this->getRecord();
         $actions = [];
 
-        // Only show Add Student Officers if adviser and not completed
         if ($user && $record && $record->council_adviser_id === $user->id && !$record->status) {
             $actions[] = \Filament\Actions\EditAction::make()
                 ->label('Add Student Officers');
@@ -31,8 +30,7 @@ class ViewMyEvaluation extends ViewRecord
     protected function getPeerEvaluationActions($record, array $peerEvaluateeIds): array
     {
         $actions = [];
-        
-        // Get user details for each peer evaluatee
+
         $evaluatees = $record->users()
             ->whereIn('user_id', $peerEvaluateeIds)
             ->get();

@@ -63,7 +63,6 @@ class EvaluationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // Admin users can see all evaluations
         return parent::getEloquentQuery()->with(['adviser', 'council']);
     }
 

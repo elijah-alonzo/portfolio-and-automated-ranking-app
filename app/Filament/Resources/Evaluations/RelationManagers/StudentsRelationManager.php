@@ -79,6 +79,7 @@ class StudentsRelationManager extends RelationManager
             ]),
         ];
     }
+
     protected function getEvaluationRankValue(int $userId, string $field): string
     {
         $rank = \App\Models\EvaluationRank::where('evaluation_id', $this->ownerRecord->id)
@@ -96,18 +97,13 @@ class StudentsRelationManager extends RelationManager
         return $rank->$field ?? '-';
     }
 
-
     protected function getHeaderActions(): array
     {
-        // This is now read-only for admin monitoring purposes
-        // Student management should be done through MyEvaluations resource
         return [];
     }
 
     protected function getTableActions(): array
     {
-        // This is now read-only for admin monitoring purposes
-        // Student management should be done through MyEvaluations resource
         return [];
     }
 

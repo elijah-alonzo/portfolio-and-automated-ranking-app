@@ -11,8 +11,6 @@ class ListLeadershipAwardApplications extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            // No create action needed as applications come from student submissions
-        ];
+        return [];
     }
 }

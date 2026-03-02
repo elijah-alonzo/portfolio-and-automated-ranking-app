@@ -35,7 +35,6 @@ class ViewMyPortfolio extends Page
 
     public function mount(): void
     {
-        // Always load the current student's record with relationships
         $this->record = auth()->user()->fresh()->load([
             'participatingEvaluations.council.awardType', 
             'participatingEvaluations.adviser', 
@@ -63,7 +62,6 @@ class ViewMyPortfolio extends Page
                         ->accepted(),
                 ])
                 ->action(function (array $data): void {
-                    // Check if user already has a pending application
                     $existingApplication = LeadershipAwardApplication::where('user_id', auth()->id())
                         ->where('award_type_id', $data['award_type_id'])
                         ->whereIn('status', ['pending', 'accepted'])
