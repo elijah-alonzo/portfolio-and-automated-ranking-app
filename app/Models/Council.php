@@ -15,6 +15,7 @@ class Council extends Model
         'code',
         'is_active',
         'description',
+        'award_type_id',
     ];
 
     protected function casts(): array
@@ -45,5 +46,13 @@ class Council extends Model
     public function evaluations()
     {
         return $this->hasMany(Evaluation::class);
+    }
+
+    /**
+     * Get the award type for this council.
+     */
+    public function awardType()
+    {
+        return $this->belongsTo(AwardType::class);
     }
 }
