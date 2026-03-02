@@ -8,7 +8,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\Action;
-use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -18,6 +17,7 @@ class LeadershipAwardApplicationsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->recordUrl(null)
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Student Name')
@@ -54,11 +54,11 @@ class LeadershipAwardApplicationsTable
                 Action::make('view_portfolio')
                     ->label('View Portfolio')
                     ->icon('heroicon-m-eye')
+                    ->color('info')
                     ->url(fn (LeadershipAwardApplication $record): string => 
-                        \App\Filament\Resources\MyPortfolio\MyPortfolioResource::getUrl('index', ['record' => $record->user_id])
+                        \App\Filament\Resources\LeadershipAwardApplications\LeadershipAwardApplicationResource::getUrl('portfolio', ['application' => $record->id])
                     )
                     ->openUrlInNewTab(),
-                EditAction::make(),
                 DeleteAction::make(),
             ])
             ->bulkActions([

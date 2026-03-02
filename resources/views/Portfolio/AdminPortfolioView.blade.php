@@ -79,10 +79,33 @@
                 @if($record->participatingEvaluations && $record->participatingEvaluations->count() > 0)
                     <div class="experience-list">
                         @foreach($record->participatingEvaluations as $evaluation)
+                            @php
+                                // Get the rank for this user in this evaluation
+                                $rank = $record->evaluationRanks
+                                    ->where('evaluation_id', $evaluation->id)
+                                    ->where('user_id', $record->id)
+                                    ->first();
+                            @endphp
                             <div class="experience-item">
                                 <div class="experience-content">
                                     <h3 class="experience-position">{{ $evaluation->pivot->position ?? 'Member' }}</h3>
                                     <h4 class="experience-council">{{ $evaluation->council->name ?? 'Unknown Council' }}</h4>
+                                    
+                                    @if($rank)
+                                        <div class="rank-badge rank-{{ strtolower($rank->rank) }}">
+                                            <span class="rank-text">{{ ucfirst($rank->rank) }} Award</span>
+                                            <span class="rank-score">({{ number_format($rank->final_score, 2) }})</span>
+                                        </div>
+                                    @endif
+                                    
+                                    @if($evaluation->council && $evaluation->council->awardType)
+                                        <div class="award-type">
+                                            <strong>Award Type:</strong> {{ $evaluation->council->awardType->name }}
+                                            @if($evaluation->council->awardType->description)
+                                                <p class="award-description">{{ $evaluation->council->awardType->description }}</p>
+                                            @endif
+                                        </div>
+                                    @endif
                                     
                                     <p class="experience-description">
                                         Successfully fulfilled a comprehensive mandate as {{ $evaluation->pivot->position ?? 'Member' }} for the {{ $evaluation->council->name ?? 'Unknown Council' }}, completing a full term of service characterized by dedicated leadership and active engagement in all council proceedings and initiatives.

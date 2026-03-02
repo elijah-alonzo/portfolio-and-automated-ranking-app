@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\LeadershipAwardApplications;
 
 use App\Filament\Resources\LeadershipAwardApplications\Pages\ListLeadershipAwardApplications;
+use App\Filament\Resources\LeadershipAwardApplications\Pages\ViewApplicantPortfolio;
 use App\Filament\Resources\LeadershipAwardApplications\Schemas\LeadershipAwardApplicationForm;
 use App\Filament\Resources\LeadershipAwardApplications\Tables\LeadershipAwardApplicationsTable;
 use App\Models\LeadershipAwardApplication;
@@ -57,6 +58,7 @@ class LeadershipAwardApplicationResource extends Resource
     {
         return [
             'index' => ListLeadershipAwardApplications::route('/'),
+            'portfolio' => ViewApplicantPortfolio::route('/{application}/portfolio'),
         ];
     }
 }

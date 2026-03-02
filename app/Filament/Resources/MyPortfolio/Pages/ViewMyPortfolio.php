@@ -33,9 +33,9 @@ class ViewMyPortfolio extends Page
         return 'Your leadership portfolio and evaluation history';
     }
 
-    public function mount(int|string $record = null): void
+    public function mount(): void
     {
-        // Always load the current user's record with relationships
+        // Always load the current student's record with relationships
         $this->record = auth()->user()->fresh()->load([
             'participatingEvaluations.council.awardType', 
             'participatingEvaluations.adviser', 
@@ -48,9 +48,8 @@ class ViewMyPortfolio extends Page
     {
         return [
             Action::make('apply_for_leadership_award')
-                ->label('Apply for Leadership Award')
-                ->color('success')
-                ->icon('heroicon-m-trophy')
+                ->label('Apply for Award')
+                ->color('primary')
                 ->visible(fn() => auth()->user()->role === 'student')
                 ->form([
                     Forms\Components\Select::make('award_type_id')
@@ -93,7 +92,7 @@ class ViewMyPortfolio extends Page
                 }),
             Action::make('edit_profile')
                 ->label('Edit Profile')
-                ->color('primary')
+                ->color('info')
                 ->url(Filament::getProfileUrl()),
             Action::make('view_certificates')
                 ->label('View Certificates')
