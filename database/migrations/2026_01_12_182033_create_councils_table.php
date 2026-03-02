@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->boolean('is_active')->default(true);
             $table->text('description')->nullable();
+            $table->foreignId('award_type_id')->nullable()->constrained('award_types')->onDelete('set null');
             $table->timestamps();
         });
     }
