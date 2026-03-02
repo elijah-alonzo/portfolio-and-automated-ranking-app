@@ -25,11 +25,6 @@ class ViewApplicantPortfolio extends Page
         return $this->record ? $this->record->name . '\'s Portfolio' : 'Applicant Portfolio';
     }
 
-    public function getSubheading(): string|Htmlable|null
-    {
-        return 'Student leadership portfolio and evaluation history';
-    }
-
     public function mount(int|string $application): void
     {
         $app = LeadershipAwardApplication::findOrFail($application);
