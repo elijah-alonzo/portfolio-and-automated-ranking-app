@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\LeadershipAwardApplications\Schemas;
 
 use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Select;
+use Filament\Forms\Components\Select;
 
 class LeadershipAwardApplicationForm
 {
