@@ -6,6 +6,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
 
 class CouncilForm
@@ -33,18 +34,28 @@ class CouncilForm
                             ->maxLength(50)
                             ->placeholder('Enter council code')
                             ->columnSpan(1),
-                        
-                        Textarea::make('description')
-                            ->label('Description')
-                            ->placeholder('Enter council description')
-                            ->rows(3)
+
+                        Select::make('award_type_id')
+                            ->label('Award Type')
+                            ->prefixIcon('heroicon-o-trophy')
+                            ->relationship('awardType', 'name')
+                            ->placeholder('Select award type for this council')
+                            ->searchable()
+                            ->preload()
                             ->columnSpan(1),
-                            
+
                         Toggle::make('is_active')
                             ->label('Is Active')
                             ->inline(false)
                             ->helperText('Activate or deactivate this council')
                             ->columnSpan(1),
+                        
+                        Textarea::make('description')
+                            ->label('Description')
+                            ->placeholder('Enter council description')
+                            ->rows(3)
+                            ->columnSpan(2),
+                            
                     ])
                     ->columns(2)
                     ->extraAttributes(['class' => 'mb-6']),

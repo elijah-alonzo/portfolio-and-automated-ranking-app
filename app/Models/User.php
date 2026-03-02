@@ -94,4 +94,20 @@ class User extends Authenticatable
         return $this->hasMany(Certificate::class);
     }
 
+    /**
+     * Get leadership award applications for this user.
+     */
+    public function leadershipAwardApplications()
+    {
+        return $this->hasMany(LeadershipAwardApplication::class);
+    }
+
+    /**
+     * Get evaluation ranks for this user.
+     */
+    public function evaluationRanks()
+    {
+        return $this->hasMany(EvaluationRank::class);
+    }
+
 }

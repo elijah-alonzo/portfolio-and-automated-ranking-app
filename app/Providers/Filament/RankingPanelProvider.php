@@ -46,7 +46,6 @@ class RankingPanelProvider extends PanelProvider
                 ],
             ])
             ->darkMode(false)
-            ->defaultThemeMode(ThemeMode::Light)
             ->renderHook(
                 PanelsRenderHook::STYLES_AFTER,
                 fn (): string => <<<'HTML'
@@ -106,7 +105,7 @@ class RankingPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Council Management',
                 'User Management',
-                'Admin Settings',
+                'Award Management',
             ])
             ->collapsibleNavigationGroups()
             

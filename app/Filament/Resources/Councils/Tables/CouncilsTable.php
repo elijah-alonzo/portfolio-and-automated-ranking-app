@@ -29,6 +29,14 @@ class CouncilsTable
                     ->badge()
                     ->color('primary'),
 
+                TextColumn::make('awardType.name')
+                    ->label('Award Type')
+                    ->searchable()
+                    ->sortable()
+                    ->badge()
+                    ->color('success')
+                    ->placeholder('No award type'),
+
                 IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')
