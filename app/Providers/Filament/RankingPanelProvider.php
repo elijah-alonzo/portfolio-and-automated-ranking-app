@@ -65,6 +65,12 @@ class RankingPanelProvider extends PanelProvider
                             --tw-ring-color: var(--primary-600);
                         }
 
+                        .fi-ta {
+                            border-left: 3px solid var(--primary-500);
+                            border-top-left-radius: 0.8rem;
+                            border-bottom-left-radius: 0.8rem;
+                        }
+
                         .fi-ta,
                         .fi-badge.fi-color {
                             --primary-50: color-mix(in oklab, #036635 8%, white);
