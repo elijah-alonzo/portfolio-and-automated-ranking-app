@@ -28,6 +28,7 @@ class RankingPanelProvider extends PanelProvider
             ->path('ranking')
             ->login()
             ->profile(\App\Filament\Pages\Auth\EditProfile::class, isSimple: false)
+            ->font('Instrument Sans')
             ->colors([
                 'primary' => [
                     50 => '#036635',
@@ -39,7 +40,7 @@ class RankingPanelProvider extends PanelProvider
                     600 => '#036635',
                     700 => '#036635',
                     800 => '#036635',
-                    900 => '#036635',
+                    900 => '#064324',
                     950 => '#036635',
                 ],
             ])
