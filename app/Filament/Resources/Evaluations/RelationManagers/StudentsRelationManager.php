@@ -37,8 +37,7 @@ class StudentsRelationManager extends RelationManager
                     ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF'),
                 TextColumn::make('name')
                     ->label('Name')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 TextColumn::make('pivot.position')
                     ->label('Position')
                     ->placeholder('No position assigned'),

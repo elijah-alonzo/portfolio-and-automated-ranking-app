@@ -15,18 +15,15 @@ class CertificatesTable
             ->columns([
                 TextColumn::make('certification_name')
                     ->label('Certification Name')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
 
                 TextColumn::make('user.name')
                     ->label('Uploader')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
 
                 TextColumn::make('date_issued')
                     ->label('Date Issued')
-                    ->date()
-                    ->sortable(),
+                    ->date(),
 
                 TextColumn::make('file_path')
                     ->label('File')
@@ -37,8 +34,7 @@ class CertificatesTable
 
                 TextColumn::make('created_at')
                     ->label('Uploaded At')
-                    ->dateTime()
-                    ->sortable(),
+                    ->dateTime(),
             ])
             ->filters([])
             ;

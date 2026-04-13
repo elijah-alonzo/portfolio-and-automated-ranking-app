@@ -17,13 +17,11 @@ class MyEvaluationsTable
             ->columns([
                 TextColumn::make('council.name')
                     ->label('Council')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
 
                 TextColumn::make('adviser.name')
                     ->label('Adviser')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
 
                 ImageColumn::make('students_images')
                     ->label('Students')
@@ -46,8 +44,7 @@ class MyEvaluationsTable
 
                 TextColumn::make('academic_year')
                     ->label('Academic Year')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
 
                 ToggleColumn::make('status')
                     ->label('Status')
@@ -55,8 +52,7 @@ class MyEvaluationsTable
                     ->offColor('warning')
                     ->onIcon('heroicon-o-check-circle')
                     ->offIcon('heroicon-o-clock')
-                    ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id)
-                    ->sortable(),
+                    ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id),
             ])
             ->filters([
                 SelectFilter::make('status')
