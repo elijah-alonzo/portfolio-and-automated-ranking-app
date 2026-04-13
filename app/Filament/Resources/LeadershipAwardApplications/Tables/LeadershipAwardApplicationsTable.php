@@ -9,8 +9,6 @@ use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 
 class LeadershipAwardApplicationsTable
 {
@@ -60,11 +58,7 @@ class LeadershipAwardApplicationsTable
                     ),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ])
+            
             ->defaultSort('created_at', 'desc');
     }
 }
