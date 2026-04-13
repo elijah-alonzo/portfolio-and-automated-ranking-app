@@ -28,7 +28,6 @@ class CouncilsTable
                 TextColumn::make('awardType.name')
                     ->label('Award Type')
                     ->searchable()
-                    ->sortable()
                     ->badge()
                     ->color('success')
                     ->placeholder('No award type'),

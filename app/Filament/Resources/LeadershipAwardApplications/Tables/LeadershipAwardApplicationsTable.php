@@ -19,12 +19,10 @@ class LeadershipAwardApplicationsTable
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Student Name')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 TextColumn::make('awardType.name')
                     ->label('Award Type')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 SelectColumn::make('status')
                     ->options([
                         'pending' => 'Pending',
@@ -34,7 +32,6 @@ class LeadershipAwardApplicationsTable
                     ->selectablePlaceholder(false),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
                     ->label('Applied At'),
             ])
             ->filters([
