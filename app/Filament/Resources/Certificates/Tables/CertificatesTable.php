@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Certificates\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
@@ -43,10 +41,6 @@ class CertificatesTable
                     ->sortable(),
             ])
             ->filters([])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ;
     }
 }

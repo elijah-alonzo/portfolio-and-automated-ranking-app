@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\Councils\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -55,10 +53,6 @@ class CouncilsTable
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ;
     }
 }
