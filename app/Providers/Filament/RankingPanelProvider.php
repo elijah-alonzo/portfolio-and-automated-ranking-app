@@ -46,7 +46,7 @@ class RankingPanelProvider extends PanelProvider
                 ],
             ])
             ->darkMode(false)
-            ->brandLogo(asset('ranking-sys.png'))
+            ->brandLogo(asset('sys-logo.png'))
             ->brandLogoHeight('3rem')
             ->breadcrumbs()
             ->navigationGroups([
