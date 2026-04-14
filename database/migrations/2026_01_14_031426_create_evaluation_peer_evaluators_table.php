@@ -20,7 +20,10 @@ return new class extends Migration
             $table->text('assignment_notes')->nullable();
             $table->timestamp('assigned_at');
             $table->timestamps();
-            $table->unique(['evaluation_id', 'evaluatee_user_id'], 'unique_peer_evaluator_per_student');
+            $table->unique(
+                ['evaluation_id', 'evaluatee_user_id', 'evaluator_user_id'],
+                'unique_peer_evaluator_assignment'
+            );
         });
     }
 

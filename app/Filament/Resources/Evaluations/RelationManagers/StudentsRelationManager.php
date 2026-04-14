@@ -50,7 +50,7 @@ class StudentsRelationManager extends RelationManager
                     ->url(fn ($record) => $this->getEvaluationScore($record->id, 'self') !== '-' 
                         ? $this->getAdminEvaluationUrl($record->id, 'self') 
                         : null)
-                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'self') !== '-' ? 'success' : 'gray'),
+                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'self') !== '-' ? 'info' : 'gray'),
                 TextColumn::make('peer_score')
                     ->label('Peer')
                     ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'peer'))
@@ -66,7 +66,7 @@ class StudentsRelationManager extends RelationManager
                     ->url(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' 
                         ? $this->getAdminEvaluationUrl($record->id, 'adviser') 
                         : null)
-                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' ? 'primary' : 'gray'),
+                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' ? 'info' : 'grays'),
                 TextColumn::make('total_score')
                     ->label('Total')
                     ->getStateUsing(fn ($record) => $this->getEvaluationRankValue($record->id, 'final_score'))
