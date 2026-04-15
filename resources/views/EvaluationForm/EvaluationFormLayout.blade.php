@@ -123,6 +123,16 @@
         color: #444; 
         font-size: 0.97rem; 
     }
+
+    .ef-length-service-note {
+        background: #f7faf8;
+        border: 1px dashed #cfe6d7;
+        border-radius: 8px;
+        color: #355a44;
+        font-size: 0.98rem;
+        margin-top: 8px;
+        padding: 10px 12px;
+    }
     
     /* Form actions */
     .ef-form-actions { 

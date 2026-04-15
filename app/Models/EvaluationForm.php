@@ -10,6 +10,8 @@ class EvaluationForm extends Model
 {
 	use HasFactory;
 
+	public const LENGTH_OF_SERVICE_KEY = 'Length of Service|Service|service';
+
 	protected $fillable = [
 		'evaluation_id',
 		'user_id',
@@ -24,6 +26,58 @@ class EvaluationForm extends Model
 		'answers' => 'array',
 		'evaluator_score' => 'decimal:3',
 	];
+
+	public static function getLengthOfServiceData(Evaluation $evaluation, int $userId): array
+	{
+		$awardTypeId = $evaluation->council?->award_type_id;
+		if (!$awardTypeId) {
+			return [
+				'years' => 0,
+				'score' => 0,
+				'award_type' => null,
+			];
+		}
+
+		$targetStartYear = self::parseAcademicYearStart($evaluation->academic_year);
+
+		$query = Evaluation::query()
+			->whereHas('council', fn ($councilQuery) => $councilQuery->where('award_type_id', $awardTypeId))
+			->whereHas('users', fn ($userQuery) => $userQuery->where('user_id', $userId));
+
+		if ($targetStartYear) {
+			$query->whereRaw(
+				'CAST(SUBSTRING_INDEX(academic_year, "-", 1) AS UNSIGNED) <= ?',
+				[$targetStartYear]
+			);
+		}
+
+		$years = (int) $query->distinct('evaluations.id')->count('evaluations.id');
+		$score = match (true) {
+			$years >= 3 => 3,
+			$years === 2 => 2,
+			$years === 1 => 1,
+			default => 0,
+		};
+
+		return [
+			'years' => $years,
+			'score' => $score,
+			'award_type' => $evaluation->council?->awardType?->name,
+		];
+	}
+
+	protected static function parseAcademicYearStart(?string $academicYear): ?int
+	{
+		if (!$academicYear) {
+			return null;
+		}
+
+		if (preg_match('/^(\d{4})/', $academicYear, $matches)) {
+			return (int) $matches[1];
+		}
+
+		return null;
+	}
 
 	public function evaluation(): BelongsTo
 	{

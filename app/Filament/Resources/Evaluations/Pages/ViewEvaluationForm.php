@@ -24,12 +24,17 @@ class ViewEvaluationForm extends Page
     public bool $isLocked = true;
     public array $data = [];
     public array $questions = [];
+    public ?int $lengthOfServiceYears = null;
+    public ?int $lengthOfServiceScore = null;
+    public ?string $lengthOfServiceAwardType = null;
 
     public function mount(Evaluation $evaluation, User $user, string $type): void
     {
         $this->evaluation = $evaluation;
         $this->evaluatee = $user;
         $this->evaluationType = $type;
+
+        $this->evaluation->loadMissing('council.awardType');
 
         $this->view = match($this->evaluationType) {
             'self' => 'EvaluationForm.SelfEvaluation',
@@ -52,10 +57,22 @@ class ViewEvaluationForm extends Page
 
         $this->questions = EvaluationForm::getQuestionsForEvaluator($this->evaluationType);
 
+        $serviceData = EvaluationForm::getLengthOfServiceData($this->evaluation, $this->evaluatee->id);
+        $this->lengthOfServiceYears = $serviceData['years'];
+        $this->lengthOfServiceScore = $serviceData['score'];
+        $this->lengthOfServiceAwardType = $serviceData['award_type'];
+
         $this->loadExistingEvaluation();
 
         if ($this->existingForm) {
             $this->data = $this->existingForm->answers ?? [];
+        }
+
+        if (
+            $this->evaluationType === 'adviser'
+            && isset($this->questions[EvaluationForm::LENGTH_OF_SERVICE_KEY])
+        ) {
+            $this->data[EvaluationForm::LENGTH_OF_SERVICE_KEY] = $this->lengthOfServiceScore ?? 0;
         }
     }
 

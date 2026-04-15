@@ -42,6 +42,13 @@ class EvaluationSubmissionController extends Controller
         }
 
         $answers = $request->input('answers', []);
+
+        if ($evaluationType === 'adviser') {
+            $evaluation->loadMissing('council.awardType');
+            $serviceData = EvaluationForm::getLengthOfServiceData($evaluation, $evaluatee->id);
+            $answers[EvaluationForm::LENGTH_OF_SERVICE_KEY] = $serviceData['score'];
+        }
+
         $questions = EvaluationForm::getQuestionsForEvaluator($evaluationType);
         foreach (array_keys($questions) as $questionKey) {
             if (!isset($answers[$questionKey]) || $answers[$questionKey] === '') {

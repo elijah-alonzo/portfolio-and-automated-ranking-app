@@ -39,24 +39,26 @@
                 <div class="ef-strand-title">Strand {{ substr($strandKey, -1) }}. {{ $strand['title'] }}</div>
                 <div class="ef-questions-container">
                     @foreach($questionsByDomainStrand[$domainKey][$strandKey] as $questionKey => $question)
-                        <div class="ef-question-item">
-                            <div class="ef-question-text">{{ $question['text'] }}</div>
-                            <div class="ef-rating-scale">
-                                @foreach($question['criteria'] as $value => $criteria)
-                                    <label class="ef-rating-option {{ isset($data[$questionKey]) && $data[$questionKey] == $value ? 'selected' : '' }}">
-                                        <input type="radio"
-                                               name="answers[{{ $questionKey }}]"
-                                               value="{{ $value }}"
-                                               {{ isset($data[$questionKey]) && $data[$questionKey] == $value ? 'checked' : '' }}
-                                               {{ $isLocked ? 'disabled' : 'required' }}>
-                                        <span class="ef-rating-label">
-                                            <span class="ef-rating-value">{{ $value }}</span>
-                                            <span class="ef-rating-criteria">{{ $criteria }}</span>
-                                        </span>
-                                    </label>
-                                @endforeach
+                        @if($questionKey !== \App\Models\EvaluationForm::LENGTH_OF_SERVICE_KEY)
+                            <div class="ef-question-item">
+                                <div class="ef-question-text">{{ $question['text'] }}</div>
+                                <div class="ef-rating-scale">
+                                    @foreach($question['criteria'] as $value => $criteria)
+                                        <label class="ef-rating-option {{ isset($data[$questionKey]) && $data[$questionKey] == $value ? 'selected' : '' }}">
+                                            <input type="radio"
+                                                   name="answers[{{ $questionKey }}]"
+                                                   value="{{ $value }}"
+                                                   {{ isset($data[$questionKey]) && $data[$questionKey] == $value ? 'checked' : '' }}
+                                                   {{ $isLocked ? 'disabled' : 'required' }}>
+                                            <span class="ef-rating-label">
+                                                <span class="ef-rating-value">{{ $value }}</span>
+                                                <span class="ef-rating-criteria">{{ $criteria }}</span>
+                                            </span>
+                                        </label>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     @endforeach
                 </div>
             </div>
