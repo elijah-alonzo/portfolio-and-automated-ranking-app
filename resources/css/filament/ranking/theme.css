@@ -56,3 +56,28 @@
     --color-900: var(--primary-900);
     --color-950: var(--primary-950);
 }
+
+/* .fi-simple-main {
+    background: linear-gradient(135deg, #0b3d2e, #14532d, #166534);
+}
+
+.fi-fo-field-label-content {
+    color: #ffffff;
+}
+
+.fi-input {
+    background-color: #036635;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    color: #000000;
+} */
+
+.fi-simple-header-heading {
+    display: none !important;
+}
+
+.fi-simple-main .fi-card {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+}
