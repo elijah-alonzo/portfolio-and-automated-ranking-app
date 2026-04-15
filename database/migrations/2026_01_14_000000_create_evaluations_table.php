@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('council_id')->constrained('councils')->onDelete('cascade');
             $table->foreignId('council_adviser_id')->constrained('users')->onDelete('cascade');
             $table->string('academic_year');
+            $table->boolean('is_open')->default(false);
             $table->boolean('status')->default(false); // false = pending, true = completed
             $table->timestamps();
         });

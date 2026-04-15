@@ -2,23 +2,23 @@
 
 namespace App\Filament\Resources\MyEvaluations\RelationManagers;
 
-use App\Models\User;
 use App\Models\CouncilPosition;
+use App\Models\EvaluationForm;
 use App\Models\EvaluationPeerEvaluator;
-use App\Models\EvaluationForm as EvaluationFormModel;
-use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
+use App\Models\User;
 use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\Action;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\ColumnGroup;
-use Filament\Notifications\Notification;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class StudentsRelationManager extends RelationManager
 {
@@ -89,28 +89,29 @@ class StudentsRelationManager extends RelationManager
             return [];
         }
 
-        return [
-            AttachAction::make()
-                ->label('Add Student')
-                ->color('info')
+        $actions = [];
+
+        if (!$this->ownerRecord->is_open) {
+            $actions[] = AttachAction::make()
+                ->label('Add Officer')
+                ->color('success')
                 ->form($this->getAttachForm())
                 ->preloadRecordSelect()
                 ->modalHeading('Add Student to Evaluation')
                 ->modalDescription('Add a new student and optionally assign peer evaluatees')
                 ->modalWidth('lg')
                 ->before(function (AttachAction $action, array $data) {
-                    
                     $existingUser = $this->ownerRecord->users()
                         ->where('user_id', $data['recordId'])
                         ->exists();
-                    
+
                     if ($existingUser) {
                         Notification::make()
                             ->title('User Already Added')
                             ->body('This user is already assigned to this evaluation.')
                             ->warning()
                             ->send();
-                        
+
                         $action->halt();
                     }
 
@@ -122,8 +123,33 @@ class StudentsRelationManager extends RelationManager
                     if (isset($data['peer_evaluatee']) && !empty($data['peer_evaluatee'])) {
                         $this->assignPeerEvaluatee($data['recordId'], $data['peer_evaluatee']);
                     }
-                }),
-        ];
+                });
+        }
+
+        $actions[] = Action::make('toggle_evaluation')
+            ->label(fn () => $this->ownerRecord->is_open ? 'Close Evaluation' : 'Open Evaluation')
+            ->color(fn () => $this->ownerRecord->is_open ? 'danger' : 'warning')
+            ->requiresConfirmation()
+            ->action(function () {
+                $this->ownerRecord->update([
+                    'is_open' => !$this->ownerRecord->is_open,
+                ]);
+
+                $this->ownerRecord->refresh();
+
+                $this->resetTable();
+
+                Notification::make()
+                    ->title($this->ownerRecord->is_open ? 'Evaluation Opened' : 'Evaluation Closed')
+                    ->body($this->ownerRecord->is_open
+                        ? 'Students can now start their evaluations.'
+                        : 'Evaluations are currently closed.'
+                    )
+                    ->success()
+                    ->send();
+            });
+
+        return $actions;
     }
 
     protected function getTableActions(): array
@@ -158,6 +184,9 @@ class StudentsRelationManager extends RelationManager
                 return null;
             })
             ->tooltip(function ($record) use ($user, $isAdviser, $isStudent) {
+                if (!$this->ownerRecord->is_open) {
+                    return 'Evaluation is not open yet';
+                }
                 if ($isAdviser) {
                     return 'Complete adviser evaluation for this student';
                 }
@@ -177,6 +206,9 @@ class StudentsRelationManager extends RelationManager
                 return '';
             })
             ->disabled(function ($record) use ($user, $isAdviser, $isStudent) {
+                if (!$this->ownerRecord->is_open) {
+                    return true;
+                }
                 if ($isAdviser) {
                     return false;
                 }
@@ -193,7 +225,7 @@ class StudentsRelationManager extends RelationManager
                 return true;
             });
 
-        if ($isAdviser) {
+        if ($isAdviser && !$this->ownerRecord->is_open) {
             $actions[] = EditAction::make()
                 ->color('info')
                 ->form($this->getEditForm())
@@ -225,7 +257,12 @@ class StudentsRelationManager extends RelationManager
                 });
         }
 
-        return $actions;
+        return [
+            ActionGroup::make($actions)
+                ->label('')
+                ->icon('heroicon-m-ellipsis-vertical')
+                ->iconButton(),
+        ];
     }
 
     protected function canAssignPosition(?string $positionTitle, ?int $userId = null): bool
@@ -290,7 +327,7 @@ class StudentsRelationManager extends RelationManager
                 ->prefixIcon('heroicon-m-identification'),
 
             Select::make('peer_evaluatee')
-                ->label('Assign Student to Evaluate (Peer Evaluatee)')
+                ->label('Who will this student evaluate?')
                 ->options(function () {
                     $allStudentIds = $this->ownerRecord->users()->pluck('users.id')->toArray();
                     $assignedEvaluateeIds = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
@@ -304,8 +341,7 @@ class StudentsRelationManager extends RelationManager
                         ->toArray();
                 })
                 ->searchable()
-                ->placeholder('Select one student for this peer evaluator')
-                ->helperText('⚠️ Each student can only have ONE peer evaluator. Only unassigned students are shown.'),
+                ->placeholder('Select students that this user will evaluate .')
         ];
     }
 
@@ -395,7 +431,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getEvaluationScore(int $userId, string $evaluatorType): string
     {
-        $score = EvaluationFormModel::where('evaluation_id', $this->ownerRecord->id)
+        $score = EvaluationForm::where('evaluation_id', $this->ownerRecord->id)
             ->where('user_id', $userId)
             ->where('evaluator_type', $evaluatorType)
             ->first();
@@ -467,6 +503,34 @@ class StudentsRelationManager extends RelationManager
     protected function isCouncilAdviser(): bool
     {
         $user = auth()->user();
-        return $user && $this->ownerRecord->council_adviser_id === $user->id;
+        if (!$user) {
+            return false;
+        }
+
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return $this->ownerRecord->council_adviser_id === $user->id;
+    }
+
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
+    protected function canAttach(): bool
+    {
+        return $this->isCouncilAdviser();
+    }
+
+    protected function canEdit($record): bool
+    {
+        return $this->isCouncilAdviser();
+    }
+
+    protected function canDetach($record): bool
+    {
+        return $this->isCouncilAdviser();
     }
 }

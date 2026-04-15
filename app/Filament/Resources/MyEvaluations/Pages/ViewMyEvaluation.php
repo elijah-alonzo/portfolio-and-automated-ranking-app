@@ -15,16 +15,7 @@ class ViewMyEvaluation extends ViewRecord
     
     protected function getHeaderActions(): array
     {
-        $user = auth()->user();
-        $record = $this->getRecord();
-        $actions = [];
-
-        if ($user && $record && $record->council_adviser_id === $user->id && !$record->status) {
-            $actions[] = \Filament\Actions\EditAction::make()
-                ->label('Add Student Officers');
-        }
-
-        return $actions;
+        return [];
     }
     
     protected function getPeerEvaluationActions($record, array $peerEvaluateeIds): array

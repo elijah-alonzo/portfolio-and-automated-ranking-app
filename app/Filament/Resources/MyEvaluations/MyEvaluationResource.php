@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\MyEvaluations;
 
-use App\Filament\Resources\MyEvaluations\Pages\EditMyEvaluation;
 use App\Filament\Resources\MyEvaluations\Pages\EvaluateStudentPage;
 use App\Filament\Resources\MyEvaluations\Pages\ListMyEvaluations;
 use App\Filament\Resources\MyEvaluations\Pages\ViewMyEvaluation;
@@ -211,7 +210,6 @@ class MyEvaluationResource extends Resource
         return [
             'index' => ListMyEvaluations::route('/'),
             'view' => ViewMyEvaluation::route('/{record}'),
-            'edit' => EditMyEvaluation::route('/{record}/edit'),
             'evaluate-student' => EvaluateStudentPage::route('/{evaluation}/evaluate/{user}/{type}'),
         ];
     }
