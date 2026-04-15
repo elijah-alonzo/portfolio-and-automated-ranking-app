@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Council extends Model
 {
@@ -46,6 +47,14 @@ class Council extends Model
     public function evaluations()
     {
         return $this->hasMany(Evaluation::class);
+    }
+
+    /**
+     * Get the predefined positions for this council.
+     */
+    public function positions(): HasMany
+    {
+        return $this->hasMany(CouncilPosition::class);
     }
 
     /**

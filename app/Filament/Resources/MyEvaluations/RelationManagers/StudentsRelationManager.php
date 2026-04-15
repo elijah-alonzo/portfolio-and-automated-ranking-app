@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\MyEvaluations\RelationManagers;
 
 use App\Models\User;
+use App\Models\CouncilPosition;
 use App\Models\EvaluationPeerEvaluator;
 use App\Models\EvaluationForm as EvaluationFormModel;
 use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
@@ -113,6 +113,10 @@ class StudentsRelationManager extends RelationManager
                         
                         $action->halt();
                     }
+
+                    if (!$this->canAssignPosition($data['position'] ?? null)) {
+                        $action->halt();
+                    }
                 })
                 ->after(function (AttachAction $action, array $data, $record) {
                     if (isset($data['peer_evaluatee']) && !empty($data['peer_evaluatee'])) {
@@ -194,6 +198,10 @@ class StudentsRelationManager extends RelationManager
                 ->color('info')
                 ->form($this->getEditForm())
                 ->action(function ($record, $data) {
+                    if (!$this->canAssignPosition($data['position'] ?? null, $record->id)) {
+                        return;
+                    }
+
                     $record->pivot->update(['position' => $data['position']]);
 
                     if (isset($data['peer_evaluatee'])) {
@@ -220,6 +228,44 @@ class StudentsRelationManager extends RelationManager
         return $actions;
     }
 
+    protected function canAssignPosition(?string $positionTitle, ?int $userId = null): bool
+    {
+        if (!$positionTitle) {
+            return false;
+        }
+
+        $position = CouncilPosition::query()
+            ->where('council_id', $this->ownerRecord->council_id)
+            ->where('title', $positionTitle)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$position) {
+            Notification::make()
+                ->title('Position Not Available')
+                ->body('Selected position is not available for this council.')
+                ->warning()
+                ->send();
+            return false;
+        }
+
+        $assignedCount = $this->ownerRecord->users()
+            ->wherePivot('position', $positionTitle)
+            ->when($userId, fn ($query) => $query->where('users.id', '!=', $userId))
+            ->count();
+
+        if ($assignedCount >= $position->max_slots) {
+            Notification::make()
+                ->title('Position Full')
+                ->body("{$positionTitle} already has the maximum of {$position->max_slots} slot(s) in this evaluation.")
+                ->warning()
+                ->send();
+            return false;
+        }
+
+        return true;
+    }
+
     protected function getAttachForm(): array
     {
         return [
@@ -234,12 +280,13 @@ class StudentsRelationManager extends RelationManager
                 ->required()
                 ->placeholder('Select a student')
                 ->prefixIcon('heroicon-m-user'),
-                
-            TextInput::make('position')
+
+            Select::make('position')
                 ->label('Position')
+                ->options(fn () => $this->getPositionOptions())
                 ->required()
-                ->maxLength(255)
-                ->placeholder('e.g., President, Secretary, Member')
+                ->searchable()
+                ->placeholder('Select a position')
                 ->prefixIcon('heroicon-m-identification'),
 
             Select::make('peer_evaluatee')
@@ -265,10 +312,12 @@ class StudentsRelationManager extends RelationManager
     protected function getEditForm(): array
     {
         return [
-            TextInput::make('position')
+            Select::make('position')
                 ->label('Position')
+                ->options(fn ($record) => $this->getPositionOptions($record?->id))
                 ->required()
-                ->maxLength(255)
+                ->searchable()
+                ->placeholder('Select a position')
                 ->prefixIcon('heroicon-m-identification'),
 
             Select::make('peer_evaluatee')
@@ -309,6 +358,39 @@ class StudentsRelationManager extends RelationManager
                 ->placeholder('Select one student to evaluate')
                 ->helperText('⚠️ One-to-one assignment: Each student can only have ONE peer evaluator. Only unassigned students are shown.')
         ];
+    }
+
+    protected function getPositionOptions(?int $userId = null): array
+    {
+        $positions = CouncilPosition::query()
+            ->where('council_id', $this->ownerRecord->council_id)
+            ->where('is_active', true)
+            ->orderBy('title')
+            ->get(['title', 'max_slots']);
+
+        $assignedCounts = $this->ownerRecord->users()
+            ->when($userId, fn ($query) => $query->where('users.id', '!=', $userId))
+            ->pluck('evaluation_user.position')
+            ->filter()
+            ->countBy();
+
+        $currentPosition = null;
+        if ($userId) {
+            $currentPosition = $this->ownerRecord->users()
+                ->where('users.id', $userId)
+                ->value('evaluation_user.position');
+        }
+
+        return $positions
+            ->filter(function ($position) use ($assignedCounts, $currentPosition) {
+                $assigned = (int) ($assignedCounts[$position->title] ?? 0);
+                if ($currentPosition && $position->title === $currentPosition) {
+                    return true;
+                }
+                return $assigned < $position->max_slots;
+            })
+            ->pluck('title', 'title')
+            ->toArray();
     }
 
     protected function getEvaluationScore(int $userId, string $evaluatorType): string
