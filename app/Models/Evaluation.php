@@ -16,10 +16,12 @@ class Evaluation extends Model
         'council_id',
         'council_adviser_id',
         'academic_year',
+        'is_open',
         'status',
     ];
 
     protected $casts = [
+        'is_open' => 'boolean',
         'status' => 'boolean',
     ];
 
