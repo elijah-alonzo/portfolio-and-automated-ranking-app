@@ -324,24 +324,7 @@ class StudentsRelationManager extends RelationManager
                 ->required()
                 ->searchable()
                 ->placeholder('Select a position')
-                ->prefixIcon('heroicon-m-identification'),
-
-            Select::make('peer_evaluatee')
-                ->label('Who will this student evaluate?')
-                ->options(function () {
-                    $allStudentIds = $this->ownerRecord->users()->pluck('users.id')->toArray();
-                    $assignedEvaluateeIds = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
-                        ->pluck('evaluatee_user_id')
-                        ->toArray();
-                    $availableIds = array_diff($allStudentIds, $assignedEvaluateeIds);
-                    
-                    return $this->ownerRecord->users()
-                        ->whereIn('users.id', $availableIds)
-                        ->pluck('name', 'users.id')
-                        ->toArray();
-                })
-                ->searchable()
-                ->placeholder('Select students that this user will evaluate .')
+                ->prefixIcon('heroicon-m-identification')
         ];
     }
 
@@ -357,7 +340,7 @@ class StudentsRelationManager extends RelationManager
                 ->prefixIcon('heroicon-m-identification'),
 
             Select::make('peer_evaluatee')
-                ->label('Assign Student to Evaluate (Peer Evaluatee)')
+                ->label('Who will this officer evaluate?')
                 ->options(function ($record) {
                     $allUserIds = $this->ownerRecord->users()
                         ->where('users.id', '!=', $record->id)
@@ -392,7 +375,6 @@ class StudentsRelationManager extends RelationManager
                 })
                 ->searchable()
                 ->placeholder('Select one student to evaluate')
-                ->helperText('⚠️ One-to-one assignment: Each student can only have ONE peer evaluator. Only unassigned students are shown.')
         ];
     }
 

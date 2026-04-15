@@ -10,6 +10,11 @@ class EditPositions extends EditRecord
 {
     protected static string $resource = PositionsResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return PositionsResource::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [
