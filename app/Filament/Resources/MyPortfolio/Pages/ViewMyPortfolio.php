@@ -82,6 +82,18 @@ class ViewMyPortfolio extends Page
                         'status' => 'pending',
                     ]);
 
+                    $admins = User::where('role', 'admin')->get();
+
+                    if ($admins->isNotEmpty()) {
+                        $awardTypeName = AwardType::find($data['award_type_id'])?->name ?? 'award';
+
+                        Notification::make()
+                            ->title('New Leadership Award Application')
+                            ->body(auth()->user()->name . " submitted an application for {$awardTypeName}.")
+                            ->info()
+                            ->sendToDatabase($admins);
+                    }
+
                     Notification::make()
                         ->title('Application Submitted')
                         ->body('Your leadership award application has been submitted successfully.')

@@ -7,6 +7,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use App\Models\User;
+use Filament\Notifications\Notification;
 
 class MyEvaluationsTable
 {
@@ -52,7 +54,28 @@ class MyEvaluationsTable
                     ->offColor('warning')
                     ->onIcon('heroicon-o-check-circle')
                     ->offIcon('heroicon-o-clock')
-                    ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id),
+                    ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id)
+                    ->afterStateUpdated(function ($record, $state): void {
+                        if (! $state) {
+                            return;
+                        }
+
+                        $admins = User::where('role', 'admin')
+                            ->whereKeyNot(auth()->id())
+                            ->get();
+
+                        if ($admins->isEmpty()) {
+                            return;
+                        }
+
+                        $councilName = $record->council?->name ?? 'Council';
+
+                        Notification::make()
+                            ->title('Evaluation Completed')
+                            ->body("{$councilName} ({$record->academic_year}) was marked as completed.")
+                            ->success()
+                            ->sendToDatabase($admins);
+                    }),
             ])
             ->filters([
                 SelectFilter::make('status')

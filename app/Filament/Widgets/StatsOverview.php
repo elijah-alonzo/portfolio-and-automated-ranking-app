@@ -23,8 +23,19 @@ class StatsOverview extends StatsOverviewWidget
         }
 
         $submittedCriteria = EvaluationForm::query()
-            ->where('evaluator_id', $user->id)
             ->where('status', 'submitted')
+            ->where(function ($query) use ($user) {
+                $query->where(function ($subQuery) use ($user) {
+                    $subQuery->where('evaluator_type', 'adviser')
+                        ->whereHas('evaluation', fn ($evalQuery) => $evalQuery->where('council_adviser_id', $user->id));
+                })->orWhere(function ($subQuery) use ($user) {
+                    $subQuery->where('evaluator_type', 'self')
+                        ->where('user_id', $user->id);
+                })->orWhere(function ($subQuery) use ($user) {
+                    $subQuery->where('evaluator_type', 'peer')
+                        ->whereHas('evaluationPeerEvaluator', fn ($peerQuery) => $peerQuery->where('evaluator_user_id', $user->id));
+                });
+            })
             ->get(['answers'])
             ->sum(fn (EvaluationForm $form) => is_array($form->answers) ? count($form->answers) : 0);
 
@@ -53,24 +64,23 @@ class StatsOverview extends StatsOverviewWidget
             ->count();
 
         $submittedPendingAdviserAssignments = EvaluationForm::query()
-            ->where('evaluator_id', $user->id)
             ->where('evaluator_type', 'adviser')
             ->where('status', 'submitted')
-            ->whereHas('evaluation', fn ($query) => $query->where('status', false))
+            ->whereHas('evaluation', fn ($query) => $query->where('status', false)->where('council_adviser_id', $user->id))
             ->count();
 
         $submittedPendingSelfAssignments = EvaluationForm::query()
-            ->where('evaluator_id', $user->id)
             ->where('evaluator_type', 'self')
+            ->where('user_id', $user->id)
             ->where('status', 'submitted')
             ->whereHas('evaluation', fn ($query) => $query->where('status', false))
             ->count();
 
         $submittedPendingPeerAssignments = EvaluationForm::query()
-            ->where('evaluator_id', $user->id)
             ->where('evaluator_type', 'peer')
             ->where('status', 'submitted')
             ->whereHas('evaluation', fn ($query) => $query->where('status', false))
+            ->whereHas('evaluationPeerEvaluator', fn ($peerQuery) => $peerQuery->where('evaluator_user_id', $user->id))
             ->count();
 
         $totalPendingAssignments = $pendingAdviserAssignments + $pendingSelfAssignments + $pendingPeerAssignments;

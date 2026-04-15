@@ -49,6 +49,7 @@ class RankingPanelProvider extends PanelProvider
             ->brandLogo(asset('sys-logo.png'))
             ->brandLogoHeight('3rem')
             ->breadcrumbs()
+            ->databaseNotifications()
             ->navigationGroups([
                 'User Management',
                 'Council Management',

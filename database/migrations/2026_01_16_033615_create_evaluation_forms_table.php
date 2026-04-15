@@ -16,14 +16,17 @@ return new class extends Migration
             $table->foreignId('evaluation_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('evaluator_type', ['adviser', 'peer', 'self']);
-            $table->foreignId('evaluator_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('evaluation_peer_evaluator_id')
+                ->nullable()
+                ->constrained('evaluation_peer_evaluators')
+                ->onDelete('set null');
             $table->json('answers')->nullable();
             $table->decimal('evaluator_score', 5, 3)->nullable();
             $table->enum('status', ['pending', 'submitted'])->default('pending');
             $table->timestamps();
-            
-            $table->unique(['evaluation_id', 'user_id', 'evaluator_type']);
-            $table->index(['evaluation_id', 'user_id']);
+
+            $table->unique(['evaluation_peer_evaluator_id']);
+            $table->index(['evaluation_id', 'user_id', 'evaluator_type']);
         });
     }
 
