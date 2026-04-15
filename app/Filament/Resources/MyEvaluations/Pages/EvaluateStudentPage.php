@@ -25,12 +25,17 @@ class EvaluateStudentPage extends Page
     public bool $isLocked = false;
     public array $data = [];
     public array $questions = [];
+    public ?int $lengthOfServiceYears = null;
+    public ?int $lengthOfServiceScore = null;
+    public ?string $lengthOfServiceAwardType = null;
 
     public function mount(Evaluation $evaluation, User $user, string $type): void
     {
         $this->evaluation = $evaluation;
         $this->evaluatee = $user;
         $this->evaluationType = $type;
+
+        $this->evaluation->loadMissing('council.awardType');
 
         if (!$this->evaluation) {
             abort(404, 'Evaluation not found');
@@ -44,12 +49,24 @@ class EvaluateStudentPage extends Page
 
         $this->questions = EvaluationForm::getQuestionsForEvaluator($this->evaluationType);
 
+        $serviceData = EvaluationForm::getLengthOfServiceData($this->evaluation, $this->evaluatee->id);
+        $this->lengthOfServiceYears = $serviceData['years'];
+        $this->lengthOfServiceScore = $serviceData['score'];
+        $this->lengthOfServiceAwardType = $serviceData['award_type'];
+
         $this->loadExistingEvaluation();
 
         $this->isLocked = $this->existingForm !== null || auth()->user()->role === 'admin';
 
         if ($this->existingForm) {
             $this->data = $this->existingForm->answers ?? [];
+        }
+
+        if (
+            $this->evaluationType === 'adviser'
+            && isset($this->questions[EvaluationForm::LENGTH_OF_SERVICE_KEY])
+        ) {
+            $this->data[EvaluationForm::LENGTH_OF_SERVICE_KEY] = $this->lengthOfServiceScore ?? 0;
         }
     }
 
