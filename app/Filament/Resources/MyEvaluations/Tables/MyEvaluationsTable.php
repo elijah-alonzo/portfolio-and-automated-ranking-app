@@ -46,18 +46,17 @@ class MyEvaluationsTable
                     ->label('Academic Year')
                     ->searchable(),
 
-                TextColumn::make('created_at')
-                    ->label('Created')
-                    ->dateTime()
-                    ->sortable(),
-
                 ToggleColumn::make('status')
-                    ->label('Status')
+                    ->label('Submit Status')
                     ->onColor('success')
                     ->offColor('warning')
                     ->onIcon('heroicon-o-check-circle')
                     ->offIcon('heroicon-o-clock')
                     ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id),
+
+                TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime(),
             ])
             ->filters([
                 SelectFilter::make('status')
