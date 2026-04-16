@@ -273,8 +273,10 @@ class StudentsRelationManager extends RelationManager
 
         $position = CouncilPosition::query()
             ->where('council_id', $this->ownerRecord->council_id)
-            ->where('title', $positionTitle)
+            ->whereHas('position', fn ($query) => $query->where('title', $positionTitle))
             ->where('is_active', true)
+            ->whereHas('position', fn ($query) => $query->where('is_active', true))
+            ->with('position')
             ->first();
 
         if (!$position) {
@@ -383,8 +385,9 @@ class StudentsRelationManager extends RelationManager
         $positions = CouncilPosition::query()
             ->where('council_id', $this->ownerRecord->council_id)
             ->where('is_active', true)
-            ->orderBy('title')
-            ->get(['title', 'max_slots']);
+            ->whereHas('position', fn ($query) => $query->where('is_active', true))
+            ->with('position')
+            ->get();
 
         $assignedCounts = $this->ownerRecord->users()
             ->when($userId, fn ($query) => $query->where('users.id', '!=', $userId))
@@ -400,14 +403,23 @@ class StudentsRelationManager extends RelationManager
         }
 
         return $positions
+            ->sortBy(fn ($position) => $position->position?->hierarchy ?? PHP_INT_MAX)
             ->filter(function ($position) use ($assignedCounts, $currentPosition) {
-                $assigned = (int) ($assignedCounts[$position->title] ?? 0);
-                if ($currentPosition && $position->title === $currentPosition) {
+                $title = $position->position?->title;
+                if (!$title) {
+                    return false;
+                }
+
+                $assigned = (int) ($assignedCounts[$title] ?? 0);
+                if ($currentPosition && $title === $currentPosition) {
                     return true;
                 }
                 return $assigned < $position->max_slots;
             })
-            ->pluck('title', 'title')
+            ->mapWithKeys(function ($position) {
+                $title = $position->position?->title;
+                return $title ? [$title => $title] : [];
+            })
             ->toArray();
     }
 

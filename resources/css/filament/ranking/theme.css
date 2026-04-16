@@ -3,17 +3,18 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 
+/* =========================
+   BASE
+========================= */
 .fi-body {
     background-color: #ffffff;
 }
+
+/* =========================
+   SIDEBAR
+========================= */
 .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
     border-left: 3px solid var(--primary-500);
-}
-
-.fi-section-header {
-    border-left: 3px solid var(--primary-500);
-    padding-left: 0.75rem;
-    border-top-left-radius: 0.5rem;
 }
 
 .fi-sidebar-item-badge-ctn .fi-badge {
@@ -22,12 +23,39 @@
     --tw-ring-color: var(--primary-600);
 }
 
-.fi-ta {
-    border-left: 3px solid var(--primary-500);
+/* =========================
+   SECTION HEADER
+========================= */
+.fi-section-header {
+    background: #036635;
     border-top-left-radius: 0.8rem;
-    border-bottom-left-radius: 0.8rem;
+    border-top-right-radius: 0.8rem;
 }
 
+.fi-section-header-heading {
+    color: #ffffff;
+}
+
+.fi-section-header-description {
+    color: #f9f9f9;
+}
+
+/* =========================
+   TABLE HEADER
+========================= */
+.fi-ta-header {
+    background: #036635;
+    border-top-left-radius: 0.8rem;
+    border-top-right-radius: 0.8rem;
+}
+
+.fi-ta-header-heading {
+    color: white;
+}
+
+/* =========================
+   COLORS / THEME
+========================= */
 .fi-ta,
 .fi-badge.fi-color {
     --primary-50: color-mix(in oklab, #036635 8%, white);

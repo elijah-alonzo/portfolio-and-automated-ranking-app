@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Position;
 
 class Council extends Model
 {
@@ -52,9 +53,16 @@ class Council extends Model
     /**
      * Get the predefined positions for this council.
      */
-    public function positions(): HasMany
+    public function positionAssignments(): HasMany
     {
         return $this->hasMany(CouncilPosition::class);
+    }
+
+    public function positions()
+    {
+        return $this->belongsToMany(Position::class, 'council_positions')
+            ->withPivot(['max_slots', 'is_active'])
+            ->withTimestamps();
     }
 
     /**

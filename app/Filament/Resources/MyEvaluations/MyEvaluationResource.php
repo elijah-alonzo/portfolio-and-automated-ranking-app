@@ -32,7 +32,7 @@ class MyEvaluationResource extends Resource
     
     protected static ?string $pluralModelLabel = 'My Evaluations';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentCheck;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
     
     public static function getNavigationBadge(): ?string
     {

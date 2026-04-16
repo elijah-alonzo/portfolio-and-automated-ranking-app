@@ -79,10 +79,10 @@ class UserForm
                             ->columnSpan(1),
                         
                         Textarea::make('bio')
-                            ->label('Biography')
-                            ->placeholder('Enter user bio')
+                            ->label('Description')
+                            ->placeholder('Please enter user\'s description or biography')
                             ->rows(3)
-                            ->columnSpan(1),
+                            ->columnSpan(2),
                     ])
                     ->columns(2)
                     ->extraAttributes(['class' => 'mb-6']),

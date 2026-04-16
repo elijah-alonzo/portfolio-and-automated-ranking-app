@@ -7,7 +7,7 @@ use App\Filament\Resources\Positions\Pages\EditPositions;
 use App\Filament\Resources\Positions\Pages\ListPositions;
 use App\Filament\Resources\Positions\Schemas\PositionsForm;
 use App\Filament\Resources\Positions\Tables\PositionsTable;
-use App\Models\CouncilPosition;
+use App\Models\Position;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -18,7 +18,7 @@ use UnitEnum;
 
 class PositionsResource extends Resource
 {
-    protected static ?string $model = CouncilPosition::class;
+    protected static ?string $model = Position::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
@@ -26,9 +26,9 @@ class PositionsResource extends Resource
 
     protected static ?string $navigationLabel = 'Council Positions';
 
-    protected static ?string $modelLabel = 'Council Position';
+    protected static ?string $modelLabel = 'Position';
 
-    protected static ?string $pluralModelLabel = 'Council Positions';
+    protected static ?string $pluralModelLabel = 'Positions';
 
     protected static ?int $navigationSort = 6;
 

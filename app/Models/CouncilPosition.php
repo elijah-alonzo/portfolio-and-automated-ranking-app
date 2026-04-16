@@ -12,9 +12,8 @@ class CouncilPosition extends Model
 
     protected $fillable = [
         'council_id',
-        'title',
+        'position_id',
         'max_slots',
-        'branch',
         'is_active',
     ];
 
@@ -28,5 +27,10 @@ class CouncilPosition extends Model
     public function council(): BelongsTo
     {
         return $this->belongsTo(Council::class);
+    }
+
+    public function position(): BelongsTo
+    {
+        return $this->belongsTo(Position::class);
     }
 }

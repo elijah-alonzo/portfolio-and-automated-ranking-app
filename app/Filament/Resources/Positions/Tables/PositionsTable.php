@@ -22,13 +22,47 @@ class PositionsTable
                     ->label('Position Title')
                     ->searchable()
                     ->weight('medium'),
-                TextColumn::make('council.name')
-                    ->label('Council')
-                    ->searchable(),
+                TextColumn::make('councils_count')
+                    ->label('Councils')
+                    ->getStateUsing(function ($record) {
+                        return $record->councilAssignments()->count();
+                    })
+                    ->badge()
+                    ->color('primary')
+                    ->tooltip(function ($record) {
+                        $names = $record->councilAssignments()
+                            ->with('council:id,name')
+                            ->get()
+                            ->pluck('council.name')
+                            ->filter()
+                            ->values();
+
+                        if ($names->isEmpty()) {
+                            return 'No councils assigned';
+                        }
+
+                        return $names->implode(', ');
+                    }),
                 TextColumn::make('max_slots')
                     ->label('Max Slots')
+                    ->getStateUsing(function ($record) {
+                        $min = $record->councilAssignments()->min('max_slots');
+                        $max = $record->councilAssignments()->max('max_slots');
+
+                        if ($min === null || $max === null) {
+                            return '-';
+                        }
+
+                        return $min === $max ? (string) $min : $min . '-' . $max;
+                    })
+                    ->badge()
+                    ->color('warning'),
+                TextColumn::make('hierarchy')
+                    ->label('Hierarchy')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color('success'),
                 TextColumn::make('branch')
                     ->label('Branch')
                     ->placeholder('No branch'),
@@ -40,30 +74,21 @@ class PositionsTable
                     ->trueColor('success')
                     ->falseColor('danger'),
                 TextColumn::make('created_at')
-                    ->label('Created')
-                    ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Registered')
+                    ->dateTime(),
             ])
             ->emptyStateHeading('No positions yet')
             ->emptyStateDescription('Council positions will appear here once they are created.')
             ->filters([
                 SelectFilter::make('council_id')
                     ->label('Council')
-                    ->relationship('council', 'name')
+                    ->relationship('councils', 'name')
                     ->searchable()
                     ->preload(),
                 TernaryFilter::make('is_active')
                     ->label('Active Status')
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),
-            ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }
