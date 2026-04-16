@@ -13,6 +13,11 @@ class AwardTypesTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('councils_count')
+                    ->label('Councils')
+                    ->getStateUsing(fn ($record) => $record->councils()->count())
+                    ->badge()
+                    ->color('primary'),
                 TextColumn::make('description')
                     ->limit(50)
                     ->tooltip(function (TextColumn $column): ?string {
@@ -21,10 +26,7 @@ class AwardTypesTable
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Created'),
             ])
             ->filters([])
             ;

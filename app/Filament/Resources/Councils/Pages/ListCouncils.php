@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Councils\Pages;
 
 use App\Filament\Resources\Councils\CouncilResource;
+use App\Filament\Resources\Councils\Widgets\CouncilStatsOverview;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -14,6 +15,13 @@ class ListCouncils extends ListRecords
     {
         return [
             CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            CouncilStatsOverview::class,
         ];
     }
 }

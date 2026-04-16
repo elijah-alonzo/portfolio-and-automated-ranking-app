@@ -46,6 +46,11 @@ class MyEvaluationsTable
                     ->label('Academic Year')
                     ->searchable(),
 
+                TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->sortable(),
+
                 ToggleColumn::make('status')
                     ->label('Status')
                     ->onColor('success')

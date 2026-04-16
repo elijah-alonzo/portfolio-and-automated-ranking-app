@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\AwardType;
 use App\Models\Council;
+use App\Models\CouncilPosition;
+use App\Models\Position;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,6 +22,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
+        CouncilPosition::query()->delete();
+        Position::query()->delete();
         User::query()->delete();
         Council::query()->delete();
         AwardType::query()->delete();
@@ -185,6 +189,64 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
                 'password' => $defaultPassword,
             ]);
+        }
+
+        $campusCouncils = Council::where('code', 'PSG')->get();
+        $departmentalCouncils = Council::where('code', '!=', 'PSG')->get();
+
+        $positions = [
+            ['title' => 'President', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 1, 'availability' => 'campus'],
+            ['title' => 'Vice President', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 2, 'availability' => 'campus'],
+            ['title' => 'Governor', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 3, 'availability' => 'departmental'],
+            ['title' => 'Vice Governor', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 4, 'availability' => 'departmental'],
+            ['title' => 'Secretary', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 5, 'availability' => 'both'],
+            ['title' => 'Assistant Secretary', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 6, 'availability' => 'both'],
+            ['title' => 'Treasurer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 7, 'availability' => 'both'],
+            ['title' => 'Assistant Treasurer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 8, 'availability' => 'both'],
+            ['title' => 'Auditor', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 9, 'availability' => 'both'],
+            ['title' => 'Public Relations Officer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 10, 'availability' => 'both'],
+            ['title' => 'Assistant Public Relations Officer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 11, 'availability' => 'both'],
+            ['title' => 'Senate President', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 12, 'availability' => 'campus'],
+            ['title' => 'Senate Secretary', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 13, 'availability' => 'campus'],
+            ['title' => 'Senator', 'branch' => 'Legislative', 'max_slots' => 10, 'hierarchy' => 14, 'availability' => 'campus'],
+            ['title' => 'Speaker of the House', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 15, 'availability' => 'campus'],
+            ['title' => 'Secretary General', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 16, 'availability' => 'campus'],
+            ['title' => 'Congress', 'branch' => 'Legislative', 'max_slots' => 6, 'hierarchy' => 17, 'availability' => 'campus'],
+            ['title' => 'Councilors', 'branch' => 'Legislative', 'max_slots' => 8, 'hierarchy' => 18, 'availability' => 'departmental'],
+            ['title' => 'Chief Justice', 'branch' => 'Judiciary', 'max_slots' => 1, 'hierarchy' => 19, 'availability' => 'campus'],
+            ['title' => 'Justice Secretary', 'branch' => 'Judiciary', 'max_slots' => 1, 'hierarchy' => 20, 'availability' => 'campus'],
+            ['title' => 'Associate Justices', 'branch' => 'Judiciary', 'max_slots' => 4, 'hierarchy' => 21, 'availability' => 'campus'],
+            ['title' => 'Mayor', 'branch' => 'Mayoral', 'max_slots' => 4, 'hierarchy' => 22, 'availability' => 'departmental'],
+        ];
+
+        foreach ($positions as $positionData) {
+            $position = Position::firstOrCreate(
+                ['title' => $positionData['title']],
+                [
+                    'branch' => $positionData['branch'],
+                    'hierarchy' => $positionData['hierarchy'],
+                    'is_active' => true,
+                ]
+            );
+
+            $targetCouncils = match ($positionData['availability']) {
+                'departmental' => $departmentalCouncils,
+                'both' => $campusCouncils->merge($departmentalCouncils),
+                default => $campusCouncils,
+            };
+
+            foreach ($targetCouncils as $council) {
+                CouncilPosition::updateOrCreate(
+                    [
+                        'council_id' => $council->id,
+                        'position_id' => $position->id,
+                    ],
+                    [
+                        'max_slots' => $positionData['max_slots'],
+                        'is_active' => true,
+                    ]
+                );
+            }
         }
     }
 }
