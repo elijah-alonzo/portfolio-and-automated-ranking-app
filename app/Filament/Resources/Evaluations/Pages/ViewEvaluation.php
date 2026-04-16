@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Evaluations\Pages;
 
 use App\Filament\Resources\Evaluations\EvaluationResource;
+use App\Filament\Resources\Evaluations\Widgets\EvaluationRecommendationsOverview;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -19,6 +20,13 @@ class ViewEvaluation extends ViewRecord
         return [
             EditAction::make()
                 ->label('Edit Evaluation')
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            EvaluationRecommendationsOverview::class,
         ];
     }
 }

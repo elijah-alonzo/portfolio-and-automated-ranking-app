@@ -14,7 +14,7 @@ class EvaluationForm
         return $schema
             ->components([
                 Section::make('Evaluation Information')
-                    ->description('Create or edit evaluation details')
+                    ->description('Manage evaluation details such as council, academic year, and evaluation period')
                     ->columnSpanFull()
                     ->schema([
                         Select::make('council_id')
