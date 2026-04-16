@@ -94,7 +94,7 @@ class StudentsRelationManager extends RelationManager
         if (!$this->ownerRecord->is_open) {
             $actions[] = AttachAction::make()
                 ->label('Add Officer')
-                ->color('success')
+                ->color('gray')
                 ->form($this->getAttachForm())
                 ->preloadRecordSelect()
                 ->modalHeading('Add Student to Evaluation')
@@ -128,7 +128,7 @@ class StudentsRelationManager extends RelationManager
 
         $actions[] = Action::make('toggle_evaluation')
             ->label(fn () => $this->ownerRecord->is_open ? 'Close Evaluation' : 'Open Evaluation')
-            ->color(fn () => $this->ownerRecord->is_open ? 'danger' : 'warning')
+            ->color(fn () => $this->ownerRecord->is_open ? 'danger' : 'info')
             ->requiresConfirmation()
             ->action(function () {
                 $this->ownerRecord->update([
