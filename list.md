@@ -1,12 +1,12 @@
 # To Do List
 
-### 4. Certficate Feature
+### 1. Award Application Process Improvement
 
-    - Certificates will no longer be controlled by students. The adviser or admin will be the one issuing the certificates to avoid fake documents being uploaded. Students can just download them as pdf. Advisers and Admin can select which multiple students that they will issue the certificate too.
-
-### 5. Printable Evaluation Form.
-
-    - The client requested that they can download the evaluation form. They didnt specify which format so can we just se the dowload button when clicked, a drop down will show allowing you to select wether it be downlaoded as a .csv or pdf? The csv file should show all the questions, the available options, the answer selected, the evaluatee name, the evaluator's name, the date submitted.
+    - Improve the looks of the modal for applying for a leadership award. Match it with the modals in the my evalaution relation table.
+    - The cleint requested a decision support. I think this is doable by simply updating the award application tbale to include a field called Rank. This field should display the rank he got from the most recent evaluation of a council with the same award type requested.
+    - In the admin view of the portfolio, lets update the award and award type. I like the layout of the award type but we need to remove the description and add rank there too per council evaluations. These should act like helper text.s
+    - Lets update the action column to be like a three dot icon that allows the user to view portfolio (info), accept (success), adn reject (danger). The status field should just display Icons with colors corresponding to their state.
+    - Update the student name to student infor. The image, name, and department should be displayed similar to the relational table of my evaluation
 
 ## Reminders
 

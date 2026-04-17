@@ -40,7 +40,7 @@ class StudentsRelationManager extends RelationManager
     protected function getTableColumns(): array
     {
         return [
-            ColumnGroup::make('Student', [
+            ColumnGroup::make('Student Information', [
                 ImageColumn::make('user.pfp')
                     ->label('Picture')
                     ->circular()
@@ -140,6 +140,8 @@ class StudentsRelationManager extends RelationManager
                 ->requiresConfirmation()
                 ->disabled(fn () => $this->isCompletedStage())
                 ->action(function () {
+                    $previousStatus = $this->ownerRecord->status;
+
                     if ($this->isClosedStage()) {
                         $unassignedCount = $this->getUnassignedPeerEvaluatorCount();
                         if ($unassignedCount > 0) {
@@ -169,6 +171,8 @@ class StudentsRelationManager extends RelationManager
                     $this->ownerRecord->refresh();
 
                     $this->resetTable();
+
+                    $this->notifyEvaluationStatusChange($previousStatus, $this->ownerRecord->status);
 
                     Notification::make()
                         ->title($this->getStatusNotificationTitle())
@@ -239,7 +243,21 @@ class StudentsRelationManager extends RelationManager
         }
 
         $actions[] = Action::make('evaluate')
-            ->label('Evaluate')
+            ->label(function (EvaluationPositionSlot $record) {
+                $user = auth()->user();
+                if (!$user || !$record->user_id) {
+                    return 'Evaluate';
+                }
+
+                $type = $this->resolveEvaluationTypeForUser($record, $user);
+                if (!$type) {
+                    return 'Evaluate';
+                }
+
+                return $this->getEvaluationStatus($record->user_id, $type) === 'submitted'
+                    ? 'View'
+                    : 'Evaluate';
+            })
             ->icon('heroicon-o-clipboard-document-check')
             ->color('success')
             ->size('sm')
@@ -343,6 +361,24 @@ class StudentsRelationManager extends RelationManager
             $this->ownerRecord->users()->syncWithoutDetaching([
                 $studentId => ['position' => $positionTitle],
             ]);
+        }
+
+        $student = User::find($studentId);
+        if ($student) {
+            Notification::make()
+                ->title('Evaluation Assignment')
+                ->body('You have been added to an evaluation.')
+                ->success()
+                ->sendToDatabase($student);
+        }
+
+        $adviser = $this->ownerRecord->adviser;
+        if ($adviser) {
+            Notification::make()
+                ->title('Student Assigned')
+                ->body(($student?->name ?? 'A student') . ' was added to your evaluation.')
+                ->success()
+                ->sendToDatabase($adviser);
         }
 
         Notification::make()
@@ -585,6 +621,64 @@ class StudentsRelationManager extends RelationManager
     protected function isCompletedStage(): bool
     {
         return $this->ownerRecord->status === Evaluation::STATUS_COMPLETED;
+    }
+
+    protected function notifyEvaluationStatusChange(string $previousStatus, string $currentStatus): void
+    {
+        if (!in_array($currentStatus, [Evaluation::STATUS_ONGOING, Evaluation::STATUS_COMPLETED], true)) {
+            return;
+        }
+
+        if ($previousStatus === $currentStatus) {
+            return;
+        }
+
+        $title = $currentStatus === Evaluation::STATUS_ONGOING
+            ? 'Evaluation Opened'
+            : 'Evaluation Completed';
+        $body = $currentStatus === Evaluation::STATUS_ONGOING
+            ? 'An evaluation you are part of is now open.'
+            : 'An evaluation you are part of has been completed.';
+
+        $users = $this->ownerRecord->users()->get();
+        $adviser = $this->ownerRecord->adviser;
+
+        if ($adviser) {
+            $users->push($adviser);
+        }
+
+        $adminUsers = User::where('role', 'admin')->get();
+        $users = $users->merge($adminUsers)->unique('id');
+
+        foreach ($users as $user) {
+            Notification::make()
+                ->title($title)
+                ->body($body)
+                ->success()
+                ->sendToDatabase($user);
+        }
+    }
+
+    protected function resolveEvaluationTypeForUser(EvaluationPositionSlot $record, User $user): ?string
+    {
+        if ($this->isCouncilAdviser()) {
+            return 'adviser';
+        }
+
+        if ($user->role !== 'student') {
+            return null;
+        }
+
+        if ($user->id === $record->user_id) {
+            return 'self';
+        }
+
+        $isPeerEvaluator = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+            ->where('evaluator_user_id', $user->id)
+            ->where('evaluatee_user_id', $record->user_id)
+            ->exists();
+
+        return $isPeerEvaluator ? 'peer' : null;
     }
 
     protected function getStatusNotificationTitle(): string

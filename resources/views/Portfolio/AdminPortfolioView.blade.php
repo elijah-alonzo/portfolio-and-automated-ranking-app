@@ -89,20 +89,16 @@
                             <div class="experience-item">
                                 <div class="experience-content">
                                     <h3 class="experience-position">{{ $evaluation->pivot->position ?? 'Member' }}</h3>
-                                    <h4 class="experience-council">{{ $evaluation->council->name ?? 'Unknown Council' }}</h4>
-                                    
-                                    @if($rank)
-                                        <div class="rank-badge rank-{{ strtolower($rank->rank) }}">
-                                            <span class="rank-text">{{ ucfirst($rank->rank) }} Award</span>
-                                            <span class="rank-score">({{ number_format($rank->final_score, 2) }})</span>
-                                        </div>
-                                    @endif
+                                    <h4 class="experience-council">
+                                        {{ $evaluation->council->name ?? 'Unknown Council' }}
+                                        <span class="experience-year">{{ $evaluation->academic_year ?? 'N/A' }}</span>
+                                    </h4>
                                     
                                     @if($evaluation->council && $evaluation->council->awardType)
                                         <div class="award-type">
-                                            <strong>Award Type:</strong> {{ $evaluation->council->awardType->name }}
-                                            @if($evaluation->council->awardType->description)
-                                                <p class="award-description">{{ $evaluation->council->awardType->description }}</p>
+                                            <p class="award-description">Award Type: {{ $evaluation->council->awardType->name }}</p>
+                                            @if($rank)
+                                                <p class="award-description">Rank: {{ ucfirst($rank->rank) }} ({{ number_format($rank->final_score, 2) }})</p>
                                             @endif
                                         </div>
                                     @endif

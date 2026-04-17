@@ -82,7 +82,10 @@
                             <div class="experience-item">
                                 <div class="experience-content">
                                     <h3 class="experience-position">{{ $evaluation->pivot->position ?? 'Member' }}</h3>
-                                    <h4 class="experience-council">{{ $evaluation->council->name ?? 'Unknown Council' }}</h4>
+                                    <h4 class="experience-council">
+                                        {{ $evaluation->council->name ?? 'Unknown Council' }}
+                                        <span class="experience-year">{{ $evaluation->academic_year ?? 'N/A' }}</span>
+                                    </h4>
                                     
                                     <p class="experience-description">
                                         Successfully fulfilled a comprehensive mandate as {{ $evaluation->pivot->position ?? 'Member' }} for the {{ $evaluation->council->name ?? 'Unknown Council' }}, completing a full term of service characterized by dedicated leadership and active engagement in all council proceedings and initiatives.
