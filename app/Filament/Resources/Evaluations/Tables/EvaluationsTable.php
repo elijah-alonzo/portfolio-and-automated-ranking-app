@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Evaluations\Tables;
 
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -53,19 +52,29 @@ class EvaluationsTable
                     ->label('Academic Year')
                     ->searchable(),
 
-                ToggleColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
-                    ->onColor('success')
-                    ->offColor('warning')
-                    ->onIcon('heroicon-o-check-circle')
-                    ->offIcon('heroicon-o-clock'),
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state) => match ($state) {
+                        'closed' => 'Closed',
+                        'ongoing' => 'On going',
+                        'completed' => 'Completed',
+                        default => 'Unknown',
+                    })
+                    ->color(fn (?string $state) => match ($state) {
+                        'completed' => 'success',
+                        'ongoing' => 'info',
+                        'closed' => 'warning',
+                        default => 'gray',
+                    }),
             ])
             ->filters([
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
-                        true => 'Completed',
-                        false => 'Pending',
+                        'closed' => 'Closed',
+                        'ongoing' => 'On going',
+                        'completed' => 'Completed',
                     ])
                     ->placeholder('All Statuses'),
 

@@ -161,6 +161,16 @@
         background: #024d27; 
         box-shadow: 0 4px 12px rgba(3, 102, 53, 0.3); 
     }
+
+    .ef-btn-info {
+        background: #0ea5e9;
+        color: #fff;
+    }
+
+    .ef-btn-info:hover {
+        background: #0284c7;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
     
     /* Locked message */
     .ef-locked-message { 

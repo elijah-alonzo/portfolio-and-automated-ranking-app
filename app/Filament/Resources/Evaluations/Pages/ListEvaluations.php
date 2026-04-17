@@ -31,10 +31,12 @@ class ListEvaluations extends ListRecords
     {
         return [
             'all' => Tab::make('All'),
-            'pending' => Tab::make('Pending')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', false)),
+            'closed' => Tab::make('Closed')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'closed')),
+            'ongoing' => Tab::make('On Going')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'ongoing')),
             'completed' => Tab::make('Completed')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', true)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'completed')),
         ];
     }
 }

@@ -409,12 +409,17 @@ class EvaluationForm extends Model
 		});
 
 		static::saved(function (EvaluationForm $form) {
+			if ($form->status !== 'submitted') {
+				return;
+			}
+
 			$councilId = $form->evaluation->council_id ?? null;
 			EvaluationRank::updateForUser(
 				$form->evaluation_id,
 				$form->user_id,
 				$councilId
 			);
+
 		});
 	}
 }

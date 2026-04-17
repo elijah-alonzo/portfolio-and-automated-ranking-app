@@ -74,7 +74,7 @@ class TableWidget extends BaseTableWidget
             ->query(function () use ($user) {
                 $query = Evaluation::query()
                     ->with(['council', 'adviser', 'users'])
-                    ->where('status', false);
+                    ->whereIn('status', ['closed', 'ongoing']);
 
                 if (! $user) {
                     return $query->whereRaw('1 = 0');
