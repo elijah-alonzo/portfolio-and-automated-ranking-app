@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Position;
 
 class Council extends Model
@@ -62,6 +63,12 @@ class Council extends Model
     {
         return $this->belongsToMany(Position::class, 'council_positions')
             ->withPivot(['max_slots', 'is_active'])
+            ->withTimestamps();
+    }
+
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class, 'council_department')
             ->withTimestamps();
     }
 

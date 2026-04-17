@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'contact_number',
         'role',
+        'department_id',
         'is_active',
         'bio',
         'password',
@@ -92,6 +93,11 @@ class User extends Authenticatable
     public function certificates()
     {
         return $this->hasMany(Certificate::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     /**

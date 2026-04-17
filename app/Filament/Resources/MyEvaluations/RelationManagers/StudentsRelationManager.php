@@ -115,6 +115,16 @@ class StudentsRelationManager extends RelationManager
                         $action->halt();
                     }
 
+                    if (!$this->isStudentAllowedForCouncil($data['recordId'])) {
+                        Notification::make()
+                            ->title('Department Not Allowed')
+                            ->body('This student does not belong to an allowed department for this council.')
+                            ->warning()
+                            ->send();
+
+                        $action->halt();
+                    }
+
                     if (!$this->canAssignPosition($data['position'] ?? null)) {
                         $action->halt();
                     }
@@ -311,7 +321,9 @@ class StudentsRelationManager extends RelationManager
             Select::make('recordId')
                 ->label('Student')
                 ->options(function () {
+                    $allowedDepartmentIds = $this->getAllowedDepartmentIds();
                     return User::where('role', 'student')
+                        ->when($allowedDepartmentIds, fn ($query) => $query->whereIn('department_id', $allowedDepartmentIds))
                         ->whereNotIn('id', $this->ownerRecord->users->pluck('id'))
                         ->pluck('name', 'id');
                 })
@@ -378,6 +390,28 @@ class StudentsRelationManager extends RelationManager
                 ->searchable()
                 ->placeholder('Select one student to evaluate')
         ];
+    }
+
+    protected function getAllowedDepartmentIds(): array
+    {
+        $council = $this->ownerRecord->council;
+        if (!$council) {
+            return [];
+        }
+
+        return $council->departments()->pluck('departments.id')->toArray();
+    }
+
+    protected function isStudentAllowedForCouncil(int $userId): bool
+    {
+        $allowedDepartmentIds = $this->getAllowedDepartmentIds();
+        if (empty($allowedDepartmentIds)) {
+            return true;
+        }
+
+        return User::where('id', $userId)
+            ->whereIn('department_id', $allowedDepartmentIds)
+            ->exists();
     }
 
     protected function getPositionOptions(?int $userId = null): array

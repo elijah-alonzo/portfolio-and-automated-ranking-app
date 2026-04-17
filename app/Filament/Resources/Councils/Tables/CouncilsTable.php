@@ -32,6 +32,12 @@ class CouncilsTable
                     ->color('success')
                     ->placeholder('No award type'),
 
+                TextColumn::make('departments_count')
+                    ->label('Departments')
+                    ->getStateUsing(fn ($record) => $record->departments()->count())
+                    ->badge()
+                    ->color('primary'),
+
                 IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active')

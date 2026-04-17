@@ -71,6 +71,15 @@ class UserForm
                             ->placeholder('Select role')
                             ->columnSpan(1),
 
+                        Select::make('department_id')
+                            ->label('Department')
+                            ->prefixIcon('heroicon-o-building-office-2')
+                            ->relationship('department', 'name')
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->columnSpan(1),
+
                         Toggle::make('is_active')
                             ->label('Is Active')
                             ->inline(false)

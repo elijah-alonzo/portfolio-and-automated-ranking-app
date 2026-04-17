@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AwardType;
 use App\Models\Council;
 use App\Models\CouncilPosition;
+use App\Models\Department;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -26,8 +27,25 @@ class DatabaseSeeder extends Seeder
         Position::query()->delete();
         User::query()->delete();
         Council::query()->delete();
+        Department::query()->delete();
         AwardType::query()->delete();
         Schema::enableForeignKeyConstraints();
+
+        $departments = [
+            'University Administration' => 'Administrative and campus-wide oversight functions.',
+            'School of Information Technology and Engineering' => 'Programs and initiatives under the School of Information Technology and Engineering.',
+            'School of Art Sciences and Teacher Education' => 'Programs and initiatives under the School of Art Sciences and Teacher Education.',
+            'School of Business, Accountancy, and Hospitality Management' => 'Programs and initiatives under the School of Business, Accountancy, and Hospitality Management.',
+            'School of Nursing and Allied Health Services' => 'Programs and initiatives under the School of Nursing and Allied Health Services.',
+        ];
+
+        $departmentModels = [];
+        foreach ($departments as $name => $description) {
+            $departmentModels[$name] = Department::create([
+                'name' => $name,
+                'description' => $description,
+            ]);
+        }
 
         $awardTypes = [
             'Campus Leadership Award' => 'Recognizes an outstanding student leader within a specific school or college. This award honors individuals who have demonstrated exceptional service, initiative, and the ability to drive progress and engagement within their specialized academic department.',
@@ -87,6 +105,36 @@ class DatabaseSeeder extends Seeder
             Council::create($council);
         }
 
+        $councilModels = Council::all()->keyBy('code');
+        $studentDepartments = collect([
+            'School of Information Technology and Engineering',
+            'School of Art Sciences and Teacher Education',
+            'School of Business, Accountancy, and Hospitality Management',
+            'School of Nursing and Allied Health Services',
+        ])->map(fn ($name) => $departmentModels[$name]->id)->all();
+
+        if (isset($councilModels['PSG'])) {
+            $councilModels['PSG']->departments()->sync($studentDepartments);
+        }
+
+        $departmentCouncilMap = [
+            'PSG-SITE' => 'School of Information Technology and Engineering',
+            'PSG-SASTE' => 'School of Art Sciences and Teacher Education',
+            'PSG-SBAHM' => 'School of Business, Accountancy, and Hospitality Management',
+            'PSG-SNAHS' => 'School of Nursing and Allied Health Services',
+        ];
+
+        foreach ($departmentCouncilMap as $code => $departmentName) {
+            if (!isset($councilModels[$code])) {
+                continue;
+            }
+
+            $departmentId = $departmentModels[$departmentName]->id ?? null;
+            if ($departmentId) {
+                $councilModels[$code]->departments()->sync([$departmentId]);
+            }
+        }
+
         $defaultPassword = Hash::make('password');
 
         $users = [
@@ -95,6 +143,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'admin@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'admin',
+                'department_name' => 'University Administration',
                 'bio' => 'A system user with administrative privileges. Responsible for managing core data, configuring system settings, and overseeing the overall integrity of the platform\'s workflows.',
             ],
             [
@@ -102,6 +151,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'siteadviser@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'adviser',
+                'department_name' => 'School of Information Technology and Engineering',
                 'bio' => 'A system user with supervisory privileges. Responsible for reviewing submissions, verifying departmental records, and providing guidance within their assigned jurisdiction.',
             ],
             [
@@ -109,6 +159,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sasteadviser@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'adviser',
+                'department_name' => 'School of Art Sciences and Teacher Education',
                 'bio' => 'A system user with supervisory privileges. Responsible for reviewing submissions, verifying departmental records, and providing guidance within their assigned jurisdiction.',
             ],
             [
@@ -116,6 +167,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'snahsadviser@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'adviser',
+                'department_name' => 'School of Nursing and Allied Health Services',
                 'bio' => 'A system user with supervisory privileges. Responsible for reviewing submissions, verifying departmental records, and providing guidance within their assigned jurisdiction.',
             ],
             [
@@ -123,6 +175,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sbahmsadviser@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'adviser',
+                'department_name' => 'School of Business, Accountancy, and Hospitality Management',
                 'bio' => 'A system user with supervisory privileges. Responsible for reviewing submissions, verifying departmental records, and providing guidance within their assigned jurisdiction.',
             ],
             [
@@ -130,6 +183,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'psgstudent1@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Information Technology and Engineering',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
@@ -137,6 +191,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'psgstudent2@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Art Sciences and Teacher Education',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
@@ -144,6 +199,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'psgstudent3@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Business, Accountancy, and Hospitality Management',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
@@ -151,6 +207,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'psgstudent4@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Nursing and Allied Health Services',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
@@ -158,6 +215,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sitestudent1@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Information Technology and Engineering',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
@@ -165,6 +223,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sitestudent2@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Information Technology and Engineering',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
@@ -172,6 +231,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sitestudent3@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Information Technology and Engineering',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
@@ -179,15 +239,18 @@ class DatabaseSeeder extends Seeder
                 'email' => 'sitestudent4@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',
+                'department_name' => 'School of Information Technology and Engineering',
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
         ];
 
         foreach ($users as $user) {
+            $departmentId = $departmentModels[$user['department_name']]->id ?? null;
             User::create([
-                ...$user,
+                ...collect($user)->except('department_name')->all(),
                 'is_active' => true,
                 'password' => $defaultPassword,
+                'department_id' => $departmentId,
             ]);
         }
 
