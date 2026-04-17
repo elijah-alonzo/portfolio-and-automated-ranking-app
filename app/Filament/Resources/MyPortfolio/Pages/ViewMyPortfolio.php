@@ -50,6 +50,12 @@ class ViewMyPortfolio extends Page
                 ->label('Apply for Award')
                 ->color('primary')
                 ->visible(fn() => auth()->user()->role === 'student')
+                ->modalHeading('Apply for Leadership Award')
+                ->modalDescription('Select the award type you are applying for, then confirm your graduation status.')
+                ->modalIcon('heroicon-o-academic-cap')
+                ->modalIconColor('success')
+                ->modalWidth('md')
+                ->modalSubmitActionLabel('Submit Application')
                 ->form([
                     Forms\Components\Select::make('award_type_id')
                         ->label('Award Type')
@@ -81,6 +87,15 @@ class ViewMyPortfolio extends Page
                         'award_type_id' => $data['award_type_id'],
                         'status' => 'pending',
                     ]);
+
+                    $adminUsers = User::where('role', 'admin')->get();
+                    foreach ($adminUsers as $admin) {
+                        Notification::make()
+                            ->title('New Award Application')
+                            ->body(auth()->user()->name . ' submitted a leadership award application.')
+                            ->success()
+                            ->sendToDatabase($admin);
+                    }
 
                     Notification::make()
                         ->title('Application Submitted')
