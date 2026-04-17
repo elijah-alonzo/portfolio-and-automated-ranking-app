@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
@@ -29,21 +30,21 @@ class UserResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && in_array($user->role, ['admin']);
+        return $user && in_array($user->role, ['admin', 'adviser'], true);
     }
 
     public static function canViewAny(): bool
     {
         $user = Auth::user();
 
-        return $user && $user->role === 'admin';
+        return $user && in_array($user->role, ['admin', 'adviser'], true);
     }
 
     public static function canCreate(): bool
     {
         $user = Auth::user();
 
-        return $user && $user->role === 'admin';
+        return $user && in_array($user->role, ['admin', 'adviser'], true);
     }
 
     public static function canEdit($record): bool
@@ -65,6 +66,18 @@ class UserResource extends Resource
         $user = Auth::user();
 
         return $user && $user->role === 'admin';
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user = Auth::user();
+
+        if ($user && $user->role === 'adviser') {
+            return $query->where('department_id', $user->department_id);
+        }
+
+        return $query;
     }
 
     public static function form(Schema $schema): Schema

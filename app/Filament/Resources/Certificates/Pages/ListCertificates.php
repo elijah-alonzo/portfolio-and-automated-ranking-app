@@ -15,7 +15,7 @@ class ListCertificates extends ListRecords
     {
         $actions = [];
 
-        if (auth()->user()?->role === 'admin') {
+        if (in_array(auth()->user()?->role, ['admin', 'adviser'], true)) {
             $actions[] = CreateAction::make();
         }
 

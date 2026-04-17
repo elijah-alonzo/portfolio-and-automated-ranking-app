@@ -27,17 +27,17 @@ class CertificateResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $navigationLabel = 'Certificates';
+    protected static ?string $navigationLabel = 'Issue Certificates';
 
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && in_array($user->role, ['admin', 'student'], true);
+        return $user && in_array($user->role, ['admin', 'adviser', 'student'], true);
     }
 
     public static function shouldRegisterNavigation(): bool
     {
-        return auth()->user()?->role === 'admin';
+        return in_array(auth()->user()?->role, ['admin', 'adviser'], true);
     }
 
     public static function form(Schema $schema): Schema
@@ -58,6 +58,15 @@ class CertificateResource extends Resource
             return $query;
         }
 
+        if (auth()->user()?->role === 'adviser') {
+            $departmentId = auth()->user()?->department_id;
+
+            return $query->whereHas('user', function (Builder $builder) use ($departmentId): void {
+                $builder->where('role', 'student')
+                    ->when($departmentId, fn (Builder $query) => $query->where('department_id', $departmentId));
+            });
+        }
+
         return $query->where('user_id', Auth::id());
     }
 
@@ -68,7 +77,7 @@ class CertificateResource extends Resource
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->role === 'admin';
+        return in_array(auth()->user()?->role, ['admin', 'adviser'], true);
     }
 
     public static function canEdit($record): bool
