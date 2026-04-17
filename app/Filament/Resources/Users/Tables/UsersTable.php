@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -18,35 +19,31 @@ class UsersTable
         return $table
             ->recordUrl(fn ($record) => \App\Filament\Resources\Users\UserResource::getUrl('edit', ['record' => $record]))
             ->columns([
-                ImageColumn::make('pfp')
-                    ->label(' ')
-                    ->circular()
-                    ->size(40)
-                    ->grow(false)
-                    ->alignCenter()
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
-                    ->extraAttributes(['class' => 'ring-1 ring-gray-100 dark:ring-gray-800']),
-
-                TextColumn::make('name')
-                    ->weight('medium')
-                    ->searchable(),
-
-                TextColumn::make('email')
-                    ->searchable()
-                    ->copyable()
-                    ->icon('heroicon-o-envelope')
-                    ->label('Email'),
-
-                TextColumn::make('contact_number')
-                    ->icon('heroicon-o-phone')
-                    ->label('Contact')
-                    ->placeholder('No contact')
-                    ->copyable(),
-
-                TextColumn::make('department.name')
-                    ->label('Department')
-                    ->searchable()
-                    ->placeholder('Not set'),
+                ColumnGroup::make('User Information', [
+                    ImageColumn::make('pfp')
+                        ->label('Picture')
+                        ->circular()
+                        ->size(40)
+                        ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
+                        ,
+                    TextColumn::make('name')
+                        ->label('Name')
+                        ->weight('medium')
+                        ->searchable()
+                        ->description(fn ($record) => $record->department?->name ?? 'No department'),
+                ]),
+                ColumnGroup::make('Contact Information', [
+                    TextColumn::make('email')
+                        ->label('Email')
+                        ->searchable()
+                        ->copyable()
+                        ->icon('heroicon-o-envelope'),
+                    TextColumn::make('contact_number')
+                        ->label('Contact')
+                        ->icon('heroicon-o-phone')
+                        ->placeholder('No contact')
+                        ->copyable(),
+                ]),
 
                 IconColumn::make('role')
                     ->label('Role')
