@@ -23,18 +23,32 @@ class CertificateForm
                     ->schema([
                         Select::make('user_ids')
                             ->label('Students')
-                            ->options(User::where('role', 'student')->pluck('name', 'id'))
+                            ->options(function () {
+                                $query = User::query()->where('role', 'student');
+
+                                if (auth()->user()?->role === 'adviser') {
+                                    $query->where('department_id', auth()->user()?->department_id);
+                                }
+
+                                return $query->pluck('name', 'id');
+                            })
                             ->searchable()
                             ->multiple()
-                            ->required(fn ($record) => auth()->user()?->role === 'admin' && $record === null)
-                            ->visible(fn ($record) => auth()->user()?->role === 'admin' && $record === null)
+                            ->required(fn ($record) => in_array(auth()->user()?->role, ['admin', 'adviser'], true) && $record === null)
+                            ->visible(fn ($record) => in_array(auth()->user()?->role, ['admin', 'adviser'], true) && $record === null)
                             ->columnSpan(2),
                         Select::make('user_id')
                             ->label('Student')
-                            ->relationship('user', 'name', fn (Builder $query) => $query->where('role', 'student'))
+                            ->relationship('user', 'name', function (Builder $query) {
+                                $query->where('role', 'student');
+
+                                if (auth()->user()?->role === 'adviser') {
+                                    $query->where('department_id', auth()->user()?->department_id);
+                                }
+                            })
                             ->searchable()
-                            ->required(fn ($record) => auth()->user()?->role === 'admin' && $record !== null)
-                            ->visible(fn ($record) => auth()->user()?->role === 'admin' && $record !== null)
+                            ->required(fn ($record) => in_array(auth()->user()?->role, ['admin', 'adviser'], true) && $record !== null)
+                            ->visible(fn ($record) => in_array(auth()->user()?->role, ['admin', 'adviser'], true) && $record !== null)
                             ->columnSpan(2),
                         FileUpload::make('file_path')
                             ->columnSpan(2)

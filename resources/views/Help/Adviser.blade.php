@@ -58,5 +58,19 @@
                 >
             </figure>
         </div>
+
+        <div class="help-section">
+            <h2 class="help-section-title">Certificates</h2>
+            <p class="text-sm text-gray-600">
+                Advisers can issue certificates to students within the same department. Once a certificate is issued, it is automatically reflected in the recipient's portfolio, where the student can view and download it at any time.
+            </p>
+            <figure class="help-figure">
+                <img
+                    class="help-image"
+                    src="{{ asset('assets/adviser/certificates.png') }}"
+                    alt="Certificate management view"
+                >
+            </figure>
+        </div>
     @endcomponent
 </x-filament-panels::page>
