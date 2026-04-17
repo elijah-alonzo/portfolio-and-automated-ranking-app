@@ -16,7 +16,7 @@ class CreateCertificate extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        if (auth()->user()?->role !== 'admin') {
+        if (auth()->user()?->role === 'student') {
             $data['user_id'] = auth()->id();
             $this->issuedUserIds = [$data['user_id']];
             return $data;

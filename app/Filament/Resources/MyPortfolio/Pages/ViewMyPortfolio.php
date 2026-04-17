@@ -103,12 +103,8 @@ class ViewMyPortfolio extends Page
                         ->success()
                         ->send();
                 }),
-            Action::make('edit_profile')
-                ->label('Edit Profile')
-                ->color('info')
-                ->url(Filament::getProfileUrl()),
             Action::make('view_certificates')
-                ->label('View Certificates')
+                ->label('Issued Certificates')
                 ->color('gray')
                 ->url(\App\Filament\Resources\Certificates\CertificateResource::getUrl('index')),
         ];
