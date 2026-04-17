@@ -112,8 +112,25 @@ class ViewEvaluationForm extends Page
         return [
             Action::make('back')
                 ->label('Back to Students')
-                ->url(EvaluationResource::getUrl('view', ['record' => $this->evaluation]))
-                ->color('gray'),
+                ->url(EvaluationResource::getUrl('view', ['record' => $this->evaluation])),
+            Action::make('download_csv')
+                ->label('Download CSV')
+                ->color('info')
+                ->url(fn () => route('evaluation.export', [
+                    'evaluation' => $this->evaluation->id,
+                    'user' => $this->evaluatee->id,
+                    'type' => $this->evaluationType,
+                    'format' => 'csv',
+                ])),
+            Action::make('download_pdf')
+                ->label('Download PDF')
+                ->color('gray')
+                ->url(fn () => route('evaluation.export', [
+                    'evaluation' => $this->evaluation->id,
+                    'user' => $this->evaluatee->id,
+                    'type' => $this->evaluationType,
+                    'format' => 'pdf',
+                ])),
         ];
     }
 }
