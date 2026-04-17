@@ -13,12 +13,19 @@ class ListCertificates extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            CreateAction::make(),
-            Action::make('back_portfolio')
+        $actions = [];
+
+        if (auth()->user()?->role === 'admin') {
+            $actions[] = CreateAction::make();
+        }
+
+        if (auth()->user()?->role === 'student') {
+            $actions[] = Action::make('back_portfolio')
                 ->label('Back to Portfolio')
                 ->color('gray')
-                ->url(\App\Filament\Resources\MyPortfolio\MyPortfolioResource::getUrl('index')),
-        ];
+                ->url(\App\Filament\Resources\MyPortfolio\MyPortfolioResource::getUrl('index'));
+        }
+
+        return $actions;
     }
 }

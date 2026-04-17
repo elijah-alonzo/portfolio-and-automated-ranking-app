@@ -46,8 +46,9 @@ class RankingPanelProvider extends PanelProvider
                 ],
             ])
             ->darkMode(false)
-            ->topbar(false)
+            ->databaseNotifications()
             ->brandLogo(asset('sys-logo.png'))
+            ->topbar(false)
             ->brandLogoHeight('2.5rem')
             ->breadcrumbs()
             ->navigationGroups([
