@@ -227,7 +227,7 @@ class DatabaseSeeder extends Seeder
                 'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
             ],
             [
-                'name' => 'Joshua CAbalza',
+                'name' => 'Joshua Cabalza',
                 'email' => 'sitestudent3@psg.com',
                 'contact_number' => '123456789',
                 'role' => 'student',

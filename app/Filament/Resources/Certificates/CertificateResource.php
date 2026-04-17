@@ -23,7 +23,7 @@ class CertificateResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static UnitEnum|string|null $navigationGroup = 'Portfolio Management';
+    protected static UnitEnum|string|null $navigationGroup = 'Award Management';
 
     protected static ?int $navigationSort = 2;
 
@@ -32,12 +32,12 @@ class CertificateResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
-        return $user && $user->role === 'student';
+        return $user && in_array($user->role, ['admin', 'student'], true);
     }
 
     public static function shouldRegisterNavigation(): bool
     {
-        return false; 
+        return auth()->user()?->role === 'admin';
     }
 
     public static function form(Schema $schema): Schema
@@ -52,7 +52,13 @@ class CertificateResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('user_id', Auth::id());
+        $query = parent::getEloquentQuery();
+
+        if (auth()->user()?->role === 'admin') {
+            return $query;
+        }
+
+        return $query->where('user_id', Auth::id());
     }
 
     public static function canViewAny(): bool
@@ -62,17 +68,17 @@ class CertificateResource extends Resource
 
     public static function canCreate(): bool
     {
-        return self::canAccess();
+        return auth()->user()?->role === 'admin';
     }
 
     public static function canEdit($record): bool
     {
-        return self::canAccess();
+        return auth()->user()?->role === 'admin';
     }
 
     public static function canDelete($record): bool
     {
-        return self::canAccess();
+        return false;
     }
 
     public static function getRelations(): array
