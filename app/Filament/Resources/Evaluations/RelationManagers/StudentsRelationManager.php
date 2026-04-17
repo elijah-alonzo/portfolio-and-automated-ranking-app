@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Evaluations\RelationManagers;
 
 use App\Filament\Resources\Evaluations\EvaluationResource;
+use App\Models\Position;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
@@ -31,16 +32,27 @@ class StudentsRelationManager extends RelationManager
         return [
             ColumnGroup::make('Student', [
                 ImageColumn::make('pfp')
-                    ->label('Profile')
+                    ->label('Picture')
                     ->circular()
                     ->size(40)
-                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF'),
+                    ->getStateUsing(function ($record) {
+                        $name = $record->name ?? 'Unassigned';
+
+                        return $record->pfp
+                            ? (str_starts_with($record->pfp, 'http')
+                                ? $record->pfp
+                                : asset('storage/' . $record->pfp))
+                            : 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
+                    }),
                 TextColumn::make('name')
-                    ->label('Name')
-                    ->searchable(),
+                    ->label('Student')
+                    ->weight('medium')
+                    ->searchable()
+                    ->description(fn ($record) => $record->department?->name ?? 'No department'),
                 TextColumn::make('pivot.position')
                     ->label('Position')
-                    ->placeholder('No position assigned'),
+                    ->placeholder('No position assigned')
+                    ->description(fn ($record) => $this->getRecommendationForPosition($record->pivot->position ?? null)),
             ]),
             ColumnGroup::make('Evaluation Scores', [
                 TextColumn::make('self_score')
@@ -58,7 +70,7 @@ class StudentsRelationManager extends RelationManager
                     ->url(fn ($record) => $this->getEvaluationScore($record->id, 'peer') !== '-' 
                         ? $this->getAdminEvaluationUrl($record->id, 'peer') 
                         : null)
-                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'peer') !== '-' ? 'info' : 'gray'),
+                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'peer') !== '-' ? 'success' : 'gray'),
                 TextColumn::make('adviser_score')
                     ->label('Adviser')
                     ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'adviser'))
@@ -66,13 +78,15 @@ class StudentsRelationManager extends RelationManager
                     ->url(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' 
                         ? $this->getAdminEvaluationUrl($record->id, 'adviser') 
                         : null)
-                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' ? 'primary' : 'gray'),
+                    ->color(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' ? 'success' : 'gray'),
                 TextColumn::make('total_score')
                     ->label('Total')
+                    ->color('warning')
                     ->getStateUsing(fn ($record) => $this->getEvaluationRankValue($record->id, 'final_score'))
                     ->tooltip('Weighted total score'),
                 TextColumn::make('rank')
                     ->label('Rank')
+                    ->color('warning')
                     ->getStateUsing(fn ($record) => $this->getEvaluationRankValue($record->id, 'rank_display'))
                     ->tooltip('Final rank'),
             ]),
@@ -123,4 +137,21 @@ class StudentsRelationManager extends RelationManager
             'type' => $evaluatorType,
         ]);
     }
+
+    protected function getRecommendationForPosition(?string $positionTitle): ?string
+    {
+        if (!$positionTitle) {
+            return null;
+        }
+
+        $branch = Position::where('title', $positionTitle)->value('branch');
+
+        return match ($branch) {
+            'Executive' => 'Recommended: Executive (3.00-2.41)',
+            'Legislative' => 'Recommended: Legislative (2.40-1.81)',
+            'Judiciary', 'Mayoral' => 'Recommended: Judicial/Mayoral (1.80-1.21)',
+            default => null,
+        };
+    }
+
 }

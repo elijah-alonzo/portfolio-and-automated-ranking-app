@@ -39,7 +39,7 @@ class EvaluationResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return (string) static::getEloquentQuery()
-            ->where('status', false)
+            ->whereIn('status', ['closed', 'ongoing'])
             ->count();
     }
 

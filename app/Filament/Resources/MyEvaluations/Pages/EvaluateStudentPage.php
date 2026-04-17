@@ -28,6 +28,7 @@ class EvaluateStudentPage extends Page
     public ?int $lengthOfServiceYears = null;
     public ?int $lengthOfServiceScore = null;
     public ?string $lengthOfServiceAwardType = null;
+    public bool $isAssignedAdviser = false;
 
     public function mount(Evaluation $evaluation, User $user, string $type): void
     {
@@ -56,7 +57,11 @@ class EvaluateStudentPage extends Page
 
         $this->loadExistingEvaluation();
 
-        $this->isLocked = $this->existingForm !== null || auth()->user()->role === 'admin';
+        $this->isAssignedAdviser = auth()->id() === $this->evaluation->council_adviser_id;
+
+        $this->isLocked = ($this->existingForm && $this->existingForm->status === 'submitted')
+            || $this->evaluation->status === Evaluation::STATUS_COMPLETED
+            || (auth()->user()->role === 'admin' && !$this->isAssignedAdviser);
 
         if ($this->existingForm) {
             $this->data = $this->existingForm->answers ?? [];

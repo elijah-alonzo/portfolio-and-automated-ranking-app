@@ -7,9 +7,18 @@
             <p class="ef-evaluation-subheading">{{ $this->getSubheading() }}</p>
         </div>
         <div class="ef-evaluation-content">
-            @if($isLocked)
+            @if($isLocked && $existingForm && $existingForm->status === 'submitted')
                 <div class="ef-locked-message">
                     <strong>Evaluation Completed:</strong> This evaluation has already been submitted and cannot be edited.
+                </div>
+            @elseif($isLocked)
+                <div class="ef-locked-message">
+                    <strong>Read-only View:</strong> This evaluation is locked for editing in your role.
+                </div>
+            @endif
+            @if(!$isLocked && $existingForm && $existingForm->status === 'draft')
+                <div class="ef-locked-message">
+                    <strong>Draft Saved:</strong> You are editing a saved draft. Submit when ready.
                 </div>
             @endif
             <form method="POST" id="evaluation-form" action="{{ route('evaluation.submit', [$evaluation->id, $evaluatee->id, $evaluationType]) }}">
@@ -58,7 +67,7 @@
                                                                            name="answers[{{ $questionKey }}]"
                                                                            value="{{ $value }}"
                                                                            {{ isset($data[$questionKey]) && $data[$questionKey] == $value ? 'checked' : '' }}
-                                                                           {{ $isLocked ? 'disabled' : 'required' }}>
+                                                                           {{ $isLocked ? 'disabled' : '' }}>
                                                                     <span class="ef-rating-label">
                                                                         <span class="ef-rating-value">{{ $value }}</span>
                                                                         <span class="ef-rating-criteria">{{ $criteria }}</span>
@@ -80,7 +89,10 @@
         </div>
         <div class="ef-form-actions">
             @if(!$isLocked)
-                <button type="submit" form="evaluation-form" class="ef-btn ef-btn-primary" onclick="return confirm('Are you sure you want to submit this evaluation? You will not be able to edit it afterwards.');">
+                <button type="submit" form="evaluation-form" name="submission_action" value="draft" class="ef-btn ef-btn-info">
+                    Save Draft
+                </button>
+                <button type="submit" form="evaluation-form" name="submission_action" value="submitted" class="ef-btn ef-btn-primary" onclick="return confirm('Are you sure you want to submit this evaluation? You will not be able to edit it afterwards.');">
                     Submit Evaluation
                 </button>
             @endif

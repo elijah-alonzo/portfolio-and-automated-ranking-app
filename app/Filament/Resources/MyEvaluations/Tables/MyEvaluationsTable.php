@@ -4,7 +4,6 @@ namespace App\Filament\Resources\MyEvaluations\Tables;
 
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -46,13 +45,21 @@ class MyEvaluationsTable
                     ->label('Academic Year')
                     ->searchable(),
 
-                ToggleColumn::make('status')
-                    ->label('Submit Status')
-                    ->onColor('success')
-                    ->offColor('warning')
-                    ->onIcon('heroicon-o-check-circle')
-                    ->offIcon('heroicon-o-clock')
-                    ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state) => match ($state) {
+                        'closed' => 'Closed',
+                        'ongoing' => 'On going',
+                        'completed' => 'Completed',
+                        default => 'Unknown',
+                    })
+                    ->color(fn (?string $state) => match ($state) {
+                        'completed' => 'success',
+                        'ongoing' => 'info',
+                        'closed' => 'warning',
+                        default => 'gray',
+                    }),
 
                 TextColumn::make('created_at')
                     ->label('Created')
@@ -62,8 +69,9 @@ class MyEvaluationsTable
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
-                        true => 'Completed',
-                        false => 'Pending',
+                        'closed' => 'Closed',
+                        'ongoing' => 'On going',
+                        'completed' => 'Completed',
                     ])
                     ->placeholder('All Statuses'),
 

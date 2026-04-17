@@ -42,6 +42,7 @@ class EvaluationSubmissionController extends Controller
         }
 
         $answers = $request->input('answers', []);
+        $submissionAction = $request->input('submission_action', 'submitted');
 
         if ($evaluationType === 'adviser') {
             $evaluation->loadMissing('council.awardType');
@@ -49,14 +50,16 @@ class EvaluationSubmissionController extends Controller
             $answers[EvaluationForm::LENGTH_OF_SERVICE_KEY] = $serviceData['score'];
         }
 
-        $questions = EvaluationForm::getQuestionsForEvaluator($evaluationType);
-        foreach (array_keys($questions) as $questionKey) {
-            if (!isset($answers[$questionKey]) || $answers[$questionKey] === '') {
-                return back()->with('error', 'All evaluation questions must be answered before submitting.');
+        if ($submissionAction === 'submitted') {
+            $questions = EvaluationForm::getQuestionsForEvaluator($evaluationType);
+            foreach (array_keys($questions) as $questionKey) {
+                if (!isset($answers[$questionKey]) || $answers[$questionKey] === '') {
+                    return back()->with('error', 'All evaluation questions must be answered before submitting.');
+                }
             }
         }
 
-        // Save or update the evaluation form and mark as submitted
+        // Save or update the evaluation form and set status
         EvaluationForm::updateOrCreate(
             [
                 'evaluation_id' => $evaluation->id,
@@ -66,9 +69,13 @@ class EvaluationSubmissionController extends Controller
             ],
             [
                 'answers' => $answers,
-                'status' => 'submitted',
+                'status' => $submissionAction === 'draft' ? 'draft' : 'submitted',
             ]
         );
+
+        if ($submissionAction === 'draft') {
+            return back()->with('success', 'Draft saved successfully.');
+        }
 
         return redirect(\App\Filament\Resources\MyEvaluations\MyEvaluationResource::getUrl('view', ['record' => $evaluation->id]))
             ->with('success', ucfirst($evaluationType) . ' evaluation submitted successfully!');

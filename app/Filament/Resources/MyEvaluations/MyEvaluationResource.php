@@ -36,7 +36,9 @@ class MyEvaluationResource extends Resource
     
     public static function getNavigationBadge(): ?string
     {
-        return (string) static::getEloquentQuery()->count();
+        return (string) static::getEloquentQuery()
+            ->whereIn('status', ['closed', 'ongoing'])
+            ->count();
     }
 
     protected static ?int $navigationSort = 1;
@@ -170,7 +172,7 @@ class MyEvaluationResource extends Resource
               ->orWhereHas('users', function ($subQ) use ($user) {
                   $subQ->where('user_id', $user->id);
               });
-        })->where('status', false);
+        });
     }
 
     public static function canCreate(): bool

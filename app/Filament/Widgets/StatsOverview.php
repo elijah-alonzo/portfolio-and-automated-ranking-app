@@ -29,7 +29,7 @@ class StatsOverview extends StatsOverviewWidget
             ->sum(fn (EvaluationForm $form) => is_array($form->answers) ? count($form->answers) : 0);
 
         $pendingEvaluationsAsAdviser = Evaluation::query()
-            ->where('status', false)
+            ->whereIn('status', ['closed', 'ongoing'])
             ->where('council_adviser_id', $user->id)
             ->pluck('id');
 
@@ -42,35 +42,35 @@ class StatsOverview extends StatsOverviewWidget
         $pendingParticipatingEvaluationIds = DB::table('evaluation_user')
             ->join('evaluations', 'evaluation_user.evaluation_id', '=', 'evaluations.id')
             ->where('evaluation_user.user_id', $user->id)
-            ->where('evaluations.status', false)
+            ->whereIn('evaluations.status', ['closed', 'ongoing'])
             ->pluck('evaluation_user.evaluation_id');
 
         $pendingSelfAssignments = $pendingParticipatingEvaluationIds->count();
 
         $pendingPeerAssignments = EvaluationPeerEvaluator::query()
             ->where('evaluator_user_id', $user->id)
-            ->whereHas('evaluation', fn ($query) => $query->where('status', false))
+            ->whereHas('evaluation', fn ($query) => $query->whereIn('status', ['closed', 'ongoing']))
             ->count();
 
         $submittedPendingAdviserAssignments = EvaluationForm::query()
             ->where('evaluator_id', $user->id)
             ->where('evaluator_type', 'adviser')
             ->where('status', 'submitted')
-            ->whereHas('evaluation', fn ($query) => $query->where('status', false))
+            ->whereHas('evaluation', fn ($query) => $query->whereIn('status', ['closed', 'ongoing']))
             ->count();
 
         $submittedPendingSelfAssignments = EvaluationForm::query()
             ->where('evaluator_id', $user->id)
             ->where('evaluator_type', 'self')
             ->where('status', 'submitted')
-            ->whereHas('evaluation', fn ($query) => $query->where('status', false))
+            ->whereHas('evaluation', fn ($query) => $query->whereIn('status', ['closed', 'ongoing']))
             ->count();
 
         $submittedPendingPeerAssignments = EvaluationForm::query()
             ->where('evaluator_id', $user->id)
             ->where('evaluator_type', 'peer')
             ->where('status', 'submitted')
-            ->whereHas('evaluation', fn ($query) => $query->where('status', false))
+            ->whereHas('evaluation', fn ($query) => $query->whereIn('status', ['closed', 'ongoing']))
             ->count();
 
         $totalPendingAssignments = $pendingAdviserAssignments + $pendingSelfAssignments + $pendingPeerAssignments;

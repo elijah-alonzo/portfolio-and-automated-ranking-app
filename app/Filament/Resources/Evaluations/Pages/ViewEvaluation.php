@@ -14,7 +14,7 @@ class ViewEvaluation extends ViewRecord
     protected function getHeaderActions(): array
     {
         $record = $this->getRecord();
-        if ($record->status) {
+        if ($record->status === 'completed') {
             return [];
         }
         return [

@@ -18,7 +18,9 @@ class EvaluationStatsOverview extends StatsOverviewWidget
     protected function getStats(): array
     {
         $totalEvaluations = Evaluation::count();
-        $openEvaluations = Evaluation::query()->where('status', false)->count();
+        $openEvaluations = Evaluation::query()
+            ->whereIn('status', ['closed', 'ongoing'])
+            ->count();
 
         return [
             Stat::make('Total Evaluations', $totalEvaluations)
@@ -31,7 +33,7 @@ class EvaluationStatsOverview extends StatsOverviewWidget
                 ->icon('heroicon-o-clock')
                 ->color('primary')
                 ->chart([1, 2, 3, 4, 5, 6, 7])
-                ->description('On going evaluations')
+                ->description('Not completed evaluations')
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
         ];
     }

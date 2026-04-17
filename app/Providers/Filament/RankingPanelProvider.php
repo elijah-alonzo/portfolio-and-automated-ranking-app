@@ -52,6 +52,7 @@ class RankingPanelProvider extends PanelProvider
             ->breadcrumbs()
             ->navigationGroups([
                 'User Management',
+                'Department Management',
                 'Council Management',
                 'Award Management',
             ])
