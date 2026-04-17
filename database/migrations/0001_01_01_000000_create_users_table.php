@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('contact_number')->nullable();
             $table->string('email')->unique();
             $table->enum('role', ['admin', 'adviser', 'student'])->default('student');
+            $table->foreignId('department_id')->constrained('departments')->restrictOnDelete();
             $table->boolean('is_active')->default(true);
             $table->text('bio')->nullable();
             $table->timestamp('email_verified_at')->nullable();

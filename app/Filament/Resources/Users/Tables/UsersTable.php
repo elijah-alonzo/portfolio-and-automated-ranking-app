@@ -43,6 +43,11 @@ class UsersTable
                     ->placeholder('No contact')
                     ->copyable(),
 
+                TextColumn::make('department.name')
+                    ->label('Department')
+                    ->searchable()
+                    ->placeholder('Not set'),
+
                 IconColumn::make('role')
                     ->label('Role')
                     ->icon(fn (string $state): string => match ($state) {
@@ -81,6 +86,11 @@ class UsersTable
                         'adviser' => 'Adviser',
                         'student' => 'Student',
                     ]),
+                SelectFilter::make('department')
+                    ->label('Department')
+                    ->relationship('department', 'name')
+                    ->searchable()
+                    ->preload(),
                 TernaryFilter::make('is_active')
                     ->label('Active Status')
                     ->trueLabel('Active')

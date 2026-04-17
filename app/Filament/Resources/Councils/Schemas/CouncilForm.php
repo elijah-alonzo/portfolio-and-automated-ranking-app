@@ -59,6 +59,21 @@ class CouncilForm
                     ])
                     ->columns(2)
                     ->extraAttributes(['class' => 'mb-6']),
+
+                Section::make('Allowed Departments')
+                    ->description('Select which departments can be attached to this council.')
+                    ->columnSpanFull()
+                    ->schema([
+                        Select::make('departments')
+                            ->label('Departments')
+                            ->relationship('departments', 'name')
+                            ->multiple()
+                            ->required()
+                            ->preload()
+                            ->searchable()
+                            ->columnSpanFull(),
+                    ])
+                    ->extraAttributes(['class' => 'mb-6']),
             ]);
     }
 }
