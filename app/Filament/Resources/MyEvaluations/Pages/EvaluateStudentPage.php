@@ -57,11 +57,7 @@ class EvaluateStudentPage extends Page
 
         $this->loadExistingEvaluation();
 
-        $this->isAssignedAdviser = auth()->id() === $this->evaluation->council_adviser_id;
-
-        $this->isLocked = ($this->existingForm && $this->existingForm->status === 'submitted')
-            || $this->evaluation->status === Evaluation::STATUS_COMPLETED
-            || (auth()->user()->role === 'admin' && !$this->isAssignedAdviser);
+        $this->isLocked = (bool) ($this->existingForm?->status === 'submitted');
 
         if ($this->existingForm) {
             $this->data = $this->existingForm->answers ?? [];
@@ -78,10 +74,6 @@ class EvaluateStudentPage extends Page
     protected function validatePermissions(): void
     {
         $user = auth()->user();
-
-        if ($user->role === 'admin') {
-            return;
-        }
         
         switch ($this->evaluationType) {
             case 'adviser':
@@ -127,8 +119,13 @@ class EvaluateStudentPage extends Page
             'evaluator_type' => $this->evaluationType,
         ]);
 
-        if (auth()->user()->role !== 'admin') {
-            $query->where('evaluator_id', auth()->id());
+        if ($this->evaluationType === 'peer') {
+            $peerAssignmentId = EvaluationPeerEvaluator::where('evaluation_id', $this->evaluation->id)
+                ->where('evaluator_user_id', auth()->id())
+                ->where('evaluatee_user_id', $this->evaluatee->id)
+                ->value('id');
+
+            $query->where('evaluation_peer_evaluator_id', $peerAssignmentId);
         }
 
         $this->existingForm = $query->first();

@@ -6,6 +6,8 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use App\Models\User;
+use Filament\Notifications\Notification;
 
 class MyEvaluationsTable
 {
@@ -47,23 +49,32 @@ class MyEvaluationsTable
 
                 TextColumn::make('status')
                     ->label('Status')
-                    ->badge()
-                    ->formatStateUsing(fn (?string $state) => match ($state) {
-                        'closed' => 'Closed',
-                        'ongoing' => 'On going',
-                        'completed' => 'Completed',
-                        default => 'Unknown',
-                    })
-                    ->color(fn (?string $state) => match ($state) {
-                        'completed' => 'success',
-                        'ongoing' => 'info',
-                        'closed' => 'warning',
-                        default => 'gray',
-                    }),
+                    ->onColor('success')
+                    ->offColor('warning')
+                    ->onIcon('heroicon-o-check-circle')
+                    ->offIcon('heroicon-o-clock')
+                    ->disabled(fn ($record) => auth()->id() !== $record->council_adviser_id)
+                    ->afterStateUpdated(function ($record, $state): void {
+                        if (! $state) {
+                            return;
+                        }
 
-                TextColumn::make('created_at')
-                    ->label('Created')
-                    ->dateTime(),
+                        $admins = User::where('role', 'admin')
+                            ->whereKeyNot(auth()->id())
+                            ->get();
+
+                        if ($admins->isEmpty()) {
+                            return;
+                        }
+
+                        $councilName = $record->council?->name ?? 'Council';
+
+                        Notification::make()
+                            ->title('Evaluation Completed')
+                            ->body("{$councilName} ({$record->academic_year}) was marked as completed.")
+                            ->success()
+                            ->sendToDatabase($admins);
+                    }),
             ])
             ->filters([
                 SelectFilter::make('status')

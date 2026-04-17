@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Evaluation;
 use App\Models\EvaluationForm;
+use App\Models\EvaluationPeerEvaluator;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
@@ -31,7 +32,13 @@ class EvaluationSubmissionController extends Controller
                 }
                 break;
             case 'peer':
-                // Add peer permission logic if needed
+                if (!EvaluationPeerEvaluator::canEvaluateAsPeer(
+                    $evaluation->id,
+                    $authUser->id,
+                    $evaluatee->id
+                )) {
+                    abort(403, 'You are not authorized to evaluate this user as a peer.');
+                }
                 break;
             case 'self':
                 if ($evaluatee->id !== $authUser->id) {
@@ -40,6 +47,18 @@ class EvaluationSubmissionController extends Controller
                 break;
             default:
                 abort(404, 'Invalid evaluation type');
+        }
+
+        $peerAssignmentId = null;
+        if ($evaluationType === 'peer') {
+            $peerAssignmentId = EvaluationPeerEvaluator::where('evaluation_id', $evaluation->id)
+                ->where('evaluator_user_id', $authUser->id)
+                ->where('evaluatee_user_id', $evaluatee->id)
+                ->value('id');
+
+            if (!$peerAssignmentId) {
+                abort(403, 'Peer evaluation assignment not found.');
+            }
         }
 
         $answers = $request->input('answers', []);
@@ -60,30 +79,46 @@ class EvaluationSubmissionController extends Controller
             }
         }
 
-        // Save or update the evaluation form and set status
+        // Save or update the evaluation form and mark as submitted
+        $lookup = [
+            'evaluation_id' => $evaluation->id,
+            'user_id' => $evaluatee->id,
+            'evaluator_type' => $evaluationType,
+        ];
+
+        if ($evaluationType === 'peer') {
+            $lookup['evaluation_peer_evaluator_id'] = $peerAssignmentId;
+        }
+
         EvaluationForm::updateOrCreate(
+            $lookup,
             [
-                'evaluation_id' => $evaluation->id,
-                'user_id' => $evaluatee->id,
-                'evaluator_type' => $evaluationType,
-                'evaluator_id' => $authUser->id,
-            ],
-            [
+                'evaluation_peer_evaluator_id' => $peerAssignmentId,
                 'answers' => $answers,
                 'status' => $submissionAction === 'draft' ? 'draft' : 'submitted',
             ]
         );
 
-        if ($submissionAction === 'draft') {
-            return back()->with('success', 'Draft saved successfully.');
+        $admins = User::where('role', 'admin')
+            ->whereKeyNot($authUser->id)
+            ->get();
+
+        $adviser = $evaluation->adviser;
+        $recipients = $admins;
+
+        if ($adviser && $adviser->id !== $authUser->id) {
+            $recipients = $recipients->push($adviser);
         }
 
-        if ($evaluation->adviser) {
+        if ($recipients->isNotEmpty()) {
+            $councilName = $evaluation->council?->name ?? 'Council';
+            $evaluationLabel = ucfirst($evaluationType) . ' evaluation';
+
             Notification::make()
                 ->title('Evaluation Submitted')
-                ->body(($evaluatee->name ?? 'A student') . ' submitted a ' . $evaluationType . ' evaluation.')
+                ->body("{$authUser->name} submitted a {$evaluationLabel} for {$evaluatee->name} ({$councilName}, {$evaluation->academic_year}).")
                 ->success()
-                ->sendToDatabase($evaluation->adviser);
+                ->sendToDatabase($recipients);
         }
 
         return redirect(\App\Filament\Resources\MyEvaluations\MyEvaluationResource::getUrl('view', ['record' => $evaluation->id]))

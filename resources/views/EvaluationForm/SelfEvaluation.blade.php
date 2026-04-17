@@ -9,7 +9,13 @@
         <div class="ef-evaluation-content">
             @if($isLocked && $existingForm && $existingForm->status === 'submitted')
                 <div class="ef-locked-message">
-                    <strong>Evaluation Completed:</strong> This evaluation has already been submitted and cannot be edited.
+                    @if($existingForm?->status === 'submitted')
+                        <strong>Evaluation Completed:</strong> This evaluation has already been submitted and cannot be edited.
+                    @elseif(auth()->user()?->role === 'admin')
+                        <strong>Read-only View:</strong> Admins cannot submit evaluations from this page.
+                    @else
+                        <strong>Evaluation Locked:</strong> This evaluation is not editable right now.
+                    @endif
                 </div>
             @elseif($isLocked)
                 <div class="ef-locked-message">

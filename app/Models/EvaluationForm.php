@@ -16,7 +16,7 @@ class EvaluationForm extends Model
 		'evaluation_id',
 		'user_id',
 		'evaluator_type',
-		'evaluator_id',
+		'evaluation_peer_evaluator_id',
 		'answers',
 		'evaluator_score',
 		'status',
@@ -89,9 +89,9 @@ class EvaluationForm extends Model
 		return $this->belongsTo(User::class, 'user_id');
 	}
 
-	public function evaluator(): BelongsTo
+	public function evaluationPeerEvaluator(): BelongsTo
 	{
-		return $this->belongsTo(User::class, 'evaluator_id');
+		return $this->belongsTo(EvaluationPeerEvaluator::class, 'evaluation_peer_evaluator_id');
 	}
 
 	// ========================================

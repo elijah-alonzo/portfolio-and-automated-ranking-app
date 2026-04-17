@@ -51,6 +51,7 @@ class RankingPanelProvider extends PanelProvider
             ->topbar(false)
             ->brandLogoHeight('2.5rem')
             ->breadcrumbs()
+            ->databaseNotifications()
             ->navigationGroups([
                 'User Management',
                 'Department Management',

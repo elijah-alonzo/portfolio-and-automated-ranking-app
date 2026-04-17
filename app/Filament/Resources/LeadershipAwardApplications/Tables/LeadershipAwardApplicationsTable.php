@@ -11,7 +11,9 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 
 class LeadershipAwardApplicationsTable
 {
@@ -42,42 +44,33 @@ class LeadershipAwardApplicationsTable
                 ]),
                 TextColumn::make('awardType.name')
                     ->label('Award Type')
-                    ->searchable()
-                    ->badge(),
-                TextColumn::make('rank_support')
-                    ->label('Rank')
-                    ->getStateUsing(function (LeadershipAwardApplication $record) {
-                        $rank = EvaluationRank::query()
-                            ->where('user_id', $record->user_id)
-                            ->whereHas('evaluation.council', function ($query) use ($record) {
-                                $query->where('award_type_id', $record->award_type_id);
-                            })
-                            ->orderByDesc('evaluation_id')
-                            ->first();
-
-                        if (!$rank || !$rank->rank_display) {
-                            return 'N/A';
+                    ->searchable(),
+                SelectColumn::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'accepted' => 'Accepted',
+                        'rejected' => 'Rejected',
+                    ])
+                    ->selectablePlaceholder(false)
+                    ->afterStateUpdated(function (LeadershipAwardApplication $record, string $state): void {
+                        if (! in_array($state, ['accepted', 'rejected'], true)) {
+                            return;
                         }
 
-                        $score = $rank->final_score !== null
-                            ? number_format($rank->final_score, 2)
-                            : 'N/A';
+                        $student = $record->user;
 
-                        return $rank->rank_display . ' (' . $score . ')';
-                    })
-                    ->badge(),
-                IconColumn::make('status')
-                    ->label('Status')
-                    ->state(fn () => true)
-                    ->icon(fn (LeadershipAwardApplication $record) => match ($record->status) {
-                        'accepted' => 'heroicon-o-check-circle',
-                        'rejected' => 'heroicon-o-x-circle',
-                        default => 'heroicon-o-clock',
-                    })
-                    ->color(fn (LeadershipAwardApplication $record) => match ($record->status) {
-                        'accepted' => 'success',
-                        'rejected' => 'danger',
-                        default => 'warning',
+                        if (! $student) {
+                            return;
+                        }
+
+                        $awardName = $record->awardType?->name ?? 'leadership award';
+                        $statusLabel = $state === 'accepted' ? 'approved' : 'rejected';
+
+                        Notification::make()
+                            ->title('Award Application Update')
+                            ->body("Your {$awardName} application was {$statusLabel}.")
+                            ->info()
+                            ->sendToDatabase($student);
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()

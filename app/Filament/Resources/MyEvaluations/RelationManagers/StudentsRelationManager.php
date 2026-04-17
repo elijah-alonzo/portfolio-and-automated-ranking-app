@@ -137,21 +137,15 @@ class StudentsRelationManager extends RelationManager
 
                     return 'gray';
                 })
-                ->requiresConfirmation()
-                ->disabled(fn () => $this->isCompletedStage())
-                ->action(function () {
-                    $previousStatus = $this->ownerRecord->status;
+                ->after(function (AttachAction $action, array $data, $record) {
+                    Notification::make()
+                        ->title('Added to Evaluation')
+                        ->body("You were added to the {$this->ownerRecord->council->name} evaluation ({$this->ownerRecord->academic_year}).")
+                        ->info()
+                        ->sendToDatabase($record);
 
-                    if ($this->isClosedStage()) {
-                        $unassignedCount = $this->getUnassignedPeerEvaluatorCount();
-                        if ($unassignedCount > 0) {
-                            Notification::make()
-                                ->title('Peer Evaluators Required')
-                                ->body("{$unassignedCount} student(s) do not have a peer evaluator assigned.")
-                                ->warning()
-                                ->send();
-                            return;
-                        }
+                    if (isset($data['peer_evaluatee']) && !empty($data['peer_evaluatee'])) {
+                        $this->assignPeerEvaluatee($data['recordId'], $data['peer_evaluatee']);
                     }
 
                     if ($this->isOngoingStage() && $this->ownerRecord->areAllFormsSubmitted()) {
@@ -390,153 +384,72 @@ class StudentsRelationManager extends RelationManager
 
     protected function removeStudentFromSlot(EvaluationPositionSlot $slot, bool $silent = false): void
     {
-        $studentId = $slot->user_id;
-        if (!$studentId) {
-            return;
-        }
+        return [
+            Select::make('recordId')
+                ->label('Student')
+                ->options(function () {
+                    return User::where('role', 'student')
+                        ->whereNotIn('id', $this->ownerRecord->users->pluck('id'))
+                        ->pluck('name', 'id');
+                })
+                ->searchable()
+                ->required()
+                ->placeholder('Select a student')
+                ->prefixIcon('heroicon-m-user'),
+                
+            TextInput::make('position')
+                ->label('Position')
+                ->required()
+                ->maxLength(255)
+                ->placeholder('e.g., President, Secretary, Member')
+                ->prefixIcon('heroicon-m-identification'),
 
-        $slot->update(['user_id' => null]);
+            Select::make('peer_evaluatee')
+                ->label('Assign Students to Evaluate (Peer Evaluatees)')
+                ->options(function () {
+                    $assignedEvaluateeIds = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+                        ->pluck('evaluatee_user_id')
+                        ->toArray();
 
-        $remainingSlots = EvaluationPositionSlot::where('evaluation_id', $this->ownerRecord->id)
-            ->where('user_id', $studentId)
-            ->exists();
-
-        if (!$remainingSlots) {
-            $this->ownerRecord->users()->detach($studentId);
-        }
-
-        EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
-            ->where(function ($query) use ($studentId) {
-                $query->where('evaluatee_user_id', $studentId)
-                    ->orWhere('evaluator_user_id', $studentId);
-            })
-            ->delete();
-
-        if (!$silent) {
-            Notification::make()
-                ->title('Student Removed')
-                ->body('Student removed from the slot.')
-                ->info()
-                ->send();
-        }
+                    return $this->ownerRecord->users()
+                        ->whereNotIn('users.id', $assignedEvaluateeIds)
+                        ->pluck('name', 'users.id')
+                        ->toArray();
+                })
+                ->multiple()
+                ->searchable()
+                ->placeholder('Select students for this peer evaluator')
+                ->helperText('Only students without a peer evaluator are shown.'),
+        ];
     }
 
     protected function assignPeerEvaluator(int $evaluateeId, int $evaluatorId): void
     {
-        if ($evaluateeId === $evaluatorId) {
-            Notification::make()
-                ->title('Invalid Assignment')
-                ->body('A student cannot evaluate themselves.')
-                ->warning()
-                ->send();
-            return;
-        }
+        return [
+            TextInput::make('position')
+                ->label('Position')
+                ->required()
+                ->maxLength(255)
+                ->prefixIcon('heroicon-m-identification'),
 
-        EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
-            ->where('evaluatee_user_id', $evaluateeId)
-            ->delete();
+            Select::make('peer_evaluatee')
+                ->label('Assign Students to Evaluate (Peer Evaluatees)')
+                ->options(function ($record) {
+                    $assignedEvaluateeIds = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+                        ->pluck('evaluatee_user_id')
+                        ->toArray();
 
-        EvaluationPeerEvaluator::create([
-            'evaluation_id' => $this->ownerRecord->id,
-            'evaluatee_user_id' => $evaluateeId,
-            'evaluator_user_id' => $evaluatorId,
-            'assigned_by_user_id' => auth()->id(),
-            'assigned_at' => now(),
-        ]);
-
-        $evaluateeName = User::find($evaluateeId)?->name ?? 'Student';
-        $evaluatorName = User::find($evaluatorId)?->name ?? 'Student';
-
-        Notification::make()
-            ->title('Peer Evaluator Assigned')
-            ->body("{$evaluatorName} will evaluate {$evaluateeName}.")
-            ->success()
-            ->send();
-    }
-
-    protected function getEligibleStudentOptions(EvaluationPositionSlot $slot): array
-    {
-        $allowedDepartmentIds = $this->getAllowedDepartmentIds();
-        $assignedStudentIds = EvaluationPositionSlot::where('evaluation_id', $this->ownerRecord->id)
-            ->whereNotNull('user_id')
-            ->where('id', '!=', $slot->id)
-            ->pluck('user_id')
-            ->toArray();
-
-        return User::where('role', 'student')
-            ->when($allowedDepartmentIds, fn ($query) => $query->whereIn('department_id', $allowedDepartmentIds))
-            ->whereNotIn('id', $assignedStudentIds)
-            ->pluck('name', 'id')
-            ->toArray();
-    }
-
-    protected function getEligiblePeerEvaluatorOptions(int $evaluateeId): array
-    {
-        $studentIds = EvaluationPositionSlot::where('evaluation_id', $this->ownerRecord->id)
-            ->whereNotNull('user_id')
-            ->pluck('user_id')
-            ->unique()
-            ->toArray();
-
-        $studentIds = array_values(array_diff($studentIds, [$evaluateeId]));
-
-        return User::whereIn('id', $studentIds)->pluck('name', 'id')->toArray();
-    }
-
-    protected function isStudentAlreadyAssigned(int $studentId, ?int $ignoreSlotId = null): bool
-    {
-        return EvaluationPositionSlot::where('evaluation_id', $this->ownerRecord->id)
-            ->when($ignoreSlotId, fn ($query) => $query->where('id', '!=', $ignoreSlotId))
-            ->where('user_id', $studentId)
-            ->exists();
-    }
-
-    protected function getAllowedDepartmentIds(): array
-    {
-        $council = $this->ownerRecord->council;
-        if (!$council) {
-            return [];
-        }
-
-        return $council->departments()->pluck('departments.id')->toArray();
-    }
-
-    protected function getPositionSlotLabel(EvaluationPositionSlot $slot): string
-    {
-        return $slot->position?->title ?? 'Position';
-    }
-
-    protected function getRecommendationForPosition(?string $positionTitle): ?string
-    {
-        if (!$positionTitle) {
-            return null;
-        }
-
-        $branch = Position::where('title', $positionTitle)->value('branch');
-
-        return match ($branch) {
-            'Executive' => 'Recommended: Executive (3.00-2.41)',
-            'Legislative' => 'Recommended: Legislative (2.40-1.81)',
-            'Judiciary', 'Mayoral' => 'Recommended: Judicial/Mayoral (1.80-1.21)',
-            default => null,
-        };
-    }
-
-    protected function getPeerEvaluatorName(EvaluationPositionSlot $slot): string
-    {
-        if (!$slot->user_id) {
-            return 'Unassigned';
-        }
-
-        $evaluatorId = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
-            ->where('evaluatee_user_id', $slot->user_id)
-            ->value('evaluator_user_id');
-
-        if (!$evaluatorId) {
-            return 'Unassigned';
-        }
-
-        return User::where('id', $evaluatorId)->value('name') ?? 'Unassigned';
+                    return $this->ownerRecord->users()
+                        ->where('users.id', '!=', $record->id)
+                        ->whereNotIn('users.id', $assignedEvaluateeIds)
+                        ->pluck('name', 'users.id')
+                        ->toArray();
+                })
+                ->multiple()
+                ->searchable()
+                ->placeholder('Select students to evaluate')
+                ->helperText('Only students without a peer evaluator are shown.')
+        ];
     }
 
     protected function getStatusIcon(EvaluationPositionSlot $slot, string $type): string
@@ -594,63 +507,86 @@ class StudentsRelationManager extends RelationManager
         return count(array_diff($studentIds, $assignedEvaluateeIds));
     }
 
-    protected function isCouncilAdviser(): bool
+    protected function assignPeerEvaluatee(int $evaluatorUserId, array|int|null $evaluateeId): void
     {
-        $user = auth()->user();
-        if (!$user) {
-            return false;
-        }
+        try {
+            $evaluateeIds = array_filter((array) $evaluateeId);
 
-        if ($user->role === 'admin') {
-            return true;
-        }
+            if (empty($evaluateeIds)) {
+                Notification::make()
+                    ->title('Peer Evaluation Assignment Removed')
+                    ->body('No peer evaluation assignment was added.')
+                    ->info()
+                    ->send();
+                return;
+            }
 
-        return $this->ownerRecord->council_adviser_id === $user->id;
-    }
+            $assignedCount = 0;
+            $skippedSelf = false;
+            $skippedAssigned = [];
 
-    protected function isClosedStage(): bool
-    {
-        return $this->ownerRecord->status === Evaluation::STATUS_CLOSED;
-    }
+            foreach ($evaluateeIds as $evaluateeIdValue) {
+                if ($evaluateeIdValue === $evaluatorUserId) {
+                    $skippedSelf = true;
+                    continue;
+                }
 
-    protected function isOngoingStage(): bool
-    {
-        return $this->ownerRecord->status === Evaluation::STATUS_ONGOING;
-    }
+                $alreadyAssigned = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+                    ->where('evaluatee_user_id', $evaluateeIdValue)
+                    ->exists();
 
-    protected function isCompletedStage(): bool
-    {
-        return $this->ownerRecord->status === Evaluation::STATUS_COMPLETED;
-    }
+                if ($alreadyAssigned) {
+                    $skippedAssigned[] = $evaluateeIdValue;
+                    continue;
+                }
 
-    protected function notifyEvaluationStatusChange(string $previousStatus, string $currentStatus): void
-    {
-        if (!in_array($currentStatus, [Evaluation::STATUS_ONGOING, Evaluation::STATUS_COMPLETED], true)) {
-            return;
-        }
+                EvaluationPeerEvaluator::create([
+                    'evaluation_id' => $this->ownerRecord->id,
+                    'evaluatee_user_id' => $evaluateeIdValue,
+                    'evaluator_user_id' => $evaluatorUserId,
+                    'assigned_by_user_id' => auth()->id(),
+                    'assigned_at' => now(),
+                ]);
 
-        if ($previousStatus === $currentStatus) {
-            return;
-        }
+                $assignedCount++;
+            }
 
-        $title = $currentStatus === Evaluation::STATUS_ONGOING
-            ? 'Evaluation Opened'
-            : 'Evaluation Completed';
-        $body = $currentStatus === Evaluation::STATUS_ONGOING
-            ? 'An evaluation you are part of is now open.'
-            : 'An evaluation you are part of has been completed.';
+            if ($assignedCount > 0) {
+                $evaluatorName = User::find($evaluatorUserId)->name;
 
-        $users = $this->ownerRecord->users()->get();
-        $adviser = $this->ownerRecord->adviser;
+                $evaluator = User::find($evaluatorUserId);
+                if ($evaluator) {
+                    Notification::make()
+                        ->title('Peer Evaluations Assigned')
+                        ->body("You were assigned to evaluate {$assignedCount} student(s) in {$this->ownerRecord->council->name} ({$this->ownerRecord->academic_year}).")
+                        ->info()
+                        ->sendToDatabase($evaluator);
+                }
 
-        if ($adviser) {
-            $users->push($adviser);
-        }
+                Notification::make()
+                    ->title('Peer Evaluators Assigned Successfully')
+                    ->body("{$evaluatorName} assigned to evaluate {$assignedCount} student(s).")
+                    ->success()
+                    ->send();
+            }
 
-        $adminUsers = User::where('role', 'admin')->get();
-        $users = $users->merge($adminUsers)->unique('id');
+            if ($skippedSelf) {
+                Notification::make()
+                    ->title('Invalid Peer Assignment')
+                    ->body('A student cannot evaluate themselves as a peer.')
+                    ->warning()
+                    ->send();
+            }
 
-        foreach ($users as $user) {
+            if (!empty($skippedAssigned)) {
+                Notification::make()
+                    ->title('Peer Evaluators Skipped')
+                    ->body('Some students already have peer evaluators assigned and were skipped.')
+                    ->info()
+                    ->send();
+            }
+                
+        } catch (\Exception $e) {
             Notification::make()
                 ->title($title)
                 ->body($body)

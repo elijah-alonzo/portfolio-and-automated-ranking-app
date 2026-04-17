@@ -88,13 +88,16 @@ class ViewMyPortfolio extends Page
                         'status' => 'pending',
                     ]);
 
-                    $adminUsers = User::where('role', 'admin')->get();
-                    foreach ($adminUsers as $admin) {
+                    $admins = User::where('role', 'admin')->get();
+
+                    if ($admins->isNotEmpty()) {
+                        $awardTypeName = AwardType::find($data['award_type_id'])?->name ?? 'award';
+
                         Notification::make()
-                            ->title('New Award Application')
-                            ->body(auth()->user()->name . ' submitted a leadership award application.')
-                            ->success()
-                            ->sendToDatabase($admin);
+                            ->title('New Leadership Award Application')
+                            ->body(auth()->user()->name . " submitted an application for {$awardTypeName}.")
+                            ->info()
+                            ->sendToDatabase($admins);
                     }
 
                     Notification::make()
