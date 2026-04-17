@@ -21,6 +21,10 @@ class HelpResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
     protected static ?int $navigationSort = 3;
+    
+    protected static ?string $modelLabel = 'Help';           
+
+    protected static ?string $pluralModelLabel = 'Help';    
 
     public static function getNavigationLabel(): string
     {
@@ -50,7 +54,7 @@ class HelpResource extends Resource
     public static function getSubNavigation(Page $page): array
     {
         return [
-            NavigationItem::make('Overview')
+            NavigationItem::make('Introduction')
                 ->icon('heroicon-o-bookmark')
                 ->url(OverviewHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(OverviewHelp::getRouteName()))

@@ -15,9 +15,9 @@
                 This tab shows the evaluations for councils you advise and their current status. As an adviser, you can manage the evaluation cycle by setting the evaluation to one of the following states:
             </p>
             <ul class="help-list">
-                <li><span class="font-semibold">Closed:</span> Advisers can add students to their councils and assign peer evaluators to them.</li>
-                <li><span class="font-semibold">Open:</span> Student management is disabled and evaluation can be performed.</li>
-                <li><span class="font-semibold">Completed:</span> When all evaluation forms are submitted it can be marked as completed, making the record read only.</li>
+                <li><strong>Closed:</strong> Advisers can add students to their councils and assign peer evaluators to them.</li>
+                <li><strong>Open:</strong> Student management is disabled and evaluation can be performed.</li>
+                <li><strong>Completed:</strong> When all evaluation forms are submitted it can be marked as completed, making the record read only.</li>
             </ul>
             <figure class="help-figure">
                 <img
