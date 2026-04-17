@@ -8,7 +8,7 @@ class AdviserHelp extends HelpPage
 {
     protected static string $resource = HelpResource::class;
 
-    protected static ?string $title = 'Adviser\s Guide';
+    protected static ?string $title = 'Adviser\'s Guide';
 
     protected string $view = 'Help.Adviser';
 
