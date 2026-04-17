@@ -19,7 +19,7 @@ class LeadershipAwardApplicationResource extends Resource
 {
     protected static ?string $model = LeadershipAwardApplication::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelopeOpen;
 
     protected static ?string $navigationLabel = 'Award Applications';
 

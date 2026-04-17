@@ -20,6 +20,8 @@ class MyPortfolioResource extends Resource
 
     protected static ?string $navigationLabel = 'Portfolio';
 
+    protected static UnitEnum|string|null $navigationGroup = 'Portfolio Management';
+
     protected static ?int $navigationSort = 1;
 
     public static function canAccess(): bool

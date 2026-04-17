@@ -46,6 +46,7 @@ class RankingPanelProvider extends PanelProvider
                 ],
             ])
             ->darkMode(false)
+            ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->brandLogo(asset('sys-logo.png'))
             ->topbar(false)
@@ -53,6 +54,7 @@ class RankingPanelProvider extends PanelProvider
             ->breadcrumbs()
             ->navigationGroups([
                 'User Management',
+                'Portfolio Management',
                 'Department Management',
                 'Council Management',
                 'Award Management',

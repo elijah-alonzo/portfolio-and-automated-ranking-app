@@ -69,7 +69,8 @@ class UserForm
                             ])
                             ->default('student')
                             ->placeholder('Select role')
-                            ->columnSpan(1),
+                            ->columnSpan(1)
+                            ->visible(fn () => auth()->user()?->role === 'admin'),
 
                         Select::make('department_id')
                             ->label('Department')
@@ -78,7 +79,8 @@ class UserForm
                             ->required()
                             ->searchable()
                             ->preload()
-                            ->columnSpan(1),
+                            ->columnSpan(1)
+                            ->visible(fn () => auth()->user()?->role === 'admin'),
 
                         Toggle::make('is_active')
                             ->label('Is Active')
