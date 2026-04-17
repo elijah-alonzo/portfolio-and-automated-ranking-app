@@ -30,5 +30,6 @@
     - Feel free to edit migration files, we can just do I migrate:fresh --seed since this isnt in productions yet.
 
 ## Follow ups to the department and council revisions
+
     - First of all, you did well, thank you. A few minor revisions left. Please hide the actions in the department table, and please update the routing after creating or editing a record in the department where it should redirect back to the list view.
     - I forgot to ask you about the academic year field when creating an evalution. I can input text which is bad. Can you set it as a datepicker? Like the pasted image 2? Actually it doesnt have to be a date picker, it just need to be a consistent numeric only and it should only show the year range like 2022-2023. Its up to you.

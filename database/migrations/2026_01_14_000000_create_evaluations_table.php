@@ -16,6 +16,8 @@ return new class extends Migration
             $table->boolean('is_open')->default(false);
             $table->boolean('status')->default(false); // false = pending, true = completed
             $table->timestamps();
+
+            $table->unique(['council_id', 'academic_year']);
         });
     }
 
