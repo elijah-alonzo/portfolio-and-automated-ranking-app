@@ -58,6 +58,7 @@ class RankingPanelProvider extends PanelProvider
                 'Department Management',
                 'Council Management',
                 'Award Management',
+                'Help',
             ])
             ->collapsibleNavigationGroups()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
