@@ -16,22 +16,17 @@
             </ul>
         </div>
 
-        <div class="help-section">
-            <h2 class="help-section-title">Users Table</h2>
-            <p>
-                Displays all the users in the system along with their details such as name, email, role, and associated council. If the user is an <strong>Adviser</strong>, they can only manage user accounts with their assigned department.
-            </p>
             <figure class="help-figure">
                 <img
                     class="help-image"
                     src="{{ asset('assets/users/users-table.png') }}"
                     alt="Users table"
                 >
-            </figure>
-        </div>
+                <figcaption class="help-caption">Table displaying all users in the system.</figcaption>
+            </figure>        
 
         <div class="help-section">
-            <h2 class="help-section-title">Users Form</h2>
+            <h2 class="help-section-title">Creating a User </h2>
             <p>
                 Creating a user account requires filling out the user form. The <strong>Role</strong> field determines the user's permissions and access within the system. The <strong>Department</strong> field determines the councils a user can be associated with. And the <strong>Is Active</strong> field determines whether the user can log in to the system or not.
             </p>
@@ -41,6 +36,7 @@
                     src="{{ asset('assets/users/users-form.png') }}"
                     alt="Users form"
                 >
+                <figcaption class="help-caption">Form for creating or editing a user account.</figcaption>
             </figure>
         </div>
 
