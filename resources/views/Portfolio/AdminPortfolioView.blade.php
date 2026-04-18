@@ -7,11 +7,22 @@
             <!-- Image -->
             <div class="profile-image-container">
                 @php
-                    $imageUrl = $record->pfp 
-                        ? (str_starts_with($record->pfp, 'http') 
-                            ? $record->pfp 
-                            : asset('storage/' . $record->pfp))
-                        : 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=036635&background=E8F5E9&size=250';
+                    $fallbackUrl = 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=036635&background=E8F5E9&size=250';
+                    $pfpPath = $record->pfp ? str_replace('\\', '/', $record->pfp) : null;
+
+                    if (! $pfpPath) {
+                        $imageUrl = $fallbackUrl;
+                    } elseif (str_starts_with($pfpPath, 'http')) {
+                        $imageUrl = $pfpPath;
+                    } else {
+                        $relativePath = str_starts_with($pfpPath, 'storage/')
+                            ? substr($pfpPath, strlen('storage/'))
+                            : ltrim($pfpPath, '/');
+
+                        $imageUrl = \Illuminate\Support\Facades\Storage::disk('public')->exists($relativePath)
+                            ? \Illuminate\Support\Facades\Storage::disk('public')->url($relativePath)
+                            : asset('storage/' . $relativePath);
+                    }
                 @endphp
                 <img src="{{ $imageUrl }}" 
                      alt="{{ $record->name }}" 

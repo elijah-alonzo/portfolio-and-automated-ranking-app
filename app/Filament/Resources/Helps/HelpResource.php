@@ -10,6 +10,7 @@ use App\Filament\Resources\Helps\Pages\CouncilHelp;
 use App\Filament\Resources\Helps\Pages\DepartmentHelp;
 use App\Filament\Resources\Helps\Pages\MyEvaluationHelp;
 use App\Filament\Resources\Helps\Pages\OverviewHelp;
+use App\Filament\Resources\Helps\Pages\PortfolioHelp;
 use App\Filament\Resources\Helps\Pages\PositionHelp;
 use App\Filament\Resources\Helps\Pages\UserHelp;
 use App\Models\Help;
@@ -48,6 +49,7 @@ class HelpResource extends Resource
         return [
             'index' => OverviewHelp::route('/'),
             'my-evaluation' => MyEvaluationHelp::route('/my-evaluation'),
+            'portfolio' => PortfolioHelp::route('/portfolio'),
             'users' => UserHelp::route('/users'),
             'departments' => DepartmentHelp::route('/departments'),
             'councils' => CouncilHelp::route('/councils'),
@@ -74,47 +76,69 @@ class HelpResource extends Resource
                 ->icon('heroicon-o-clipboard-document-list')
                 ->url(MyEvaluationHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(MyEvaluationHelp::getRouteName()))
+                ->visible(fn (): bool => self::userHasRole(['student', 'adviser', 'admin']))
                 ->sort(2),
-            NavigationItem::make('Users')
+            NavigationItem::make('Portfolio')
+                ->icon('heroicon-o-briefcase')
+                ->url(PortfolioHelp::getUrl())
+                ->isActiveWhen(fn (): bool => request()->routeIs(PortfolioHelp::getRouteName()))
+                ->visible(fn (): bool => self::userHasRole(['student', 'admin']))
+                ->sort(3),
+            NavigationItem::make('User Management')
                 ->icon('heroicon-o-user-circle')
                 ->url(UserHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(UserHelp::getRouteName()))
-                ->sort(3),
+                ->visible(fn (): bool => self::userHasRole(['adviser', 'admin']))
+                ->sort(4),
             NavigationItem::make('Departments')
                 ->icon('heroicon-o-building-office-2')
                 ->url(DepartmentHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(DepartmentHelp::getRouteName()))
-                ->sort(4),
+                ->visible(fn (): bool => self::userHasRole(['admin']))
+                ->sort(5),
             NavigationItem::make('Available Councils')
                 ->icon('heroicon-o-user-group')
                 ->url(CouncilHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(CouncilHelp::getRouteName()))
-                ->sort(5),
+                ->visible(fn (): bool => self::userHasRole(['admin']))
+                ->sort(6),
             NavigationItem::make('Council Evaluation')
                 ->icon('heroicon-o-clipboard-document-check')
                 ->url(CouncilEvaluationHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(CouncilEvaluationHelp::getRouteName()))
-                ->sort(6),
+                ->visible(fn (): bool => self::userHasRole(['admin']))
+                ->sort(7),
             NavigationItem::make('Council Positions')
                 ->icon('heroicon-o-identification')
                 ->url(PositionHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(PositionHelp::getRouteName()))
-                ->sort(7),
+                ->visible(fn (): bool => self::userHasRole(['admin']))
+                ->sort(8),
             NavigationItem::make('Issue Certificates')
                 ->icon('heroicon-o-document-text')
                 ->url(CertificateHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(CertificateHelp::getRouteName()))
-                ->sort(8),
+                ->visible(fn (): bool => self::userHasRole(['adviser', 'admin']))
+                ->sort(9),
             NavigationItem::make('Award Types')
                 ->icon('heroicon-o-trophy')
                 ->url(AwardHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(AwardHelp::getRouteName()))
-                ->sort(9),
+                ->visible(fn (): bool => self::userHasRole(['admin']))
+                ->sort(10),
             NavigationItem::make('Award Applications')
                 ->icon('heroicon-o-envelope-open')
                 ->url(ApplicationHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(ApplicationHelp::getRouteName()))
-                ->sort(10),
+                ->visible(fn (): bool => self::userHasRole(['admin']))
+                ->sort(11),
         ];
+    }
+
+    protected static function userHasRole(array $roles): bool
+    {
+        $role = auth()->user()?->role;
+
+        return $role !== null && in_array($role, $roles, true);
     }
 }
