@@ -4,7 +4,7 @@
     ])
 
         <p>
-            <strong>Departments</strong> are used to organize users and councils within the system. Each department has a unique name and description.
+            <strong>Departments</strong> are used to organize users and councils within the system. Each department has a unique name and description. This feature can only be performed by users with the <strong>Admin</strong> role.
         </p>
 
             <figure class="help-figure">
