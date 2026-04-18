@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Auth;
 
+use Filament\Actions\Action;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\FileUpload;
@@ -13,6 +14,16 @@ use Filament\Schemas\Schema;
 
 class EditProfile extends BaseEditProfile
 {
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('backToDashboard')
+                ->label('Back to Dashboard')
+                ->color('gray')
+                ->url(Filament::getCurrentPanel()->getUrl()),
+        ];
+    }
+
     protected function getCurrentPasswordFormComponent(): Component
     {
         return TextInput::make('currentPassword')
@@ -42,7 +53,9 @@ class EditProfile extends BaseEditProfile
                         FileUpload::make('pfp')
                             ->label('Profile Picture')
                             ->image()
+                            ->disk('public')
                             ->directory('profile-pictures')
+                            ->visibility('public')
                             ->imageEditor()
                             ->maxSize(2048),
 
