@@ -6,9 +6,9 @@ use App\Filament\Resources\Helps\HelpResource;
 
 class UserHelp extends HelpPage
 {
-	protected static string $resource = HelpResource::class;
+    protected static string $resource = HelpResource::class;
 
-	protected static ?string $title = 'Users';
+    protected static ?string $title = 'Users';
 
-	protected string $view = 'Help.Users';
+    protected string $view = 'Help.Users';
 }

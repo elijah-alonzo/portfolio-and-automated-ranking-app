@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\Positions\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use App\Filament\Resources\Positions\PositionsResource;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -16,7 +14,7 @@ class PositionsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordUrl(fn ($record) => \App\Filament\Resources\Positions\PositionsResource::getUrl('edit', ['record' => $record]))
+            ->recordUrl(fn ($record) => PositionsResource::getUrl('edit', ['record' => $record]))
             ->columns([
                 TextColumn::make('title')
                     ->label('Position Title')
@@ -53,7 +51,7 @@ class PositionsTable
                             return '-';
                         }
 
-                        return $min === $max ? (string) $min : $min . '-' . $max;
+                        return $min === $max ? (string) $min : $min.'-'.$max;
                     })
                     ->badge()
                     ->color('warning'),

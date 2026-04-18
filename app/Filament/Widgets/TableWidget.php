@@ -2,9 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use App\Models\Evaluation;
-use Filament\Actions\Action;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -52,7 +50,7 @@ class TableWidget extends BaseTableWidget
                 ->circular()
                 ->getStateUsing(function ($record) {
                     return $record->users->map(function ($student) {
-                        return $student->pfp ?: 'https://ui-avatars.com/api/?name=' . urlencode($student->name) . '&color=7F9CF5&background=EBF4FF';
+                        return $student->pfp ?: 'https://ui-avatars.com/api/?name='.urlencode($student->name).'&color=7F9CF5&background=EBF4FF';
                     })->toArray();
                 })
                 ->tooltip(function ($record) {
@@ -62,7 +60,7 @@ class TableWidget extends BaseTableWidget
                         return 'No students assigned';
                     }
 
-                    return 'Students: ' . implode(', ', $studentNames);
+                    return 'Students: '.implode(', ', $studentNames);
                 });
         }
 

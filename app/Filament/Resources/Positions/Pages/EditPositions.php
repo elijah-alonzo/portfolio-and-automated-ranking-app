@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Positions\Pages;
 
 use App\Filament\Resources\Positions\PositionsResource;
 use App\Models\CouncilPosition;
-use App\Models\Position;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;

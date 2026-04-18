@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Positions\Schemas;
 
-use App\Models\Position;
 use App\Models\Council;
 use App\Models\CouncilPosition;
 use Filament\Forms\Components\Select;
@@ -27,7 +26,7 @@ class PositionsForm
                             ->default(fn ($record) => $record?->title)
                             ->required()
                             ->maxLength(255)
-                            ->rule(fn ($record) => 'unique:positions,title,' . ($record?->id ?? 'NULL') . ',id')
+                            ->rule(fn ($record) => 'unique:positions,title,'.($record?->id ?? 'NULL').',id')
                             ->columnSpan(1),
                         Select::make('council_ids')
                             ->label('Councils')

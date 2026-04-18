@@ -13,19 +13,29 @@ use Illuminate\Contracts\Support\Htmlable;
 class ViewEvaluationForm extends Page
 {
     protected static string $resource = EvaluationResource::class;
+
     protected static bool $shouldRegisterNavigation = false;
 
     protected string $view = 'EvaluationForm.AdviserEvaluation';
 
     public ?Evaluation $evaluation = null;
+
     public ?User $evaluatee = null;
+
     public string $evaluationType = '';
+
     public ?EvaluationForm $existingForm = null;
+
     public bool $isLocked = true;
+
     public array $data = [];
+
     public array $questions = [];
+
     public ?int $lengthOfServiceYears = null;
+
     public ?int $lengthOfServiceScore = null;
+
     public ?string $lengthOfServiceAwardType = null;
 
     public function mount(Evaluation $evaluation, User $user, string $type): void
@@ -36,18 +46,18 @@ class ViewEvaluationForm extends Page
 
         $this->evaluation->loadMissing('council.awardType');
 
-        $this->view = match($this->evaluationType) {
+        $this->view = match ($this->evaluationType) {
             'self' => 'EvaluationForm.SelfEvaluation',
             'peer' => 'EvaluationForm.PeerEvaluation',
             'adviser' => 'EvaluationForm.AdviserEvaluation',
             default => 'EvaluationForm.AdviserEvaluation'
         };
 
-        if (!$this->evaluation) {
+        if (! $this->evaluation) {
             abort(404, 'Evaluation not found');
         }
 
-        if (!$this->evaluatee) {
+        if (! $this->evaluatee) {
             abort(404, 'User not specified');
         }
 
@@ -95,7 +105,7 @@ class ViewEvaluationForm extends Page
         };
 
         $targetName = $this->evaluatee->name ?? 'Unknown';
-        
+
         return "{$evaluationTypeLabel} Evaluation for {$targetName}";
     }
 
@@ -103,7 +113,7 @@ class ViewEvaluationForm extends Page
     {
         $councilName = $this->evaluation->council->name ?? 'Council';
         $academicYear = $this->evaluation->academic_year ?? 'Unknown Year';
-        
+
         return "Council: {$councilName} | Academic Year: {$academicYear}";
     }
 

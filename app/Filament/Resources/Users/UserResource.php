@@ -30,6 +30,7 @@ class UserResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
+
         return $user && in_array($user->role, ['admin', 'adviser'], true);
     }
 

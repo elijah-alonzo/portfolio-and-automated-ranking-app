@@ -2,13 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Models\Department;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\Department;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -25,7 +26,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $departmentId = Department::query()->inRandomOrder()->value('id');
-        if (!$departmentId) {
+        if (! $departmentId) {
             $departmentId = Department::create([
                 'name' => 'General Department',
                 'description' => 'Default department for testing.',

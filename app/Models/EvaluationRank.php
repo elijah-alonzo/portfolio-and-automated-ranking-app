@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class EvaluationRank extends Model
 {
@@ -77,7 +78,7 @@ class EvaluationRank extends Model
         ]);
     }
 
-    protected static function calculateBreakdown(\Illuminate\Support\Collection $evaluationForms): array
+    protected static function calculateBreakdown(Collection $evaluationForms): array
     {
         $breakdown = [];
 
@@ -95,14 +96,14 @@ class EvaluationRank extends Model
         return $breakdown;
     }
 
-    protected static function isFinalized(\Illuminate\Support\Collection $evaluationForms): bool
+    protected static function isFinalized(Collection $evaluationForms): bool
     {
         return isset($evaluationForms['adviser']) && isset($evaluationForms['peer']) && isset($evaluationForms['self']);
     }
 
     protected static function computeFinalRanking(array $breakdown, bool $isFinalized): array
     {
-        if (!$isFinalized) {
+        if (! $isFinalized) {
             return [null, null, 'pending'];
         }
 

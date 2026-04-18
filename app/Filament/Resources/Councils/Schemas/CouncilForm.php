@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Councils\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
 
 class CouncilForm
@@ -49,13 +49,13 @@ class CouncilForm
                             ->inline(false)
                             ->helperText('Activate or deactivate this council')
                             ->columnSpan(1),
-                        
+
                         Textarea::make('description')
                             ->label('Description')
                             ->placeholder('Enter council description')
                             ->rows(3)
                             ->columnSpan(2),
-                            
+
                     ])
                     ->columns(2)
                     ->extraAttributes(['class' => 'mb-6']),

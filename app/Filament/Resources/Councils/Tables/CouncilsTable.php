@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Councils\Tables;
 
+use App\Filament\Resources\Councils\CouncilResource;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
@@ -12,7 +13,7 @@ class CouncilsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordUrl(fn ($record) => \App\Filament\Resources\Councils\CouncilResource::getUrl('edit', ['record' => $record]))
+            ->recordUrl(fn ($record) => CouncilResource::getUrl('edit', ['record' => $record]))
             ->columns([
                 TextColumn::make('name')
                     ->label('Council Name')
@@ -48,7 +49,7 @@ class CouncilsTable
 
                 TextColumn::make('created_at')
                     ->label('Registered')
-                    ->dateTime()
+                    ->dateTime(),
             ])
             ->emptyStateHeading('No councils yet')
             ->emptyStateDescription('Councils will appear here once they are created.')
@@ -57,7 +58,6 @@ class CouncilsTable
                     ->label('Active Status')
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),
-            ])
-            ;
+            ]);
     }
 }

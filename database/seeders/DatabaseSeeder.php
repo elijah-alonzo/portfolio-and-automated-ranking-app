@@ -125,7 +125,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($departmentCouncilMap as $code => $departmentName) {
-            if (!isset($councilModels[$code])) {
+            if (! isset($councilModels[$code])) {
                 continue;
             }
 

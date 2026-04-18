@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use App\Models\Evaluation;
 use App\Models\EvaluationForm;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 
 class EvaluationSubmissionController extends Controller
 {
@@ -20,7 +20,7 @@ class EvaluationSubmissionController extends Controller
 
         // Permission checks
         $authUser = Auth::user();
-        if (!$authUser) {
+        if (! $authUser) {
             abort(401, 'Authentication required.');
         }
 
@@ -54,7 +54,7 @@ class EvaluationSubmissionController extends Controller
         if ($submissionAction === 'submitted') {
             $questions = EvaluationForm::getQuestionsForEvaluator($evaluationType);
             foreach (array_keys($questions) as $questionKey) {
-                if (!isset($answers[$questionKey]) || $answers[$questionKey] === '') {
+                if (! isset($answers[$questionKey]) || $answers[$questionKey] === '') {
                     return back()->with('error', 'All evaluation questions must be answered before submitting.');
                 }
             }
@@ -81,12 +81,12 @@ class EvaluationSubmissionController extends Controller
         if ($evaluation->adviser) {
             Notification::make()
                 ->title('Evaluation Submitted')
-                ->body(($evaluatee->name ?? 'A student') . ' submitted a ' . $evaluationType . ' evaluation.')
+                ->body(($evaluatee->name ?? 'A student').' submitted a '.$evaluationType.' evaluation.')
                 ->success()
                 ->sendToDatabase($evaluation->adviser);
         }
 
-        return redirect(\App\Filament\Resources\MyEvaluations\MyEvaluationResource::getUrl('view', ['record' => $evaluation->id]))
-            ->with('success', ucfirst($evaluationType) . ' evaluation submitted successfully!');
+        return redirect(MyEvaluationResource::getUrl('view', ['record' => $evaluation->id]))
+            ->with('success', ucfirst($evaluationType).' evaluation submitted successfully!');
     }
 }

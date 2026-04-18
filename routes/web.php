@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EvaluationSubmissionController;
 use App\Http\Controllers\EvaluationExportController;
+use App\Http\Controllers\EvaluationSubmissionController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('/ranking/login');

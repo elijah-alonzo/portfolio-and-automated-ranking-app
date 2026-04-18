@@ -7,7 +7,6 @@ use App\Filament\Resources\Evaluations\Pages\EditEvaluation;
 use App\Filament\Resources\Evaluations\Pages\ListEvaluations;
 use App\Filament\Resources\Evaluations\Pages\ViewEvaluation;
 use App\Filament\Resources\Evaluations\Pages\ViewEvaluationForm;
-use App\Filament\Resources\Evaluations\RelationManagers;
 use App\Filament\Resources\Evaluations\Schemas\EvaluationForm;
 use App\Filament\Resources\Evaluations\Tables\EvaluationsTable;
 use App\Models\Evaluation;
@@ -29,6 +28,7 @@ class EvaluationResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
+
         return $user && $user->role === 'admin';
     }
 
@@ -48,6 +48,7 @@ class EvaluationResource extends Resource
     public static function shouldRegisterNavigation(): bool
     {
         $user = auth()->user();
+
         return $user && $user->role === 'admin';
     }
 

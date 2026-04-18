@@ -22,13 +22,13 @@ class AwardTypesTable
                     ->limit(50)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
+
                         return strlen($state) > 50 ? $state : null;
                     }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->label('Created'),
             ])
-            ->filters([])
-            ;
+            ->filters([]);
     }
 }

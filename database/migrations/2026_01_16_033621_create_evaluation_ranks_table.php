@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('rank', ['gold', 'silver', 'bronze', 'none'])->nullable();
             $table->enum('status', ['pending', 'finalized'])->default('pending');
             $table->timestamps();
-            
+
             $table->unique(['evaluation_id', 'user_id']);
             $table->index(['evaluation_id', 'council_id']);
         });

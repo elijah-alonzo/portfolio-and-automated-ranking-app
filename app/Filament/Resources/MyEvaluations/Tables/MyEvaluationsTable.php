@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\MyEvaluations\Tables;
 
+use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
+use App\Models\Evaluation;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -12,7 +14,7 @@ class MyEvaluationsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordUrl(fn ($record) => \App\Filament\Resources\MyEvaluations\MyEvaluationResource::getUrl('view', ['record' => $record]))
+            ->recordUrl(fn ($record) => MyEvaluationResource::getUrl('view', ['record' => $record]))
             ->columns([
                 TextColumn::make('council.name')
                     ->label('Council')
@@ -30,7 +32,7 @@ class MyEvaluationsTable
                     ->circular()
                     ->getStateUsing(function ($record) {
                         return $record->users->map(function ($user) {
-                            return $user->pfp ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&color=7F9CF5&background=EBF4FF';
+                            return $user->pfp ?: 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&color=7F9CF5&background=EBF4FF';
                         })->toArray();
                     })
                     ->tooltip(function ($record) {
@@ -38,7 +40,8 @@ class MyEvaluationsTable
                         if (empty($userNames)) {
                             return 'No students assigned';
                         }
-                        return 'Students: ' . implode(', ', $userNames);
+
+                        return 'Students: '.implode(', ', $userNames);
                     }),
 
                 TextColumn::make('academic_year')
@@ -78,7 +81,7 @@ class MyEvaluationsTable
                 SelectFilter::make('academic_year')
                     ->label('Academic Year')
                     ->options(function () {
-                        return \App\Models\Evaluation::distinct()
+                        return Evaluation::distinct()
                             ->pluck('academic_year', 'academic_year')
                             ->sort()
                             ->toArray();

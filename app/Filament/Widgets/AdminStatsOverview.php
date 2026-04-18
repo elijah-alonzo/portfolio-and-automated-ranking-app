@@ -2,6 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\Councils\Pages\ListCouncils;
+use App\Filament\Resources\Evaluations\Pages\ListEvaluations;
+use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\Council;
 use App\Models\Evaluation;
 use App\Models\User;
@@ -28,7 +31,7 @@ class AdminStatsOverview extends StatsOverviewWidget
                 ->chart([1, 2, 3, 4, 5, 6, 7])
                 ->description('The total number of users registered in the system')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->url(\App\Filament\Resources\Users\Pages\ListUsers::getUrl()),
+                ->url(ListUsers::getUrl()),
 
             Stat::make('Councils', Council::count())
                 ->icon('heroicon-o-building-library')
@@ -36,7 +39,7 @@ class AdminStatsOverview extends StatsOverviewWidget
                 ->chart([1, 2, 3, 4, 5, 6, 7])
                 ->description('Active councils who can be involved in evaluations')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->url(\App\Filament\Resources\Councils\Pages\ListCouncils::getUrl()),
+                ->url(ListCouncils::getUrl()),
 
             Stat::make('Evaluations', Evaluation::count())
                 ->icon('heroicon-o-clipboard-document-list')
@@ -44,7 +47,7 @@ class AdminStatsOverview extends StatsOverviewWidget
                 ->chart([1, 2, 3, 4, 5, 6, 7])
                 ->description('The number of evaluation instances created')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->url(\App\Filament\Resources\Evaluations\Pages\ListEvaluations::getUrl()),
+                ->url(ListEvaluations::getUrl()),
         ];
     }
 }

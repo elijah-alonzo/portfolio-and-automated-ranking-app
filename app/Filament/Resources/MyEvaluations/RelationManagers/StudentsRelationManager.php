@@ -10,6 +10,7 @@ use App\Models\Position;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\ColumnGroup;
@@ -22,7 +23,9 @@ use Illuminate\Database\Eloquent\Builder;
 class StudentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'positionSlots';
+
     protected static ?string $recordTitleAttribute = 'id';
+
     protected static ?string $title = 'Students';
 
     public function table(Table $table): Table
@@ -51,8 +54,8 @@ class StudentsRelationManager extends RelationManager
                         return $record->user?->pfp
                             ? (str_starts_with($record->user->pfp, 'http')
                                 ? $record->user->pfp
-                                : asset('storage/' . $record->user->pfp))
-                            : 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
+                                : asset('storage/'.$record->user->pfp))
+                            : 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
                     }),
                 TextColumn::make('user.name')
                     ->label('Student')
@@ -105,7 +108,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getHeaderActions(): array
     {
-        if (!$this->isCouncilAdviser()) {
+        if (! $this->isCouncilAdviser()) {
             return [];
         }
 
@@ -150,6 +153,7 @@ class StudentsRelationManager extends RelationManager
                                 ->body("{$unassignedCount} student(s) do not have a peer evaluator assigned.")
                                 ->warning()
                                 ->send();
+
                             return;
                         }
                     }
@@ -198,7 +202,7 @@ class StudentsRelationManager extends RelationManager
                 ->modalDescription('Select a student to fill this position slot.')
                 ->modalWidth('md')
                 ->form(fn (EvaluationPositionSlot $record) => [
-                    \Filament\Forms\Components\Select::make('student_id')
+                    Select::make('student_id')
                         ->label('Student')
                         ->options($this->getEligibleStudentOptions($record))
                         ->searchable()
@@ -220,7 +224,7 @@ class StudentsRelationManager extends RelationManager
                 ->modalWidth('md')
                 ->visible(fn (EvaluationPositionSlot $record) => (bool) $record->user_id)
                 ->form(fn (EvaluationPositionSlot $record) => [
-                    \Filament\Forms\Components\Select::make('evaluator_id')
+                    Select::make('evaluator_id')
                         ->label('Peer Evaluator')
                         ->options($this->getEligiblePeerEvaluatorOptions($record->user_id))
                         ->searchable()
@@ -245,12 +249,12 @@ class StudentsRelationManager extends RelationManager
         $actions[] = Action::make('evaluate')
             ->label(function (EvaluationPositionSlot $record) {
                 $user = auth()->user();
-                if (!$user || !$record->user_id) {
+                if (! $user || ! $record->user_id) {
                     return 'Evaluate';
                 }
 
                 $type = $this->resolveEvaluationTypeForUser($record, $user);
-                if (!$type) {
+                if (! $type) {
                     return 'Evaluate';
                 }
 
@@ -264,7 +268,7 @@ class StudentsRelationManager extends RelationManager
             ->visible(fn (EvaluationPositionSlot $record) => $this->isOngoingStage() && (bool) $record->user_id)
             ->url(function (EvaluationPositionSlot $record) {
                 $user = auth()->user();
-                if (!$user || !$record->user_id) {
+                if (! $user || ! $record->user_id) {
                     return null;
                 }
 
@@ -294,11 +298,11 @@ class StudentsRelationManager extends RelationManager
             })
             ->disabled(function (EvaluationPositionSlot $record) {
                 $user = auth()->user();
-                if (!$user || !$record->user_id) {
+                if (! $user || ! $record->user_id) {
                     return true;
                 }
 
-                if (!$this->isOngoingStage()) {
+                if (! $this->isOngoingStage()) {
                     return true;
                 }
 
@@ -316,7 +320,7 @@ class StudentsRelationManager extends RelationManager
                         ->where('evaluatee_user_id', $record->user_id)
                         ->exists();
 
-                    return !$isPeerEvaluator;
+                    return ! $isPeerEvaluator;
                 }
 
                 return true;
@@ -338,6 +342,7 @@ class StudentsRelationManager extends RelationManager
                 ->body('You cannot update assignments after completion.')
                 ->warning()
                 ->send();
+
             return;
         }
 
@@ -347,6 +352,7 @@ class StudentsRelationManager extends RelationManager
                 ->body('This student is already assigned to another position slot.')
                 ->warning()
                 ->send();
+
             return;
         }
 
@@ -376,7 +382,7 @@ class StudentsRelationManager extends RelationManager
         if ($adviser) {
             Notification::make()
                 ->title('Student Assigned')
-                ->body(($student?->name ?? 'A student') . ' was added to your evaluation.')
+                ->body(($student?->name ?? 'A student').' was added to your evaluation.')
                 ->success()
                 ->sendToDatabase($adviser);
         }
@@ -391,7 +397,7 @@ class StudentsRelationManager extends RelationManager
     protected function removeStudentFromSlot(EvaluationPositionSlot $slot, bool $silent = false): void
     {
         $studentId = $slot->user_id;
-        if (!$studentId) {
+        if (! $studentId) {
             return;
         }
 
@@ -401,7 +407,7 @@ class StudentsRelationManager extends RelationManager
             ->where('user_id', $studentId)
             ->exists();
 
-        if (!$remainingSlots) {
+        if (! $remainingSlots) {
             $this->ownerRecord->users()->detach($studentId);
         }
 
@@ -412,7 +418,7 @@ class StudentsRelationManager extends RelationManager
             })
             ->delete();
 
-        if (!$silent) {
+        if (! $silent) {
             Notification::make()
                 ->title('Student Removed')
                 ->body('Student removed from the slot.')
@@ -429,6 +435,7 @@ class StudentsRelationManager extends RelationManager
                 ->body('A student cannot evaluate themselves.')
                 ->warning()
                 ->send();
+
             return;
         }
 
@@ -494,7 +501,7 @@ class StudentsRelationManager extends RelationManager
     protected function getAllowedDepartmentIds(): array
     {
         $council = $this->ownerRecord->council;
-        if (!$council) {
+        if (! $council) {
             return [];
         }
 
@@ -508,7 +515,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getRecommendationForPosition(?string $positionTitle): ?string
     {
-        if (!$positionTitle) {
+        if (! $positionTitle) {
             return null;
         }
 
@@ -524,7 +531,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getPeerEvaluatorName(EvaluationPositionSlot $slot): string
     {
-        if (!$slot->user_id) {
+        if (! $slot->user_id) {
             return 'Unassigned';
         }
 
@@ -532,7 +539,7 @@ class StudentsRelationManager extends RelationManager
             ->where('evaluatee_user_id', $slot->user_id)
             ->value('evaluator_user_id');
 
-        if (!$evaluatorId) {
+        if (! $evaluatorId) {
             return 'Unassigned';
         }
 
@@ -541,7 +548,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getStatusIcon(EvaluationPositionSlot $slot, string $type): string
     {
-        if (!$slot->user_id) {
+        if (! $slot->user_id) {
             return 'heroicon-o-minus';
         }
 
@@ -554,7 +561,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getStatusColor(EvaluationPositionSlot $slot, string $type): string
     {
-        if (!$slot->user_id) {
+        if (! $slot->user_id) {
             return 'gray';
         }
 
@@ -571,6 +578,7 @@ class StudentsRelationManager extends RelationManager
             ->where('user_id', $userId)
             ->where('evaluator_type', $evaluatorType)
             ->value('status');
+
         return $status ?? 'pending';
     }
 
@@ -597,7 +605,7 @@ class StudentsRelationManager extends RelationManager
     protected function isCouncilAdviser(): bool
     {
         $user = auth()->user();
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -625,7 +633,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function notifyEvaluationStatusChange(string $previousStatus, string $currentStatus): void
     {
-        if (!in_array($currentStatus, [Evaluation::STATUS_ONGOING, Evaluation::STATUS_COMPLETED], true)) {
+        if (! in_array($currentStatus, [Evaluation::STATUS_ONGOING, Evaluation::STATUS_COMPLETED], true)) {
             return;
         }
 

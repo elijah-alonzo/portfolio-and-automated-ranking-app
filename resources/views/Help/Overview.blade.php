@@ -4,67 +4,46 @@
     ])
 
         <p>
-            This system manages student leadership records, evaluations, and recognition in one centralized platform.
-            It helps advisers and administrators track performance and maintain a transparent ranking process.
+            This system was developed to provide a digital portfolio for Paulinian student leaders that automatically grows as they contribute more to the Paulinian community. It also enables administrators and advisers to manage and automate the evaluation and ranking of Paulinian student leaders through a built-in decision support system.
         </p>
-
-        <div class="help-section">
-            <h2 class="help-section-title">Purpose</h2>
-            <ul class="help-list">
-                <li>Centralize student leadership portfolios across councils and positions.</li>
-                <li>Standardize evaluation and ranking workflows.</li>
-                <li>Support issuance and tracking of certificates and awards.</li>
-            </ul>
-        </div>
-
-        <div class="help-section">
-            <h2 class="help-section-title">Help Topics</h2>
-            <ul class="help-list">
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\MyEvaluationHelp::getUrl() }}">My Evaluation</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\UserHelp::getUrl() }}">Users</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\DepartmentHelp::getUrl() }}">Departments</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\CouncilHelp::getUrl() }}">Councils</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\CouncilEvaluationHelp::getUrl() }}">Council Evaluation</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\PositionHelp::getUrl() }}">Positions</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\CertificateHelp::getUrl() }}">Certificates</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\AwardHelp::getUrl() }}">Awards</a></li>
-                <li><a href="{{ \App\Filament\Resources\Helps\Pages\ApplicationHelp::getUrl() }}">Applications</a></li>
-            </ul>
-        </div>
-
-        <div class="help-section">
-            <h2 class="help-section-title">Key Features</h2>
-            <ul class="help-list">
-                <li>Portfolio tracking for students and officers.</li>
-                <li>Structured evaluation cycles for advisers and admins.</li>
-                <li>Automated records for recognition and certificates.</li>
-            </ul>
-        </div>
 
         <div class="help-section">
             <h2 class="help-section-title">User Roles</h2>
             <ul class="help-list">
-                <li><strong>Students:</strong> View evaluations and update portfolios.</li>
-                <li><strong>Advisers:</strong> Evaluate assigned students and validate records.</li>
-                <li><strong>Administrators:</strong> Manage councils, evaluations, and certifications.</li>
+                <li><strong>Students</strong> participate in the evaluation process of the councils they are a participating in.</li>
+                <li><strong>Advisers</strong> create student accounts and manage students and evaluations for their councils.</li>
+                <li><strong>Admins</strong> have full access to manage all aspects of the system, including councils, students, evaluations, and certifications.</li>
             </ul>
         </div>
 
         <div class="help-section">
-            <h2 class="help-section-title">Ranking Process</h2>
+            <h2 class="help-section-title">Dashboard</h2>
             <p>
-                Rankings are built from multiple criteria to ensure a balanced assessment of performance.
+                Each user is provided with a dashboard that provides an overview of their activities and provides a quick access to information.
             </p>
-            <ul class="help-list">
-                <li><strong>Self evaluation:</strong> Students complete their own assessment.</li>
-                <li><strong>Adviser evaluation:</strong> Advisers provide formal ratings and comments.</li>
-                <li><strong>Admin evaluation:</strong> Administrators review and finalize scoring where required.</li>
-                <li><strong>Length of service:</strong> Service duration is calculated automatically based on council assignments.</li>
-            </ul>
+            <figure class="help-figure">
+                <img
+                    class="help-image"
+                    src="{{ asset('assets/dashboard.png') }}"
+                    alt="Dashboard overview"
+                >
+                <figcaption class="help-caption">Main dashboard view of the system.</figcaption>
+            </figure>
+        </div>
+
+        <div class="help-section">
+            <h2 class="help-section-title">Profile Management</h2>
             <p>
-                Award applications also factor into rank determination by capturing additional achievements and
-                leadership contributions tied to specific award criteria.
+                Users can also manage their information such as personal details and passwords by clicking on their username at the bottom left corner and selecting <strong>Profile</strong>.
             </p>
+            <figure class="help-figure">
+                <img
+                    class="help-image"
+                    src="{{ asset('assets/profile.png') }}"
+                    alt="Profile management"
+                >
+                <figcaption class="help-caption">Once clicked, the user is redirected to a page where they can edit their profile information.</figcaption>
+            </figure>
         </div>
 
         <div class="help-section">

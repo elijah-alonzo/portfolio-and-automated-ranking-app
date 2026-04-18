@@ -19,18 +19,19 @@ class CreateCertificate extends CreateRecord
         if (auth()->user()?->role === 'student') {
             $data['user_id'] = auth()->id();
             $this->issuedUserIds = [$data['user_id']];
+
             return $data;
         }
 
         $userIds = $data['user_ids'] ?? [];
-        if (!is_array($userIds)) {
+        if (! is_array($userIds)) {
             $userIds = [$userIds];
         }
 
         $userIds = array_values(array_filter($userIds));
         $this->issuedUserIds = $userIds;
 
-        if (!empty($userIds)) {
+        if (! empty($userIds)) {
             $data['user_id'] = $userIds[0];
         }
 
@@ -42,7 +43,7 @@ class CreateCertificate extends CreateRecord
     protected function afterCreate(): void
     {
         $record = $this->record;
-        if (!$record) {
+        if (! $record) {
             return;
         }
 
@@ -62,7 +63,7 @@ class CreateCertificate extends CreateRecord
             if ($student) {
                 Notification::make()
                     ->title('Certificate Issued')
-                    ->body('You have been issued a certificate: ' . $record->certification_name)
+                    ->body('You have been issued a certificate: '.$record->certification_name)
                     ->success()
                     ->sendToDatabase($student);
             }

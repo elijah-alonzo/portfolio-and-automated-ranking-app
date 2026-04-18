@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Evaluations\Tables;
 
+use App\Filament\Resources\Evaluations\EvaluationResource;
+use App\Models\Evaluation;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -12,12 +14,13 @@ class EvaluationsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordUrl(fn ($record) => \App\Filament\Resources\Evaluations\EvaluationResource::getUrl('view', ['record' => $record]))
+            ->recordUrl(fn ($record) => EvaluationResource::getUrl('view', ['record' => $record]))
             ->modifyQueryUsing(function ($query) {
                 $user = auth()->user();
                 if ($user && $user->role === 'adviser') {
                     $query->where('council_adviser_id', $user->id);
                 }
+
                 return $query;
             })
             ->columns([
@@ -37,7 +40,7 @@ class EvaluationsTable
                     ->circular()
                     ->getStateUsing(function ($record) {
                         return $record->users->map(function ($user) {
-                            return $user->pfp ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&color=7F9CF5&background=EBF4FF';
+                            return $user->pfp ?: 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&color=7F9CF5&background=EBF4FF';
                         })->toArray();
                     })
                     ->tooltip(function ($record) {
@@ -45,7 +48,8 @@ class EvaluationsTable
                         if (empty($userNames)) {
                             return 'No students assigned';
                         }
-                        return 'Students: ' . implode(', ', $userNames);
+
+                        return 'Students: '.implode(', ', $userNames);
                     }),
 
                 TextColumn::make('academic_year')
@@ -81,7 +85,7 @@ class EvaluationsTable
                 SelectFilter::make('academic_year')
                     ->label('Academic Year')
                     ->options(function () {
-                        return \App\Models\Evaluation::distinct()
+                        return Evaluation::distinct()
                             ->pluck('academic_year', 'academic_year')
                             ->sort()
                             ->toArray();
@@ -96,13 +100,12 @@ class EvaluationsTable
                     ->searchable()
                     ->preload(),
 
-                \Filament\Tables\Filters\SelectFilter::make('adviser')
+                SelectFilter::make('adviser')
                     ->label('Adviser')
                     ->relationship('adviser', 'name')
                     ->placeholder('All Advisers')
                     ->searchable()
                     ->preload(),
-            ])
-            ;
+            ]);
     }
 }

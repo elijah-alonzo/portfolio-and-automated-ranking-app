@@ -53,7 +53,7 @@ class EvaluationForm
     {
         $options = [];
         for ($year = 2022; $year <= 2032; $year++) {
-            $label = $year . '-' . ($year + 1);
+            $label = $year.'-'.($year + 1);
             $options[$label] = $label;
         }
 

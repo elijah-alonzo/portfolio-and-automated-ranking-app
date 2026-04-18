@@ -5,35 +5,33 @@ namespace App\Filament\Resources\MyEvaluations;
 use App\Filament\Resources\MyEvaluations\Pages\EvaluateStudentPage;
 use App\Filament\Resources\MyEvaluations\Pages\ListMyEvaluations;
 use App\Filament\Resources\MyEvaluations\Pages\ViewMyEvaluation;
-use App\Filament\Resources\MyEvaluations\RelationManagers;
 use App\Filament\Resources\MyEvaluations\Tables\MyEvaluationsTable;
 use App\Models\Evaluation;
 use App\Models\EvaluationPeerEvaluator;
 use BackedEnum;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\RepeatableEntry;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class MyEvaluationResource extends Resource
 {
     protected static ?string $model = Evaluation::class;
 
     protected static ?string $navigationLabel = 'My Evaluations';
-    
+
     protected static ?string $modelLabel = 'My Evaluation';
-    
+
     protected static ?string $pluralModelLabel = 'My Evaluations';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
-    
+
     public static function getNavigationBadge(): ?string
     {
         return (string) static::getEloquentQuery()
@@ -84,7 +82,9 @@ class MyEvaluationResource extends Resource
 
                                 return $peerEvaluators->map(function ($assignments, $evaluatorId) use ($record) {
                                     $evaluator = $assignments->first()->evaluatorUser;
-                                    if (!$evaluator) return null;
+                                    if (! $evaluator) {
+                                        return null;
+                                    }
 
                                     $position = $record->users()
                                         ->where('user_id', $evaluatorId)
@@ -104,13 +104,11 @@ class MyEvaluationResource extends Resource
                                 TextEntry::make('name')
                                     ->label('Name')
                                     ->weight('semibold')
-                                    ->formatStateUsing(fn ($state, $record) =>
-                                        isset($record['no_evaluators']) ?
+                                    ->formatStateUsing(fn ($state, $record) => isset($record['no_evaluators']) ?
                                         'No peer evaluators assigned yet' :
                                         $state
                                     )
-                                    ->color(fn ($record) =>
-                                        isset($record['no_evaluators']) ? 'gray' : 'primary'
+                                    ->color(fn ($record) => isset($record['no_evaluators']) ? 'gray' : 'primary'
                                     )
                                     ->columnSpanFull()
                                     ->visible(fn ($record) => isset($record['no_evaluators'])),
@@ -121,9 +119,8 @@ class MyEvaluationResource extends Resource
                                             ->hiddenLabel()
                                             ->circular()
                                             ->size(40)
-                                            ->defaultImageUrl(fn ($state, $record) =>
-                                                'https://ui-avatars.com/api/?name=' .
-                                                urlencode($record['name'] ?? 'Unknown') .
+                                            ->defaultImageUrl(fn ($state, $record) => 'https://ui-avatars.com/api/?name='.
+                                                urlencode($record['name'] ?? 'Unknown').
                                                 '&color=7F9CF5&background=EBF4FF'
                                             ),
 
@@ -142,7 +139,7 @@ class MyEvaluationResource extends Resource
                                             ->weight('medium')
                                             ->icon('heroicon-m-users'),
                                     ])
-                                    ->visible(fn ($record) => !isset($record['no_evaluators'])),
+                                    ->visible(fn ($record) => ! isset($record['no_evaluators'])),
                             ])
                             ->contained(false)
                             ->grid(1),
@@ -162,16 +159,16 @@ class MyEvaluationResource extends Resource
         $query = parent::getEloquentQuery()->with(['adviser', 'council']);
 
         $user = auth()->user();
-        
-        if (!$user) {
-            return $query->whereRaw('1 = 0'); 
+
+        if (! $user) {
+            return $query->whereRaw('1 = 0');
         }
 
         return $query->where(function ($q) use ($user) {
             $q->where('council_adviser_id', $user->id)
-              ->orWhereHas('users', function ($subQ) use ($user) {
-                  $subQ->where('user_id', $user->id);
-              });
+                ->orWhereHas('users', function ($subQ) use ($user) {
+                    $subQ->where('user_id', $user->id);
+                });
         });
     }
 
@@ -183,8 +180,8 @@ class MyEvaluationResource extends Resource
     public static function canEdit($record): bool
     {
         $user = auth()->user();
-        
-        if (!$user) {
+
+        if (! $user) {
             return false;
         }
 

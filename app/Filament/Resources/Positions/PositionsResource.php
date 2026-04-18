@@ -35,6 +35,7 @@ class PositionsResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
+
         return $user && $user->role === 'admin';
     }
 

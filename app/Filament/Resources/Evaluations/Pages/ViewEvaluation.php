@@ -17,9 +17,10 @@ class ViewEvaluation extends ViewRecord
         if ($record->status === 'completed') {
             return [];
         }
+
         return [
             EditAction::make()
-                ->label('Edit Evaluation')
+                ->label('Edit Evaluation'),
         ];
     }
 

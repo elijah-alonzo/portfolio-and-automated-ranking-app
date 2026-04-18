@@ -26,10 +26,10 @@ class HelpResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedQuestionMarkCircle;
 
     protected static ?int $navigationSort = 3;
-    
-    protected static ?string $modelLabel = 'Help';           
 
-    protected static ?string $pluralModelLabel = 'Help';    
+    protected static ?string $modelLabel = 'Help';
+
+    protected static ?string $pluralModelLabel = 'Help';
 
     public static function getNavigationLabel(): string
     {
