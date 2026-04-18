@@ -4,9 +4,9 @@
     ])
 
         <p>
-            <strong>Councils</strong> are the student councils that serve the Paulinian community. Every year, councils undergo changes in their composition, with new members joining and others leaving. 
+            <strong>Councils</strong> are student organizations that serve the Paulinian community. 
+            Only users with the <strong>Admin</strong> role can create councils and manage their details.
         </p>
-
             <figure class="help-figure">
                 <img
                     class="help-image"
