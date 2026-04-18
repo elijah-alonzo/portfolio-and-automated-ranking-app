@@ -17,7 +17,7 @@
             </figure>
 
         <div class="help-section">
-            <h2 class="help-section-title">Viewing CouncilEvaluation Details</h2>
+            <h2 class="help-section-title">Viewing Council Evaluation Details</h2>
             <p>
                 Only users with the <strong>Admin</strong> role can monitor the progress of each evaluation and view the results of each evaluation, including the scores for each evaluation criterion, the total evaluation score, the <strong>Rank</strong> aswell as the reccomendation for evaluation scores.
             </p>
