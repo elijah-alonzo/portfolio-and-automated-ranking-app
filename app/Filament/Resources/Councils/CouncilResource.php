@@ -20,7 +20,7 @@ class CouncilResource extends Resource
 {
     protected static ?string $model = Council::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingLibrary;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     public static function canAccess(): bool
     {
