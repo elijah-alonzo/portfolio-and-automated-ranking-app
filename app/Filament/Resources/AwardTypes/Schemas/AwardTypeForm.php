@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources\AwardTypes\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class AwardTypeForm
 {
@@ -25,7 +24,7 @@ class AwardTypeForm
                         Textarea::make('description')
                             ->maxLength(65535)
                             ->columnSpanFull(),
-                    ])
+                    ]),
             ]);
     }
 }

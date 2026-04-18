@@ -8,26 +8,38 @@ use App\Models\EvaluationForm;
 use App\Models\EvaluationPeerEvaluator;
 use App\Models\User;
 use Filament\Actions\Action;
+use Filament\Panel;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
 class EvaluateStudentPage extends Page
 {
     protected static string $resource = MyEvaluationResource::class;
+
     protected static bool $shouldRegisterNavigation = false;
 
     protected string $view = 'EvaluationForm.AdviserEvaluation';
 
     public ?Evaluation $evaluation = null;
+
     public ?User $evaluatee = null;
+
     public string $evaluationType = '';
+
     public ?EvaluationForm $existingForm = null;
+
     public bool $isLocked = false;
+
     public array $data = [];
+
     public array $questions = [];
+
     public ?int $lengthOfServiceYears = null;
+
     public ?int $lengthOfServiceScore = null;
+
     public ?string $lengthOfServiceAwardType = null;
+
     public bool $isAssignedAdviser = false;
 
     public function mount(Evaluation $evaluation, User $user, string $type): void
@@ -38,11 +50,11 @@ class EvaluateStudentPage extends Page
 
         $this->evaluation->loadMissing('council.awardType');
 
-        if (!$this->evaluation) {
+        if (! $this->evaluation) {
             abort(404, 'Evaluation not found');
         }
 
-        if (!$this->evaluatee) {
+        if (! $this->evaluatee) {
             abort(404, 'User not specified');
         }
 
@@ -61,7 +73,7 @@ class EvaluateStudentPage extends Page
 
         $this->isLocked = ($this->existingForm && $this->existingForm->status === 'submitted')
             || $this->evaluation->status === Evaluation::STATUS_COMPLETED
-            || (auth()->user()->role === 'admin' && !$this->isAssignedAdviser);
+            || (auth()->user()->role === 'admin' && ! $this->isAssignedAdviser);
 
         if ($this->existingForm) {
             $this->data = $this->existingForm->answers ?? [];
@@ -82,38 +94,38 @@ class EvaluateStudentPage extends Page
         if ($user->role === 'admin') {
             return;
         }
-        
+
         switch ($this->evaluationType) {
             case 'adviser':
                 if ($this->evaluation->council_adviser_id !== $user->id) {
                     abort(403, 'You are not authorized to evaluate as an adviser.');
                 }
                 break;
-                
+
             case 'peer':
-                if (!EvaluationPeerEvaluator::canEvaluateAsPeer(
-                    $this->evaluation->id, 
-                    $user->id, 
+                if (! EvaluationPeerEvaluator::canEvaluateAsPeer(
+                    $this->evaluation->id,
+                    $user->id,
                     $this->evaluatee->id
                 )) {
                     abort(403, 'You are not authorized to evaluate this user as a peer.');
                 }
                 break;
-                
+
             case 'self':
                 if ($this->evaluatee->id !== $user->id) {
                     abort(403, 'You can only perform self-evaluation on your own record.');
                 }
-                
+
                 $isParticipating = $this->evaluation->users()
                     ->where('user_id', $user->id)
                     ->exists();
-                    
-                if (!$isParticipating) {
+
+                if (! $isParticipating) {
                     abort(403, 'You are not participating in this evaluation.');
                 }
                 break;
-                
+
             default:
                 abort(404, 'Invalid evaluation type');
         }
@@ -144,7 +156,7 @@ class EvaluateStudentPage extends Page
         };
 
         $targetName = $this->evaluatee->name ?? 'Unknown';
-        
+
         return "{$evaluationTypeLabel} Evaluation for {$targetName}";
     }
 
@@ -152,7 +164,7 @@ class EvaluateStudentPage extends Page
     {
         $councilName = $this->evaluation->council->name ?? 'Council';
         $academicYear = $this->evaluation->academic_year ?? 'Unknown Year';
-        
+
         return "Council: {$councilName} | Academic Year: {$academicYear}";
     }
 
@@ -166,7 +178,7 @@ class EvaluateStudentPage extends Page
         ];
     }
 
-    public static function getRouteName(?\Filament\Panel $panel = null): string
+    public static function getRouteName(?Panel $panel = null): string
     {
         return 'evaluate-student';
     }

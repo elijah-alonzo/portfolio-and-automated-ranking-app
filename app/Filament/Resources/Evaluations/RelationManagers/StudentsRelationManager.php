@@ -3,17 +3,21 @@
 namespace App\Filament\Resources\Evaluations\RelationManagers;
 
 use App\Filament\Resources\Evaluations\EvaluationResource;
+use App\Models\EvaluationForm;
+use App\Models\EvaluationRank;
 use App\Models\Position;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ColumnGroup;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class StudentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
+
     protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $title = 'Students';
 
     public function table(Table $table): Table
@@ -41,8 +45,8 @@ class StudentsRelationManager extends RelationManager
                         return $record->pfp
                             ? (str_starts_with($record->pfp, 'http')
                                 ? $record->pfp
-                                : asset('storage/' . $record->pfp))
-                            : 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
+                                : asset('storage/'.$record->pfp))
+                            : 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
                     }),
                 TextColumn::make('name')
                     ->label('Student')
@@ -59,24 +63,24 @@ class StudentsRelationManager extends RelationManager
                     ->label('Self')
                     ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'self'))
                     ->tooltip('Click to view self evaluation')
-                    ->url(fn ($record) => $this->getEvaluationScore($record->id, 'self') !== '-' 
-                        ? $this->getAdminEvaluationUrl($record->id, 'self') 
+                    ->url(fn ($record) => $this->getEvaluationScore($record->id, 'self') !== '-'
+                        ? $this->getAdminEvaluationUrl($record->id, 'self')
                         : null)
                     ->color(fn ($record) => $this->getEvaluationScore($record->id, 'self') !== '-' ? 'success' : 'gray'),
                 TextColumn::make('peer_score')
                     ->label('Peer')
                     ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'peer'))
                     ->tooltip('Click to view peer evaluation')
-                    ->url(fn ($record) => $this->getEvaluationScore($record->id, 'peer') !== '-' 
-                        ? $this->getAdminEvaluationUrl($record->id, 'peer') 
+                    ->url(fn ($record) => $this->getEvaluationScore($record->id, 'peer') !== '-'
+                        ? $this->getAdminEvaluationUrl($record->id, 'peer')
                         : null)
                     ->color(fn ($record) => $this->getEvaluationScore($record->id, 'peer') !== '-' ? 'success' : 'gray'),
                 TextColumn::make('adviser_score')
                     ->label('Adviser')
                     ->getStateUsing(fn ($record) => $this->getEvaluationScore($record->id, 'adviser'))
                     ->tooltip('Click to view adviser evaluation')
-                    ->url(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' 
-                        ? $this->getAdminEvaluationUrl($record->id, 'adviser') 
+                    ->url(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-'
+                        ? $this->getAdminEvaluationUrl($record->id, 'adviser')
                         : null)
                     ->color(fn ($record) => $this->getEvaluationScore($record->id, 'adviser') !== '-' ? 'success' : 'gray'),
                 TextColumn::make('total_score')
@@ -95,10 +99,10 @@ class StudentsRelationManager extends RelationManager
 
     protected function getEvaluationRankValue(int $userId, string $field): string
     {
-        $rank = \App\Models\EvaluationRank::where('evaluation_id', $this->ownerRecord->id)
+        $rank = EvaluationRank::where('evaluation_id', $this->ownerRecord->id)
             ->where('user_id', $userId)
             ->first();
-        if (!$rank) {
+        if (! $rank) {
             return '-';
         }
         if ($field === 'final_score') {
@@ -107,6 +111,7 @@ class StudentsRelationManager extends RelationManager
         if ($field === 'rank_display') {
             return $rank->rank_display;
         }
+
         return $rank->$field ?? '-';
     }
 
@@ -122,10 +127,11 @@ class StudentsRelationManager extends RelationManager
 
     protected function getEvaluationScore(int $userId, string $evaluatorType): string
     {
-        $score = \App\Models\EvaluationForm::where('evaluation_id', $this->ownerRecord->id)
+        $score = EvaluationForm::where('evaluation_id', $this->ownerRecord->id)
             ->where('user_id', $userId)
             ->where('evaluator_type', $evaluatorType)
             ->value('evaluator_score');
+
         return $score !== null ? number_format($score, 2) : '-';
     }
 
@@ -140,7 +146,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getRecommendationForPosition(?string $positionTitle): ?string
     {
-        if (!$positionTitle) {
+        if (! $positionTitle) {
             return null;
         }
 
@@ -153,5 +159,4 @@ class StudentsRelationManager extends RelationManager
             default => null,
         };
     }
-
 }

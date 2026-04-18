@@ -14,15 +14,15 @@ class EvaluationExportController extends Controller
     public function export(Request $request, Evaluation $evaluation, User $user, string $type, string $format)
     {
         $authUser = $request->user();
-        if (!$authUser || $authUser->role !== 'admin') {
+        if (! $authUser || $authUser->role !== 'admin') {
             abort(403, 'Admin access required');
         }
 
-        if (!in_array($type, ['self', 'peer', 'adviser'], true)) {
+        if (! in_array($type, ['self', 'peer', 'adviser'], true)) {
             abort(404, 'Invalid evaluation type');
         }
 
-        if (!in_array($format, ['csv', 'pdf'], true)) {
+        if (! in_array($format, ['csv', 'pdf'], true)) {
             abort(404, 'Invalid export format');
         }
 
@@ -66,7 +66,7 @@ class EvaluationExportController extends Controller
     {
         $parts = [];
         foreach ($criteria as $score => $text) {
-            $parts[] = $score . ' - ' . $text;
+            $parts[] = $score.' - '.$text;
         }
 
         return implode(' | ', $parts);

@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
+use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\CouncilPosition;
-use App\Models\EvaluationPositionSlot;
-use App\Models\EvaluationForm;
 
 class Evaluation extends Model
 {
@@ -27,7 +25,9 @@ class Evaluation extends Model
     ];
 
     public const STATUS_CLOSED = 'closed';
+
     public const STATUS_ONGOING = 'ongoing';
+
     public const STATUS_COMPLETED = 'completed';
 
     public function council(): BelongsTo
@@ -68,7 +68,7 @@ class Evaluation extends Model
      */
     public function getEvaluationUrl(int $userId, string $evaluatorType): string
     {
-        return \App\Filament\Resources\MyEvaluations\MyEvaluationResource::getUrl(
+        return MyEvaluationResource::getUrl(
             'evaluate-student',
             [
                 'evaluation' => $this->id,
@@ -120,7 +120,7 @@ class Evaluation extends Model
 
         foreach ($assignedUserIds as $userId) {
             $types = $submittedForms->get($userId)?->pluck('evaluator_type')->unique()->toArray() ?? [];
-            if (!in_array('self', $types, true) || !in_array('peer', $types, true) || !in_array('adviser', $types, true)) {
+            if (! in_array('self', $types, true) || ! in_array('peer', $types, true) || ! in_array('adviser', $types, true)) {
                 return false;
             }
         }

@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
@@ -49,7 +50,7 @@ class UserForm
                             ->unique(ignoreRecord: true)
                             ->placeholder('Enter email address')
                             ->columnSpan(1),
-                        
+
                         TextInput::make('contact_number')
                             ->label('Contact Number')
                             ->prefixIcon('heroicon-o-phone')
@@ -88,7 +89,7 @@ class UserForm
                             ->helperText('Activate or deactivate this user')
                             ->default(true)
                             ->columnSpan(1),
-                        
+
                         Textarea::make('bio')
                             ->label('Description')
                             ->placeholder('Please enter user\'s description or biography')
@@ -102,7 +103,7 @@ class UserForm
                     ->description('Set up password for the user account')
                     ->columnSpanFull()
                     ->schema([
-                        \Filament\Schemas\Components\Grid::make(2)
+                        Grid::make(2)
                             ->schema([
                                 TextInput::make('password')
                                     ->label('Password')

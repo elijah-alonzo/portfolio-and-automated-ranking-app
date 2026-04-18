@@ -70,7 +70,7 @@ class CertificateForm
                             ->placeholder('Enter certification name'),
 
                         DatePicker::make('date_issued')
-                            ->columnSpan(1)                       
+                            ->columnSpan(1)
                             ->label('Date Issued')
                             ->prefixIcon('heroicon-o-calendar-days')
                             ->native(false)

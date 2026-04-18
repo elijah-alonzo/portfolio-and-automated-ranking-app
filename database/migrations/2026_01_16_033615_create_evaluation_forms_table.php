@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('evaluator_score', 5, 3)->nullable();
             $table->enum('status', ['pending', 'draft', 'submitted'])->default('pending');
             $table->timestamps();
-            
+
             $table->unique(['evaluation_id', 'user_id', 'evaluator_type']);
             $table->index(['evaluation_id', 'user_id']);
         });

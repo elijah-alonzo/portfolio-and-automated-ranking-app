@@ -1,6 +1,9 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\Filament\RankingPanelProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\Filament\RankingPanelProvider::class,
+    AppServiceProvider::class,
+    RankingPanelProvider::class,
 ];

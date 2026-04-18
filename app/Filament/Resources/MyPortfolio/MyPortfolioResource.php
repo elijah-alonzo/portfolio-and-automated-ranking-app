@@ -4,13 +4,12 @@ namespace App\Filament\Resources\MyPortfolio;
 
 use App\Filament\Resources\MyPortfolio\Pages\ViewMyPortfolio;
 use App\Models\User;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use UnitEnum;
-use BackedEnum;
-
 
 class MyPortfolioResource extends Resource
 {
@@ -27,6 +26,7 @@ class MyPortfolioResource extends Resource
     public static function canAccess(): bool
     {
         $user = Auth::user();
+
         return $user && $user->role === 'student';
     }
 

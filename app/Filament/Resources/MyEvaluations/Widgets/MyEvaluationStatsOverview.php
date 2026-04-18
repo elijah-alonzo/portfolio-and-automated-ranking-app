@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Evaluations\Widgets;
+namespace App\Filament\Resources\MyEvaluations\Widgets;
 
-use App\Models\Evaluation;
+use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
-class EvaluationStatsOverview extends StatsOverviewWidget
+class MyEvaluationStatsOverview extends StatsOverviewWidget
 {
     protected int|string|array $columnSpan = 2;
 
@@ -17,23 +17,25 @@ class EvaluationStatsOverview extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $totalEvaluations = Evaluation::count();
-        $openEvaluations = Evaluation::query()
+        $baseQuery = MyEvaluationResource::getEloquentQuery();
+
+        $totalEvaluations = (clone $baseQuery)->count();
+        $openEvaluations = (clone $baseQuery)
             ->whereIn('status', ['closed', 'ongoing'])
             ->count();
 
         return [
-            Stat::make('Total Evaluations', $totalEvaluations)
+            Stat::make('My Evaluations', $totalEvaluations)
                 ->icon('heroicon-o-clipboard-document-list')
                 ->color('primary')
                 ->chart([1, 2, 3, 4, 5, 6, 7])
-                ->description('All evaluations in the system')
+                ->description('Evaluations assigned to you')
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
-            Stat::make('Open Evaluations', $openEvaluations)
+            Stat::make('My Open Evaluations', $openEvaluations)
                 ->icon('heroicon-o-clock')
                 ->color('primary')
                 ->chart([1, 2, 3, 4, 5, 6, 7])
-                ->description('Not completed evaluations')
+                ->description('Your evaluations not yet completed')
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
         ];
     }

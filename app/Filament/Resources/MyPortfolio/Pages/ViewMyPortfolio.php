@@ -2,30 +2,30 @@
 
 namespace App\Filament\Resources\MyPortfolio\Pages;
 
+use App\Filament\Resources\Certificates\CertificateResource;
 use App\Filament\Resources\MyPortfolio\MyPortfolioResource;
-use App\Models\User;
 use App\Models\AwardType;
 use App\Models\LeadershipAwardApplication;
+use App\Models\User;
 use Filament\Actions\Action;
-use Filament\Facades\Filament;
-use Filament\Resources\Pages\Page;
-use Illuminate\Contracts\Support\Htmlable;
 use Filament\Forms;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\Page;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ViewMyPortfolio extends Page
 {
     protected static string $resource = MyPortfolioResource::class;
 
     protected static ?string $title = 'My Portfolio';
-    
+
     protected string $view = 'Portfolio.PortfolioView';
 
     public ?User $record = null;
 
     public function getHeading(): string|Htmlable
     {
-        return 'Welcome, ' . auth()->user()->name;
+        return 'Welcome, '.auth()->user()->name;
     }
 
     public function getSubheading(): string|Htmlable|null
@@ -36,10 +36,10 @@ class ViewMyPortfolio extends Page
     public function mount(): void
     {
         $this->record = auth()->user()->fresh()->load([
-            'participatingEvaluations.council.awardType', 
-            'participatingEvaluations.adviser', 
+            'participatingEvaluations.council.awardType',
+            'participatingEvaluations.adviser',
             'certificates',
-            'evaluationRanks'
+            'evaluationRanks',
         ]);
     }
 
@@ -49,7 +49,7 @@ class ViewMyPortfolio extends Page
             Action::make('apply_for_leadership_award')
                 ->label('Apply for Award')
                 ->color('primary')
-                ->visible(fn() => auth()->user()->role === 'student')
+                ->visible(fn () => auth()->user()->role === 'student')
                 ->modalHeading('Apply for Leadership Award')
                 ->modalDescription('Select the award type you are applying for, then confirm your graduation status.')
                 ->modalIcon('heroicon-o-academic-cap')
@@ -79,6 +79,7 @@ class ViewMyPortfolio extends Page
                             ->body('You already have a pending or accepted application for this award type.')
                             ->warning()
                             ->send();
+
                         return;
                     }
 
@@ -92,7 +93,7 @@ class ViewMyPortfolio extends Page
                     foreach ($adminUsers as $admin) {
                         Notification::make()
                             ->title('New Award Application')
-                            ->body(auth()->user()->name . ' submitted a leadership award application.')
+                            ->body(auth()->user()->name.' submitted a leadership award application.')
                             ->success()
                             ->sendToDatabase($admin);
                     }
@@ -106,7 +107,7 @@ class ViewMyPortfolio extends Page
             Action::make('view_certificates')
                 ->label('Issued Certificates')
                 ->color('gray')
-                ->url(\App\Filament\Resources\Certificates\CertificateResource::getUrl('index')),
+                ->url(CertificateResource::getUrl('index')),
         ];
     }
 }

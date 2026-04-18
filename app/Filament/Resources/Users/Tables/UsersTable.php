@@ -2,30 +2,28 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
-use Filament\Actions\EditAction;
+use App\Filament\Resources\Users\UserResource;
+use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-
 
 class UsersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordUrl(fn ($record) => \App\Filament\Resources\Users\UserResource::getUrl('edit', ['record' => $record]))
+            ->recordUrl(fn ($record) => UserResource::getUrl('edit', ['record' => $record]))
             ->columns([
                 ColumnGroup::make('User Information', [
                     ImageColumn::make('pfp')
                         ->label('Picture')
                         ->circular()
                         ->size(40)
-                        ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->name) . '&color=7F9CF5&background=EBF4FF')
-                        ,
+                        ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name='.urlencode($record->name).'&color=7F9CF5&background=EBF4FF'),
                     TextColumn::make('name')
                         ->label('Name')
                         ->weight('medium')
@@ -92,7 +90,6 @@ class UsersTable
                     ->label('Active Status')
                     ->trueLabel('Active')
                     ->falseLabel('Inactive'),
-            ])
-            ;
+            ]);
     }
 }
