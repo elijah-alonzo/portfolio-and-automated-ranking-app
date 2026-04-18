@@ -18,6 +18,21 @@
         </div>
 
         <div class="help-section">
+            <h2 class="help-section-title">Help Topics</h2>
+            <ul class="help-list">
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\MyEvaluationHelp::getUrl() }}">My Evaluation</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\UserHelp::getUrl() }}">Users</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\DepartmentHelp::getUrl() }}">Departments</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\CouncilHelp::getUrl() }}">Councils</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\CouncilEvaluationHelp::getUrl() }}">Council Evaluation</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\PositionHelp::getUrl() }}">Positions</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\CertificateHelp::getUrl() }}">Certificates</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\AwardHelp::getUrl() }}">Awards</a></li>
+                <li><a href="{{ \App\Filament\Resources\Helps\Pages\ApplicationHelp::getUrl() }}">Applications</a></li>
+            </ul>
+        </div>
+
+        <div class="help-section">
             <h2 class="help-section-title">Key Features</h2>
             <ul class="help-list">
                 <li>Portfolio tracking for students and officers.</li>
