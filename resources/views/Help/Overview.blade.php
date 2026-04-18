@@ -8,15 +8,6 @@
         </p>
 
         <div class="help-section">
-            <h2 class="help-section-title">User Roles</h2>
-            <ul class="help-list">
-                <li><strong>Students</strong> participate in the evaluation process of the councils they are a participating in.</li>
-                <li><strong>Advisers</strong> create student accounts and manage students and evaluations for their councils.</li>
-                <li><strong>Admins</strong> have full access to manage all aspects of the system, including councils, students, evaluations, and certifications.</li>
-            </ul>
-        </div>
-
-        <div class="help-section">
             <h2 class="help-section-title">Dashboard</h2>
             <p>
                 Each user is provided with a dashboard that provides an overview of their activities and provides a quick access to information.
@@ -24,7 +15,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/dashboard.png') }}"
+                    src="{{ asset('assets/intro/dashboard.png') }}"
                     alt="Dashboard overview"
                 >
                 <figcaption class="help-caption">Main dashboard view of the system.</figcaption>
@@ -39,7 +30,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/profile.png') }}"
+                    src="{{ asset('assets/intro/edit-profile.png') }}"
                     alt="Profile management"
                 >
                 <figcaption class="help-caption">Once clicked, the user is redirected to a page where they can edit their profile information.</figcaption>
