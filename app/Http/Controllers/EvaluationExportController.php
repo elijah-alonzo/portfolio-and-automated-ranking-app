@@ -14,8 +14,14 @@ class EvaluationExportController extends Controller
     public function export(Request $request, Evaluation $evaluation, User $user, string $type, string $format)
     {
         $authUser = $request->user();
-        if (! $authUser || $authUser->role !== 'admin') {
-            abort(403, 'Admin access required');
+
+        $isAdmin = $authUser && $authUser->role === 'admin';
+        $isAssignedAdviser = $authUser
+            && $authUser->role === 'adviser'
+            && $evaluation->council_adviser_id === $authUser->id;
+
+        if (! $isAdmin && ! $isAssignedAdviser) {
+            abort(403, 'You are not authorized to export this evaluation.');
         }
 
         if (! in_array($type, ['self', 'peer', 'adviser'], true)) {

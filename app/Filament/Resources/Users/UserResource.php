@@ -52,7 +52,20 @@ class UserResource extends Resource
     {
         $user = Auth::user();
 
-        return $user && $user->role === 'admin';
+        if (! $user) {
+            return false;
+        }
+
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        if ($user->role === 'adviser') {
+            return $record->role === 'student'
+                && $record->department_id === $user->department_id;
+        }
+
+        return false;
     }
 
     public static function canDelete($record): bool
@@ -75,7 +88,9 @@ class UserResource extends Resource
         $user = Auth::user();
 
         if ($user && $user->role === 'adviser') {
-            return $query->where('department_id', $user->department_id);
+            return $query
+                ->where('role', 'student')
+                ->where('department_id', $user->department_id);
         }
 
         return $query;
