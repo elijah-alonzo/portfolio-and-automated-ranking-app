@@ -7,6 +7,7 @@ An e-portfolio and ranking system for the Paulinian Student Government built wit
 ## System Overview
 
 This application provides systematic evaluation of student council members through:
+
 - **Multi-tiered evaluation process** (Self, Peer, Adviser evaluations)
 - **Portfolio management** for student achievements and certificates
 - **Automated ranking calculations** based on weighted evaluation scores
@@ -17,6 +18,7 @@ This application provides systematic evaluation of student council members throu
 ## Key Features
 
 ### For Administrators
+
 - **User Management**: Create and manage admin, adviser, and student accounts
 - **Council Management**: Setup and configure student councils with award types
 - **Evaluation Management**: Create evaluation sessions and monitor progress
@@ -25,6 +27,7 @@ This application provides systematic evaluation of student council members throu
 - **System-wide Analytics**: Monitor evaluations, users, and council activities
 
 ### For Advisers
+
 - **My Evaluations**: Access assigned council evaluations
 - **Student Management**: Add students to evaluations and assign positions
 - **Peer Evaluator Assignment**: Assign peer evaluators to students
@@ -32,6 +35,7 @@ This application provides systematic evaluation of student council members throu
 - **Progress Tracking**: Monitor evaluation submission status
 
 ### For Students
+
 - **My Evaluations**: View assigned evaluations and complete forms
 - **Self-Evaluation**: Assess own performance and contributions
 - **Peer Evaluation**: Evaluate assigned peers (when designated)
@@ -99,33 +103,34 @@ Student Council Ranking System
 ## Core Evaluation Workflow
 
 1. **Admin Creates Evaluation**
-   - Selects council and adviser
-   - Sets academic year
-   - Evaluation is created in "pending" status
+    - Selects council and adviser
+    - Sets academic year
+    - Evaluation is created in "pending" status
 
 2. **Adviser Manages Students**
-   - Adds student officers to evaluation
-   - Assigns positions to each student
-   - Assigns peer evaluators (1-to-1 mapping)
+    - Adds student officers to evaluation
+    - Assigns positions to each student
+    - Assigns peer evaluators (1-to-1 mapping)
 
 3. **Evaluators Complete Forms**
-   - **Self**: Students evaluate themselves
-   - **Peer**: Designated peers evaluate assigned students
-   - **Adviser**: Council adviser evaluates all students
+    - **Self**: Students evaluate themselves
+    - **Peer**: Designated peers evaluate assigned students
+    - **Adviser**: Council adviser evaluates all students
 
 4. **Automatic Ranking**
-   - System calculates weighted scores
-   - Generates final rankings
-   - Displays scores in student portfolios
+    - System calculates weighted scores
+    - Generates final rankings
+    - Displays scores in student portfolios
 
 5. **Award Applications**
-   - Graduating students apply for leadership awards
-   - Admin reviews applications and portfolios
-   - Awards are accepted/rejected
+    - Graduating students apply for leadership awards
+    - Admin reviews applications and portfolios
+    - Awards are accepted/rejected
 
 ## Database Schema Highlights
 
 ### Core Tables
+
 - `users` - User accounts with roles (admin/adviser/student)
 - `councils` - Student councils with award type associations
 - `award_types` - Types of leadership awards
@@ -138,6 +143,7 @@ Student Council Ranking System
 - `leadership_award_applications` - Award applications
 
 ### Key Relationships
+
 - Council → Evaluation (One-to-Many)
 - Evaluation → Users (Many-to-Many via pivot)
 - Evaluation → EvaluationForms (One-to-Many)
@@ -156,41 +162,47 @@ Student Council Ranking System
 ## Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd ranking-sys
-   ```
+
+    ```bash
+    git clone <repository-url>
+    cd ranking-sys
+    ```
 
 2. **Install dependencies**
-   ```bash
-   composer install
-   npm install
-   ```
+
+    ```bash
+    composer install
+    npm install
+    ```
 
 3. **Configure environment**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
+
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
 4. **Setup database**
-   - Create database
-   - Update `.env` with database credentials
-   ```bash
-   php artisan migrate
-   ```
+    - Create database
+    - Update `.env` with database credentials
+
+    ```bash
+    php artisan migrate
+    ```
 
 5. **Create storage link**
-   ```bash
-   php artisan storage:link
-   ```
+
+    ```bash
+    php artisan storage:link
+    ```
 
 6. **Run development server**
-   ```bash
-   php artisan serve
-   npm run dev
-   ```
+
+    ```bash
+    php artisan serve
+    npm run dev
+    ```
 
 7. **Access the system**
-   - Navigate to `http://localhost:8000/ranking`
-   - Login with your credentials
+    - Navigate to `http://localhost:8000/ranking`
+    - Login with your credentials

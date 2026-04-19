@@ -5,16 +5,28 @@ namespace App\Filament\Resources\MyEvaluations\Pages;
 use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Contracts\Support\Htmlable;
 
 class ViewMyEvaluation extends ViewRecord
 {
     protected static string $resource = MyEvaluationResource::class;
 
-    protected static ?string $title = 'My Evaluations';
-
     protected function getHeaderActions(): array
     {
         return [];
+    }
+
+    public function getTitle(): string|Htmlable
+    {
+        $record = $this->getRecord();
+        $councilName = $record->council?->name ?? 'My Council';
+        $academicYear = $record->academic_year ?? null;
+
+        if ($academicYear) {
+            return $councilName.' - '.$academicYear;
+        }
+
+        return $councilName;
     }
 
     protected function getPeerEvaluationActions($record, array $peerEvaluateeIds): array

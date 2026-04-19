@@ -25,17 +25,17 @@ class MyEvaluationStatsOverview extends StatsOverviewWidget
             ->count();
 
         return [
-            Stat::make('My Evaluations', $totalEvaluations)
+            Stat::make('My Councils', $totalEvaluations)
                 ->icon('heroicon-o-clipboard-document-list')
                 ->color('primary')
                 ->chart([1, 2, 3, 4, 5, 6, 7])
-                ->description('Evaluations assigned to you')
+                ->description('Councils you are part of')
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
-            Stat::make('My Open Evaluations', $openEvaluations)
+            Stat::make('Open Evaluations', $openEvaluations)
                 ->icon('heroicon-o-clock')
                 ->color('primary')
                 ->chart([1, 2, 3, 4, 5, 6, 7])
-                ->description('Your evaluations not yet completed')
+                ->description('Your councils that are currently open for evaluation')
                 ->descriptionIcon('heroicon-m-arrow-trending-up'),
         ];
     }
