@@ -50,7 +50,7 @@ class TableWidget extends BaseTableWidget
                 ->circular()
                 ->getStateUsing(function ($record) {
                     return $record->users->map(function ($student) {
-                        return $student->pfp ?: 'https://ui-avatars.com/api/?name='.urlencode($student->name).'&color=7F9CF5&background=EBF4FF';
+                        return self::resolveProfileImageUrl($student->pfp, $student->name);
                     })->toArray();
                 })
                 ->tooltip(function ($record) {
@@ -93,5 +93,26 @@ class TableWidget extends BaseTableWidget
             ->filters([])
             ->recordActions([])
             ->toolbarActions([]);
+    }
+
+    protected static function resolveProfileImageUrl(?string $pfp, string $name): string
+    {
+        $fallbackUrl = 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
+
+        if (blank($pfp)) {
+            return $fallbackUrl;
+        }
+
+        $path = str_replace('\\', '/', $pfp);
+
+        if (str_starts_with($path, 'http')) {
+            return $path;
+        }
+
+        $relativePath = str_starts_with($path, 'storage/')
+            ? substr($path, strlen('storage/'))
+            : ltrim($path, '/');
+
+        return asset('storage/'.$relativePath);
     }
 }

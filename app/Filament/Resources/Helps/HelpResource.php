@@ -72,7 +72,7 @@ class HelpResource extends Resource
                 ->url(OverviewHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(OverviewHelp::getRouteName()))
                 ->sort(1),
-            NavigationItem::make('My Evaluations')
+            NavigationItem::make('My Councils')
                 ->icon('heroicon-o-clipboard-document-list')
                 ->url(MyEvaluationHelp::getUrl())
                 ->isActiveWhen(fn (): bool => request()->routeIs(MyEvaluationHelp::getRouteName()))

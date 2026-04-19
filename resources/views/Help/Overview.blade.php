@@ -9,7 +9,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/intro/dashboard.png') }}"
+                    src="{{ asset('assets/intro/dash.png') }}"
                     alt="Dashboard overview"
                 />
                 <figcaption class="help-caption">

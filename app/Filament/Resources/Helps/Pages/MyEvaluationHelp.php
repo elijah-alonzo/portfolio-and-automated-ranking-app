@@ -8,7 +8,7 @@ class MyEvaluationHelp extends HelpPage
 {
     protected static string $resource = HelpResource::class;
 
-    protected static ?string $title = 'My Evaluation';
+    protected static ?string $title = 'My Councils';
 
     protected string $view = 'Help.MyEvaluation';
 }
