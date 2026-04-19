@@ -42,7 +42,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getTableColumns(): array
     {
-        return [
+        $columns = [
             ColumnGroup::make('Student Information', [
                 ImageColumn::make('user.pfp')
                     ->label('Picture')
@@ -80,19 +80,46 @@ class StudentsRelationManager extends RelationManager
                     ->label('Self')
                     ->state(fn () => true)
                     ->icon(fn (EvaluationPositionSlot $record) => $this->getStatusIcon($record, 'self'))
-                    ->color(fn (EvaluationPositionSlot $record) => $this->getStatusColor($record, 'self')),
+                    ->color(fn (EvaluationPositionSlot $record) => $this->getStatusColor($record, 'self'))
+                    ->tooltip('Click to view self evaluation form')
+                    ->url(fn (EvaluationPositionSlot $record) => $this->canViewCriteriaForms()
+                        && (bool) $record->user_id
+                        && $this->getEvaluationStatus($record->user_id, 'self') !== 'pending'
+                        ? $this->ownerRecord->getEvaluationUrl((int) $record->user_id, 'self')
+                        : null),
                 IconColumn::make('peer_status')
                     ->label('Peer')
                     ->state(fn () => true)
                     ->icon(fn (EvaluationPositionSlot $record) => $this->getStatusIcon($record, 'peer'))
-                    ->color(fn (EvaluationPositionSlot $record) => $this->getStatusColor($record, 'peer')),
+                    ->color(fn (EvaluationPositionSlot $record) => $this->getStatusColor($record, 'peer'))
+                    ->tooltip('Click to view peer evaluation form')
+                    ->url(fn (EvaluationPositionSlot $record) => $this->canViewCriteriaForms()
+                        && (bool) $record->user_id
+                        && $this->getEvaluationStatus($record->user_id, 'peer') !== 'pending'
+                        ? $this->ownerRecord->getEvaluationUrl((int) $record->user_id, 'peer')
+                        : null),
                 IconColumn::make('adviser_status')
                     ->label('Adviser')
                     ->state(fn () => true)
                     ->icon(fn (EvaluationPositionSlot $record) => $this->getStatusIcon($record, 'adviser'))
-                    ->color(fn (EvaluationPositionSlot $record) => $this->getStatusColor($record, 'adviser')),
+                    ->color(fn (EvaluationPositionSlot $record) => $this->getStatusColor($record, 'adviser'))
+                    ->tooltip('Click to view adviser evaluation form')
+                    ->url(fn (EvaluationPositionSlot $record) => $this->canViewCriteriaForms()
+                        && (bool) $record->user_id
+                        && $this->getEvaluationStatus($record->user_id, 'adviser') !== 'pending'
+                        ? $this->ownerRecord->getEvaluationUrl((int) $record->user_id, 'adviser')
+                        : null),
             ]),
         ];
+
+        return $columns;
+    }
+
+    protected function canViewCriteriaForms(): bool
+    {
+        $user = auth()->user();
+
+        return $user !== null && $this->ownerRecord->council_adviser_id === $user->id;
     }
 
     protected function applyStageFilters(Builder $query): Builder
