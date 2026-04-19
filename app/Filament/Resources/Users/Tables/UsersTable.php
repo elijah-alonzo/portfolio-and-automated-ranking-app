@@ -16,7 +16,9 @@ class UsersTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->recordUrl(fn ($record) => UserResource::getUrl('edit', ['record' => $record]))
+            ->recordUrl(fn ($record) => $record->role === 'student'
+                ? UserResource::getUrl('portfolio', ['record' => $record])
+                : UserResource::getUrl('edit', ['record' => $record]))
             ->columns([
                 ColumnGroup::make('User Information', [
                     ImageColumn::make('pfp')
