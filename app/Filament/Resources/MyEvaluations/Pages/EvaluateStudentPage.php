@@ -47,6 +47,7 @@ class EvaluateStudentPage extends Page
         $this->evaluation = $evaluation;
         $this->evaluatee = $user;
         $this->evaluationType = $type;
+        $this->isAssignedAdviser = auth()->id() === $this->evaluation->council_adviser_id;
 
         $this->evaluation->loadMissing('council.awardType');
 
@@ -69,10 +70,9 @@ class EvaluateStudentPage extends Page
 
         $this->loadExistingEvaluation();
 
-        $this->isAssignedAdviser = auth()->id() === $this->evaluation->council_adviser_id;
-
         $this->isLocked = ($this->existingForm && $this->existingForm->status === 'submitted')
             || $this->evaluation->status === Evaluation::STATUS_COMPLETED
+            || ($this->isAssignedAdviser && $this->evaluationType !== 'adviser')
             || (auth()->user()->role === 'admin' && ! $this->isAssignedAdviser);
 
         if ($this->existingForm) {
@@ -92,6 +92,10 @@ class EvaluateStudentPage extends Page
         $user = auth()->user();
 
         if ($user->role === 'admin') {
+            return;
+        }
+
+        if ($this->isAssignedAdviser) {
             return;
         }
 
@@ -139,7 +143,7 @@ class EvaluateStudentPage extends Page
             'evaluator_type' => $this->evaluationType,
         ]);
 
-        if (auth()->user()->role !== 'admin') {
+        if (auth()->user()->role !== 'admin' && ! $this->isAssignedAdviser) {
             $query->where('evaluator_id', auth()->id());
         }
 
@@ -170,12 +174,36 @@ class EvaluateStudentPage extends Page
 
     protected function getHeaderActions(): array
     {
-        return [
+        $actions = [
             Action::make('back')
                 ->label('Back to Evaluation Details')
                 ->url(MyEvaluationResource::getUrl('view', ['record' => $this->evaluation]))
-                ->color('gray'),
+                ->color('primary'),
         ];
+
+        if ($this->isAssignedAdviser) {
+            $actions[] = Action::make('download_csv')
+                ->label('Download CSV')
+                ->color('info')
+                ->url(fn () => route('evaluation.export', [
+                    'evaluation' => $this->evaluation->id,
+                    'user' => $this->evaluatee->id,
+                    'type' => $this->evaluationType,
+                    'format' => 'csv',
+                ]));
+
+            $actions[] = Action::make('download_pdf')
+                ->label('Download PDF')
+                ->color('gray')
+                ->url(fn () => route('evaluation.export', [
+                    'evaluation' => $this->evaluation->id,
+                    'user' => $this->evaluatee->id,
+                    'type' => $this->evaluationType,
+                    'format' => 'pdf',
+                ]));
+        }
+
+        return $actions;
     }
 
     public static function getRouteName(?Panel $panel = null): string
