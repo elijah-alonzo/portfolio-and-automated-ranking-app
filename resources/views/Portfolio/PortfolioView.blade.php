@@ -39,10 +39,10 @@
                 @if ($record->bio)
                     <p class="profile-bio">{{ $record->bio }}</p>
                 @else
-                    <p class="profile-bio" style="
-                            font-style: italic;
-                            color: #999;
-                        ">No biography provided</p>
+                    <p
+                        class="profile-bio"
+                        style="font-style: italic; color: #999"
+                    >No biography provided</p>
                 @endif
 
                 <div class="profile-info-grid">
