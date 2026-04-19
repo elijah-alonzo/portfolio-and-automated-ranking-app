@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Evaluation Form Export</title>
     <style>
         body {
-            font-family: DejaVu Sans, Arial, sans-serif;
+            font-family:
+                DejaVu Sans,
+                Arial,
+                sans-serif;
             font-size: 12px;
             color: #111;
         }
@@ -25,7 +28,8 @@
             border-collapse: collapse;
             margin-top: 12px;
         }
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             vertical-align: top;

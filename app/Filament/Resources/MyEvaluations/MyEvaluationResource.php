@@ -24,11 +24,9 @@ class MyEvaluationResource extends Resource
 {
     protected static ?string $model = Evaluation::class;
 
-    protected static ?string $navigationLabel = 'My Evaluations';
+    protected static ?string $modelLabel = 'My Council';
 
-    protected static ?string $modelLabel = 'My Evaluation';
-
-    protected static ?string $pluralModelLabel = 'My Evaluations';
+    protected static ?string $pluralModelLabel = 'My Councils';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
