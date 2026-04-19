@@ -1,12 +1,12 @@
 <x-filament-panels::page>
     @component ('Help.HelpLayout', [
-        'title' => 'My Evaluations',
+        'title' => 'My Councils',
     ])
-        <p>The <strong>My Evaluations</strong> tab is where users can view all the council evaluations they have participated in and access their own evaluations. It is also where advisers can manage their councils and control the flow and status of the evaluation process for their councils.</p>
+        <p>The <strong>My Councils</strong> tab is where users can view all the council they have participated in and access their own evaluations. It is also where advisers can manage their councils and control the flow and status of the evaluation process for their councils.</p>
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/my-eval/my-eval-list.png') }}"
+                src="{{ asset('assets/my-council/my-council-table.png') }}"
                 alt="Dashboard overview"
             />
         </figure>
@@ -33,7 +33,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/my-eval/my-eval-view.png') }}"
+                    src="{{ asset('assets/my-council/my-council-view.png') }}"
                     alt="Council evaluations"
                 />
                 <figcaption class="help-caption">
@@ -47,7 +47,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/my-eval/eval-form.png') }}"
+                    src="{{ asset('assets/my-council/my-council-eval.png') }}"
                     alt="Evaluation form"
                 />
             </figure>

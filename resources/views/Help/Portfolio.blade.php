@@ -10,7 +10,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/portfolio/portfolio-view.png') }}"
+                src="{{ asset('assets/portfolio/portfolio.png') }}"
                 alt="Portfolio"
             />
         </figure>
@@ -38,7 +38,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/portfolio/portfolio-cert.png') }}"
+                    src="{{ asset('assets/portfolio/portfolio-certificate.png') }}"
                 />
             </figure>
         </div>
