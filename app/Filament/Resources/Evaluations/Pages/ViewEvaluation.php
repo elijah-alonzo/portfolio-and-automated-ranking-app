@@ -44,9 +44,9 @@ class ViewEvaluation extends ViewRecord
     protected function getHeaderWidgets(): array
     {
         return [
-            EvaluationRecommendationsOverview::class, // Stat overview at the top
-            TopStudentsStatsWidget::class,
+            EvaluationRecommendationsOverview::class,
             EvaluationSubmissionProgressWidget::class,
+            TopStudentsStatsWidget::class,
         ];
     }
 
