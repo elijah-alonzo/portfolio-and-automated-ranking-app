@@ -12,6 +12,8 @@ class EvaluationSubmissionProgressWidget extends ChartWidget
 
     protected int|string|array $columnSpan = 1;
 
+    protected ?string $maxHeight = '200px';
+
     protected ?string $heading = 'Submission Progress';
 
     protected ?string $description = 'Submitted evaluations for assigned students';
@@ -19,6 +21,31 @@ class EvaluationSubmissionProgressWidget extends ChartWidget
     protected function getType(): string
     {
         return 'doughnut';
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'maintainAspectRatio' => true,
+            'aspectRatio' => 4,
+            'layout' => [
+                'padding' => [
+                    'top' => 0,
+                    'right' => 0,
+                    'bottom' => 0,
+                    'left' => 0,
+                ],
+            ],
+            'cutout' => '65%',
+            'plugins' => [
+                'legend' => [
+                    'position' => 'right',
+                    'labels' => [
+                        'boxWidth' => 10,
+                    ],
+                ],
+            ],
+        ];
     }
 
     protected function getData(): array
