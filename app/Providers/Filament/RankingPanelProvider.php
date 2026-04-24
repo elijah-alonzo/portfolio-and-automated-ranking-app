@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Widgets\AccountWidget;
+use App\Filament\Widgets\CouncilSubmissionProgressWidget;
+use App\Filament\Widgets\MySubmissionProgressWidget;
 use App\Filament\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -71,6 +73,8 @@ class RankingPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 StatsOverview::class,
+                CouncilSubmissionProgressWidget::class,
+                MySubmissionProgressWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
