@@ -19,6 +19,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail;
 
 class StudentsRelationManager extends RelationManager
 {
@@ -353,6 +354,49 @@ class StudentsRelationManager extends RelationManager
                 return true;
             });
 
+        $actions[] = Action::make('remind')
+            ->label('Remind')
+            ->icon('heroicon-o-envelope')
+            ->color('info')
+            ->visible(fn (EvaluationPositionSlot $record) => $this->isOngoingStage()
+                && $this->isCouncilAdviser()
+                && (bool) $record->user_id
+                && $this->hasPendingReminders($record))
+            ->action(function (EvaluationPositionSlot $record) {
+                $targets = $this->getPendingReminderTargets($record);
+
+                if ($targets === []) {
+                    Notification::make()
+                        ->title('No Pending Evaluations')
+                        ->body('All assigned evaluations for this student are already submitted.')
+                        ->info()
+                        ->send();
+                    return;
+                }
+
+                $evaluationTitle = ($this->ownerRecord->council?->name ?? 'Council Evaluation')
+                    .' '.$this->ownerRecord->academic_year;
+
+                foreach ($targets as $target) {
+                    if (blank($target['user']?->email)) {
+                        continue;
+                    }
+
+                    $message = "You have a pending {$target['type']} evaluation for {$target['evaluatee_name']} in {$evaluationTitle}. Please submit it as soon as possible.";
+
+                    Mail::raw($message, function ($mail) use ($target, $evaluationTitle) {
+                        $mail->to($target['user']->email)
+                            ->subject("Pending {$target['type']} evaluation - {$evaluationTitle}");
+                    });
+                }
+
+                Notification::make()
+                    ->title('Reminder Sent')
+                    ->body('Email reminders were sent to pending evaluators.')
+                    ->success()
+                    ->send();
+            });
+
         return [
             ActionGroup::make($actions)
                 ->label('')
@@ -486,6 +530,54 @@ class StudentsRelationManager extends RelationManager
             ->body("{$evaluatorName} will evaluate {$evaluateeName}.")
             ->success()
             ->send();
+    }
+
+    protected function hasPendingReminders(EvaluationPositionSlot $record): bool
+    {
+        return $this->getPendingReminderTargets($record) !== [];
+    }
+
+    /**
+     * @return array<int, array{user: ?User, type: string, evaluatee_name: string}>
+     */
+    protected function getPendingReminderTargets(EvaluationPositionSlot $record): array
+    {
+        $targets = [];
+        $evaluatee = $record->user;
+        if (! $evaluatee) {
+            return [];
+        }
+
+        $evaluateeName = $evaluatee->name ?? 'Student';
+
+        $selfStatus = $this->getEvaluationStatus($evaluatee->id, 'self');
+        if ($selfStatus !== 'submitted') {
+            $targets[$evaluatee->id.'-self'] = [
+                'user' => $evaluatee,
+                'type' => 'self',
+                'evaluatee_name' => $evaluateeName,
+            ];
+        }
+
+        $peerAssignment = EvaluationPeerEvaluator::where('evaluation_id', $this->ownerRecord->id)
+            ->where('evaluatee_user_id', $evaluatee->id)
+            ->first();
+
+        if ($peerAssignment) {
+            $peerStatus = $this->getEvaluationStatus($evaluatee->id, 'peer');
+            if ($peerStatus !== 'submitted') {
+                $peerEvaluator = User::find($peerAssignment->evaluator_user_id);
+                if ($peerEvaluator) {
+                    $targets[$peerEvaluator->id.'-peer'] = [
+                        'user' => $peerEvaluator,
+                        'type' => 'peer',
+                        'evaluatee_name' => $evaluateeName,
+                    ];
+                }
+            }
+        }
+
+        return array_values($targets);
     }
 
     protected function getEligibleStudentOptions(EvaluationPositionSlot $slot): array
