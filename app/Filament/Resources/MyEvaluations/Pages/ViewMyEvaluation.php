@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\MyEvaluations\Pages;
 
 use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
-use App\Filament\Resources\MyEvaluations\Widgets\CouncilSubmissionProgressWidget;
-use App\Filament\Resources\MyEvaluations\Widgets\MySubmissionProgressWidget;
+use App\Filament\Widgets\CouncilSubmissionProgressWidget;
+use App\Filament\Widgets\MySubmissionProgressWidget;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Schema;
