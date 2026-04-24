@@ -3,8 +3,11 @@
 namespace App\Filament\Resources\MyEvaluations\Pages;
 
 use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
+use App\Filament\Resources\MyEvaluations\Widgets\CouncilSubmissionProgressWidget;
+use App\Filament\Resources\MyEvaluations\Widgets\MySubmissionProgressWidget;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 
 class ViewMyEvaluation extends ViewRecord
@@ -16,6 +19,19 @@ class ViewMyEvaluation extends ViewRecord
         return [];
     }
 
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            CouncilSubmissionProgressWidget::class,
+            MySubmissionProgressWidget::class,
+        ];
+    }
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema->components([]);
+    }
+
     public function getTitle(): string|Htmlable
     {
         $record = $this->getRecord();
@@ -23,7 +39,7 @@ class ViewMyEvaluation extends ViewRecord
         $academicYear = $record->academic_year ?? null;
 
         if ($academicYear) {
-            return $councilName.' - '.$academicYear;
+            return $councilName.' '.$academicYear;
         }
 
         return $councilName;
