@@ -14,6 +14,13 @@ class StatsOverview extends StatsOverviewWidget
 {
     protected static ?int $sort = 1;
 
+    protected int|string|array $columnSpan = 2;
+
+    protected function getColumns(): int
+    {
+        return 2;
+    }
+
     protected function getStats(): array
     {
         $user = auth()->user();
@@ -21,12 +28,6 @@ class StatsOverview extends StatsOverviewWidget
         if (! $user) {
             return [];
         }
-
-        $submittedCriteria = EvaluationForm::query()
-            ->where('evaluator_id', $user->id)
-            ->where('status', 'submitted')
-            ->get(['answers'])
-            ->sum(fn (EvaluationForm $form) => is_array($form->answers) ? count($form->answers) : 0);
 
         $pendingEvaluationsAsAdviser = Evaluation::query()
             ->whereIn('status', ['closed', 'ongoing'])
@@ -93,13 +94,6 @@ class StatsOverview extends StatsOverviewWidget
             ->count();
 
         $sharedStats = [
-            Stat::make('Submitted Criteria', $submittedCriteria)
-                ->icon('heroicon-o-check-circle')
-                ->color('primary')
-                ->chart([1, 2, 3, 4, 5, 6, 7])
-                ->description('Total criteria you have submitted')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->url(ListMyEvaluations::getUrl()),
             Stat::make('Pending Assigned Evaluations', $assignedNotSubmitted)
                 ->icon('heroicon-o-clock')
                 ->color('primary')
