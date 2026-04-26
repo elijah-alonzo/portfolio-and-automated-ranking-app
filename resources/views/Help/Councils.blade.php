@@ -10,7 +10,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/councils/councils-table.png') }}"
+                src="{{ asset('assets/councils/list.png') }}"
                 alt="Council table"
             />
             <figcaption class="help-caption">
@@ -23,7 +23,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/councils/councils-form.png') }}"
+                    src="{{ asset('assets/councils/form.png') }}"
                     alt="Council form"
                 />
                 <figcaption class="help-caption">

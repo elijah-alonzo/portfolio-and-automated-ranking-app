@@ -24,7 +24,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/users/users-table.png') }}"
+                src="{{ asset('assets/users/list.png') }}"
                 alt="Users table"
             />
             <figcaption class="help-caption">
@@ -37,7 +37,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/users/users-form.png') }}"
+                    src="{{ asset('assets/users/form.png') }}"
                     alt="Users form"
                 />
                 <figcaption class="help-caption">
