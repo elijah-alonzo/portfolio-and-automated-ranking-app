@@ -5,6 +5,7 @@ namespace App\Filament\Resources\MyPortfolio\Pages;
 use App\Filament\Resources\Certificates\CertificateResource;
 use App\Filament\Resources\MyPortfolio\MyPortfolioResource;
 use App\Models\AwardType;
+use App\Models\Evaluation;
 use App\Models\LeadershipAwardApplication;
 use App\Models\User;
 use Filament\Actions\Action;
@@ -47,8 +48,24 @@ class ViewMyPortfolio extends Page
     {
         return [
             Action::make('apply_for_leadership_award')
-                ->label('Apply for Award')
-                ->color('primary')
+                ->label(fn (): string => match ($this->getActiveLeadershipAwardApplication()?->status) {
+                    'pending' => 'Application Sent',
+                    'accepted' => 'Application Accepted',
+                    default => 'Apply for Award',
+                })
+                ->color(fn (): string => match ($this->getActiveLeadershipAwardApplication()?->status) {
+                    'pending' => 'warning',
+                    'accepted' => 'success',
+                    default => 'primary',
+                })
+                ->disabled(fn (): bool => in_array($this->getActiveLeadershipAwardApplication()?->status, ['pending', 'accepted'], true)
+                    || ! $this->hasParticipatedInEvaluations()
+                    || $this->hasIncompleteParticipatingEvaluations())
+                ->tooltip(fn (): ?string => ! $this->hasParticipatedInEvaluations()
+                    ? 'You cannot apply for an award because you have not participated in any evaluations yet.'
+                    : ($this->hasIncompleteParticipatingEvaluations()
+                        ? 'You cannot apply for an award while you are in an evaluation that is not completed.'
+                        : null))
                 ->visible(fn () => auth()->user()->role === 'student')
                 ->modalHeading('Apply for Leadership Award')
                 ->modalDescription('Select the award type you are applying for, then confirm your graduation status.')
@@ -68,15 +85,32 @@ class ViewMyPortfolio extends Page
                         ->accepted(),
                 ])
                 ->action(function (array $data): void {
-                    $existingApplication = LeadershipAwardApplication::where('user_id', auth()->id())
-                        ->where('award_type_id', $data['award_type_id'])
-                        ->whereIn('status', ['pending', 'accepted'])
-                        ->exists();
+                    if (! $this->hasParticipatedInEvaluations()) {
+                        Notification::make()
+                            ->title('Not Eligible Yet')
+                            ->body('You cannot apply for an award because you have not participated in any evaluations yet.')
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+
+                    if ($this->hasIncompleteParticipatingEvaluations()) {
+                        Notification::make()
+                            ->title('Evaluation In Progress')
+                            ->body('You cannot apply for an award while you are in an evaluation that is not completed.')
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+
+                    $existingApplication = $this->getActiveLeadershipAwardApplication();
 
                     if ($existingApplication) {
                         Notification::make()
                             ->title('Application Already Exists')
-                            ->body('You already have a pending or accepted application for this award type.')
+                            ->body('You can only have one pending or accepted leadership award application at a time.')
                             ->warning()
                             ->send();
 
@@ -109,5 +143,29 @@ class ViewMyPortfolio extends Page
                 ->color('gray')
                 ->url(CertificateResource::getUrl('index')),
         ];
+    }
+
+    protected function getActiveLeadershipAwardApplication(): ?LeadershipAwardApplication
+    {
+        return LeadershipAwardApplication::query()
+            ->where('user_id', auth()->id())
+            ->whereIn('status', ['pending', 'accepted'])
+            ->latest('created_at')
+            ->first();
+    }
+
+    protected function hasIncompleteParticipatingEvaluations(): bool
+    {
+        return auth()->user()
+            ->participatingEvaluations()
+            ->where('status', '!=', Evaluation::STATUS_COMPLETED)
+            ->exists();
+    }
+
+    protected function hasParticipatedInEvaluations(): bool
+    {
+        return auth()->user()
+            ->participatingEvaluations()
+            ->exists();
     }
 }

@@ -1,10 +1,32 @@
-# TASKS
+# Leadership award application
 
-## My Evaluation Resource
-    1. Replace the Info list with Chart Widgtes. 
-    2. In the relational table, when the Evluation is in Open State, the Council Adviser should be able to also notify students that they have evaluation forms that they have not submitted yet. Lets use gmail here. Advisers can click on the Remind action that sends an email to that user's email notifying that they have not yet submitted their assigned evaluations (Peer or Self Evaluations).
-    3. 
+- Only one application should be made regardless of the award type. When a user has submitted an application, the button should show Application Sent and becomes filement "warning". When the admin accepts it the button becomes filament "success" Application Accepted. When its rejected, users can send another one.
 
-## Evaluation Resource
-    1. Please update the title of the View Evaluation page to displaye the Council name and the Concil's Academic Year. Similar to the My Evaluation Resource View. 
-    2. In the View page, lets replace the Evaluation information with char widgets. I have two widgets in mind one should serve the pupsoe of showing the top 5 students with the highest evaluation scores for that council, the other should be like show the progress of the evaluation submission. Like the percentage of all the submitted evaluations.
+An email should be automatically sent when accepted or rejected. Please make the email multiline heres a sample on how to make it multiline:
+
+$message = <<<EOT
+Greetings!
+
+This is a reminder that you have a pending {$target['type']} evaluation for {$target['evaluatee_name']} in {$evaluationTitle}.
+
+Please submit it as soon as possible.
+EOT;
+
+When the award has been accepted, please tell the user to go to the Student Affairs and Academic Services office to claim it.
+
+Accepted:
+
+Greetings {student name}!
+
+We are happy to inform you that your application for the {award type} has been accepted! Please claim your award at the Student Affairs and Academic Services office to claim it.
+
+Sincerely,
+Paulinian Student Government
+
+Rejected:
+Greetings {student name}!
+
+We regret to inform you that your application for the {award type} has been unsuccessful at this time. You are welcome to reapply once all necessary application requirements have been completed and submitted.
+
+Sincerely,
+Paulinian Student Government

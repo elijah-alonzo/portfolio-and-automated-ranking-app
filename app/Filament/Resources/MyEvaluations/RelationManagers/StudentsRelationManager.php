@@ -383,8 +383,10 @@ class StudentsRelationManager extends RelationManager
                         continue;
                     }
 
+                    $recipientName = $target['user']?->name ?? 'Student';
+
                     $message = <<<EOT
-                        Greetings!
+                        Greetings {$recipientName}!
 
                         This is a reminder that you have a pending {$target['type']} evaluation for {$target['evaluatee_name']} in {$evaluationTitle}.
 

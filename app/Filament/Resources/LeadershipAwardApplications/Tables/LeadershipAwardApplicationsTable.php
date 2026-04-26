@@ -14,6 +14,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Mail;
 
 class LeadershipAwardApplicationsTable
 {
@@ -110,13 +111,39 @@ class LeadershipAwardApplicationsTable
                         ->color('success')
                         ->action(function (LeadershipAwardApplication $record) {
                             $record->update(['status' => 'accepted']);
+
                             if ($record->user) {
                                 Notification::make()
                                     ->title('Award Application Accepted')
                                     ->body('Your leadership award application has been accepted.')
                                     ->success()
                                     ->sendToDatabase($record->user);
+
+                                if (filled($record->user->email)) {
+                                    $studentName = $record->user->name ?? 'Student';
+                                    $awardTypeName = $record->awardType?->name ?? 'Leadership Award';
+
+                                    $message = <<<EOT
+                                        Greetings {$studentName}!
+
+                                        We are happy to inform you that your application for the {$awardTypeName} has been accepted! Please claim your award at the Student Affairs and Academic Services office to claim it.
+
+                                        Sincerely,
+                                        Paulinian Student Government
+                                        EOT;
+
+                                    Mail::raw($message, function ($mail) use ($record, $awardTypeName) {
+                                        $mail->to($record->user->email)
+                                            ->subject("Leadership Award Application Accepted - {$awardTypeName}");
+                                    });
+                                }
                             }
+
+                            Notification::make()
+                                ->title('Application Accepted')
+                                ->body('The leadership award application was accepted successfully.')
+                                ->success()
+                                ->send();
                         }),
                     Action::make('reject')
                         ->label('Reject')
@@ -124,13 +151,39 @@ class LeadershipAwardApplicationsTable
                         ->color('danger')
                         ->action(function (LeadershipAwardApplication $record) {
                             $record->update(['status' => 'rejected']);
+
                             if ($record->user) {
                                 Notification::make()
                                     ->title('Award Application Rejected')
                                     ->body('Your leadership award application has been rejected.')
                                     ->danger()
                                     ->sendToDatabase($record->user);
+
+                                if (filled($record->user->email)) {
+                                    $studentName = $record->user->name ?? 'Student';
+                                    $awardTypeName = $record->awardType?->name ?? 'Leadership Award';
+
+                                    $message = <<<EOT
+Greetings {$studentName}!
+
+We regret to inform you that your application for the {$awardTypeName} has been unsuccessful at this time. You are welcome to reapply once all necessary application requirements have been completed and submitted.
+
+Sincerely,
+Paulinian Student Government
+EOT;
+
+                                    Mail::raw($message, function ($mail) use ($record, $awardTypeName) {
+                                        $mail->to($record->user->email)
+                                            ->subject("Leadership Award Application Update - {$awardTypeName}");
+                                    });
+                                }
                             }
+
+                            Notification::make()
+                                ->title('Application Rejected')
+                                ->body('The leadership award application was rejected successfully.')
+                                ->danger()
+                                ->send();
                         }),
                 ])
                     ->label('')
