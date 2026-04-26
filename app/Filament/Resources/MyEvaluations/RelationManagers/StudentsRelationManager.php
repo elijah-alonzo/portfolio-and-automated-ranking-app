@@ -371,6 +371,7 @@ class StudentsRelationManager extends RelationManager
                         ->body('All assigned evaluations for this student are already submitted.')
                         ->info()
                         ->send();
+
                     return;
                 }
 
@@ -382,8 +383,13 @@ class StudentsRelationManager extends RelationManager
                         continue;
                     }
 
-                    $message = "You have a pending {$target['type']} evaluation for {$target['evaluatee_name']} in {$evaluationTitle}. Please submit it as soon as possible.";
+                    $message = <<<EOT
+                        Greetings!
 
+                        This is a reminder that you have a pending {$target['type']} evaluation for {$target['evaluatee_name']} in {$evaluationTitle}.
+
+                        Please submit it as soon as possible.
+                        EOT;
                     Mail::raw($message, function ($mail) use ($target, $evaluationTitle) {
                         $mail->to($target['user']->email)
                             ->subject("Pending {$target['type']} evaluation - {$evaluationTitle}");
