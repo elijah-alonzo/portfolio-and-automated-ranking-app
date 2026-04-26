@@ -58,19 +58,17 @@
 ========================= */
 .fi-ta,
 .fi-badge.fi-color {
-    --primary: #fae379;
-
-    --primary-50: color-mix(in oklab, var(--primary) 8%, white);
-    --primary-100: color-mix(in oklab, var(--primary) 18%, white);
-    --primary-200: color-mix(in oklab, var(--primary) 30%, white);
-    --primary-300: color-mix(in oklab, var(--primary) 44%, white);
-    --primary-400: color-mix(in oklab, var(--primary) 60%, white);
-    --primary-500: var(--primary);
-    --primary-600: color-mix(in oklab, var(--primary) 85%, black);
-    --primary-700: color-mix(in oklab, var(--primary) 70%, black);
-    --primary-800: color-mix(in oklab, var(--primary) 54%, black);
-    --primary-900: color-mix(in oklab, var(--primary) 38%, black);
-    --primary-950: color-mix(in oklab, var(--primary) 24%, black);
+    --primary-50: color-mix(in oklab, #036635 8%, white);
+    --primary-100: color-mix(in oklab, #036635 16%, white);
+    --primary-200: color-mix(in oklab, #036635 28%, white);
+    --primary-300: color-mix(in oklab, #036635 42%, white);
+    --primary-400: color-mix(in oklab, #036635 58%, white);
+    --primary-500: #036635;
+    --primary-600: color-mix(in oklab, #036635 85%, black);
+    --primary-700: color-mix(in oklab, #036635 72%, black);
+    --primary-800: color-mix(in oklab, #036635 60%, black);
+    --primary-900: color-mix(in oklab, #036635 48%, black);
+    --primary-950: color-mix(in oklab, #036635 35%, black);
 }
 
 .fi-badge.fi-color {
