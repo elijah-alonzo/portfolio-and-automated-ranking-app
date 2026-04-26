@@ -14,7 +14,7 @@ class TopStudentsStatsWidget extends ChartWidget
 
     protected ?string $maxHeight = '250px';
 
-    protected ?string $heading = 'Top 5 Students';
+    protected ?string $heading = 'Top 10 Students';
 
     protected ?string $description = 'Highest evaluation scores for this council';
 

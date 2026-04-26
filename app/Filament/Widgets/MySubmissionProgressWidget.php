@@ -97,7 +97,7 @@ class MySubmissionProgressWidget extends ChartWidget
                     [
                         'label' => 'Submission Progress',
                         'data' => [$submittedForms, $remainingForms],
-                        'backgroundColor' => ['#16a34a', '#e5e7eb'],
+                        'backgroundColor' => ['#fae379', '#e5e7eb'],
                     ],
                 ],
                 'labels' => ['Submitted', 'Remaining'],
@@ -147,7 +147,7 @@ class MySubmissionProgressWidget extends ChartWidget
                 [
                     'label' => 'Submission Progress',
                     'data' => [$submittedForms, $remainingForms],
-                    'backgroundColor' => ['#16a34a', '#e5e7eb'],
+                    'backgroundColor' => ['#fae379', '#e5e7eb'],
                 ],
             ],
             'labels' => ['Submitted', 'Remaining'],
