@@ -10,7 +10,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/portfolio/portfolio.png') }}"
+                src="{{ asset('assets/portfolio/view.png') }}"
                 alt="Portfolio"
             />
         </figure>
@@ -27,7 +27,7 @@
                 <figure class="help-figure">
                     <img
                         class="help-image"
-                        src="{{ asset('assets/portfolio/portfolio-application.png') }}"
+                        src="{{ asset('assets/portfolio/apply.png') }}"
                         alt="Applying for leadership awards"
                     />
                 </figure>
@@ -38,7 +38,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/portfolio/portfolio-certificate.png') }}"
+                    src="{{ asset('assets/portfolio/cert.png') }}"
                 />
             </figure>
         </div>

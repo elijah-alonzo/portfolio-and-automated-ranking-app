@@ -6,7 +6,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/council-eval/council-eval-table.png') }}"
+                src="{{ asset('assets/council-eval/list.png') }}"
                 alt="Council table"
             />
             <figcaption class="help-caption">
@@ -21,7 +21,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/council-eval/council-eval-view.png') }}"
+                    src="{{ asset('assets/council-eval/view.png') }}"
                     alt="Council table"
                 />
                 <figcaption class="help-caption">
@@ -40,7 +40,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/council-eval/admin-eval.png') }}"
+                    src="{{ asset('assets/council-eval/eval.png') }}"
                     alt="Council table"
                 />
             </figure>
@@ -51,7 +51,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/council-eval/council-eval-form.png') }}"
+                    src="{{ asset('assets/council-eval/form.png') }}"
                     alt="Council form"
                 />
                 <figcaption class="help-caption">

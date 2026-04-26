@@ -6,7 +6,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/applications/applications-table.png') }}"
+                src="{{ asset('assets/applications/list.png') }}"
                 alt="Award table"
             />
             <figcaption class="help-caption">
@@ -18,13 +18,6 @@
         <div class="help-section">
             <h2 class="help-section-title">Reviewing a Portfolio</h2>
             <p>Admins can manually check the student's portfolio to review the student's Paulinian leadership expereince and decide whether to approve or reject the application. The portfolio includes the student's profile, the councils they served in, the <strong>Evaluation Results</strong> for each council the student partook in, and the certificates they were issued.</p>
-            <figure class="help-figure">
-                <img
-                    class="help-image"
-                    src="{{ asset('assets/applications/applications-view.png') }}"
-                    alt="Student portfolio"
-                />
-            </figure>
         </div>
 
     @endcomponent

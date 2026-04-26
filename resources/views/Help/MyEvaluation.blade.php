@@ -6,7 +6,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/my-council/my-council-table.png') }}"
+                src="{{ asset('assets/my-eval/list.png') }}"
                 alt="Dashboard overview"
             />
         </figure>
@@ -33,7 +33,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/my-council/my-council-view.png') }}"
+                    src="{{ asset('assets/my-eval/view.png') }}"
                     alt="Council evaluations"
                 />
                 <figcaption class="help-caption">
@@ -47,7 +47,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/my-council/my-council-eval.png') }}"
+                    src="{{ asset('assets/my-eval/eval.png') }}"
                     alt="Evaluation form"
                 />
             </figure>

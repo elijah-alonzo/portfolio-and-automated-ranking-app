@@ -10,7 +10,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/certificates/certificates-table.png') }}"
+                    src="{{ asset('assets/certs/list.png') }}"
                     alt="Certificate table"
                 />
                 <figcaption class="help-caption">
@@ -23,7 +23,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/certificates/certificates-form.png') }}"
+                    src="{{ asset('assets/certs/form.png') }}"
                     alt="Certificate form"
                 />
                 <figcaption class="help-caption">

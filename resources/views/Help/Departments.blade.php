@@ -11,7 +11,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/departments/departments-table.png') }}"
+                src="{{ asset('assets/departments/list.png') }}"
                 alt="Department table"
             />
             <figcaption class="help-caption">
@@ -24,7 +24,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/departments/departments-form.png') }}"
+                    src="{{ asset('assets/departments/form.png') }}"
                     alt="Department form"
                 />
                 <figcaption class="help-caption">

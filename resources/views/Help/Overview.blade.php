@@ -9,7 +9,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/intro/dash.png') }}"
+                    src="{{ asset('assets/dashboard.png') }}"
                     alt="Dashboard overview"
                 />
                 <figcaption class="help-caption">
@@ -23,7 +23,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/intro/edit-profile.png') }}"
+                    src="{{ asset('assets/profile.png') }}"
                     alt="Profile management"
                 />
                 <figcaption class="help-caption">

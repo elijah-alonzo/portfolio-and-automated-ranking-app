@@ -11,7 +11,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/awards/awards-table.png') }}"
+                src="{{ asset('assets/awards/list.png') }}"
                 alt="Award table"
             />
             <figcaption class="help-caption">
@@ -24,7 +24,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/awards/awards-form.png') }}"
+                    src="{{ asset('assets/awards/form.png') }}"
                     alt="Award form"
                 />
                 <figcaption class="help-caption">

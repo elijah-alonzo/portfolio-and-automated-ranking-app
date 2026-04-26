@@ -10,7 +10,7 @@
         <figure class="help-figure">
             <img
                 class="help-image"
-                src="{{ asset('assets/positions/positions-table.png') }}"
+                src="{{ asset('assets/positions/list.png') }}"
                 alt="Position table"
             />
             <figcaption class="help-caption">
@@ -23,7 +23,7 @@
             <figure class="help-figure">
                 <img
                     class="help-image"
-                    src="{{ asset('assets/positions/positions-form.png') }}"
+                    src="{{ asset('assets/positions/form.png') }}"
                     alt="Position form"
                 />
                 <figcaption class="help-caption">
