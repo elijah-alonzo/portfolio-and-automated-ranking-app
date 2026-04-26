@@ -12,7 +12,7 @@
             "options": {
                 "parser": "blade",
                 "tabWidth": 4,
-                "printWidth": 120,
+                "printWidth": 80,
                 "singleQuote": true,
                 "wrapAttributes": "auto",
                 "sortTailwindcssClasses": true
