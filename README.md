@@ -43,6 +43,128 @@ This application provides systematic evaluation of student council members throu
 - **Certificate Management**: Upload and manage achievement certificates
 - **Award Applications**: Apply for leadership awards (for graduating students)
 
+## System Functionalities
+
+The following walkthrough mirrors the in-app Help pages and highlights the main workflows with screenshots.
+
+### Dashboard and Profile
+
+- **Dashboard Overview**: Quick view of key activities and shortcuts.
+
+![Dashboard Overview](public/assets/dashboard.png)
+
+### My Councils (Evaluations)
+
+- **Council List**: View councils you participate in or manage.
+
+![My Councils List](public/assets/my-eval/list.png)
+
+- **Council Evaluation Flow**: Manage evaluation phases (Closed, Open, Completed).
+
+![Council Evaluation View](public/assets/my-eval/view.png)
+
+- **Evaluation Form**: Submit self, peer, or adviser evaluations during Open phase.
+
+![Evaluation Form](public/assets/my-eval/eval.png)
+
+### Portfolio
+
+- **Portfolio Overview**: View leadership and extracurricular achievements.
+
+![Portfolio Overview](public/assets/portfolio/view.png)
+
+- **Apply for Leadership Awards**: Select award type and confirm graduation status.
+
+![Apply for Awards](public/assets/portfolio/apply.png)
+
+- **Issued Certificates**: Review and download issued certificates.
+
+![Issued Certificates](public/assets/portfolio/cert.png)
+
+### User Management (Admin)
+
+- **Users Table**: Manage student, adviser, and admin accounts.
+
+![Users Table](public/assets/users/list.png)
+
+- **User Form**: Create or update user profiles and roles.
+
+![User Form](public/assets/users/form.png)
+
+### Departments (Admin)
+
+- **Departments List**: Organize users and councils by department.
+
+![Departments List](public/assets/departments/list.png)
+
+- **Department Form**: Create or update department details.
+
+![Department Form](public/assets/departments/form.png)
+
+### Councils (Admin)
+
+- **Councils List**: Manage student councils and their details.
+
+![Councils List](public/assets/councils/list.png)
+
+- **Council Form**: Define council settings, departments, and award types.
+
+![Council Form](public/assets/councils/form.png)
+
+### Council Evaluations (Admin)
+
+- **Evaluations List**: Track evaluation sessions per council.
+
+![Evaluations List](public/assets/council-eval/list.png)
+
+- **Evaluation Details**: Monitor scores, ranks, and recommendations.
+
+![Evaluation Details](public/assets/council-eval/view.png)
+
+- **Evaluation Forms Review**: Access submitted evaluation forms.
+
+![Evaluation Forms Review](public/assets/council-eval/eval.png)
+
+- **Create Evaluation**: Configure council, adviser, and academic year.
+
+![Create Evaluation](public/assets/council-eval/form.png)
+
+### Council Positions (Admin)
+
+- **Positions List**: Define student officer roles.
+
+![Positions List](public/assets/positions/list.png)
+
+- **Position Form**: Create or update position configuration.
+
+![Position Form](public/assets/positions/form.png)
+
+### Certificates (Admin/Adviser)
+
+- **Certificates List**: Track issued certificates per student.
+
+![Certificates List](public/assets/certs/list.png)
+
+- **Issue Certificate**: Upload certificate and assign recipients.
+
+![Issue Certificate](public/assets/certs/form.png)
+
+### Award Types (Admin)
+
+- **Award Types List**: Manage leadership award categories.
+
+![Award Types List](public/assets/awards/list.png)
+
+- **Award Type Form**: Create or update award type details.
+
+![Award Type Form](public/assets/awards/form.png)
+
+### Award Applications (Admin)
+
+- **Applications List**: Review award applications and student ranks.
+
+![Applications List](public/assets/applications/list.png)
+
 ## Project Architecture
 
 ```
