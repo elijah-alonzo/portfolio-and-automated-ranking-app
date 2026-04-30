@@ -27,7 +27,7 @@ class StudentsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    protected static ?string $title = 'Students';
+    protected static ?string $title = 'Student Officers';
 
     public function table(Table $table): Table
     {

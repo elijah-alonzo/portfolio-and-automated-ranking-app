@@ -10,6 +10,8 @@ class AwardTypesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->heading('Award Types')
+            ->description('List of all award types associated with councils.')
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),

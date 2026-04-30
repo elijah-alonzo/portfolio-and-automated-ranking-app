@@ -15,6 +15,8 @@ class PositionsTable
     {
         return $table
             ->recordUrl(fn ($record) => PositionsResource::getUrl('edit', ['record' => $record]))
+            ->heading('Positions')
+            ->description('List of all council positions available for students.')
             ->columns([
                 TextColumn::make('title')
                     ->label('Position Title')

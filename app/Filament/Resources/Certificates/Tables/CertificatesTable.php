@@ -16,6 +16,8 @@ class CertificatesTable
             ->recordUrl(fn ($record) => auth()->user()?->role === 'admin'
                 ? CertificateResource::getUrl('edit', ['record' => $record])
                 : null)
+            ->heading('Issued Certificates')
+            ->description('List of all certificates issued to students.')
             ->columns([
                 TextColumn::make('certification_name')
                     ->label('Certification Name')

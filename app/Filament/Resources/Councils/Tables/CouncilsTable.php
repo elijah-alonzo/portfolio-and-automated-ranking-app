@@ -14,6 +14,8 @@ class CouncilsTable
     {
         return $table
             ->recordUrl(fn ($record) => CouncilResource::getUrl('edit', ['record' => $record]))
+            ->heading('Councils')
+            ->description('List of all councils students can participate in.')
             ->columns([
                 TextColumn::make('name')
                     ->label('Council Name')

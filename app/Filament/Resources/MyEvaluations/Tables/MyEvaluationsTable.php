@@ -15,6 +15,8 @@ class MyEvaluationsTable
     {
         return $table
             ->recordUrl(fn ($record) => MyEvaluationResource::getUrl('view', ['record' => $record]))
+            ->heading('My Councils')
+            ->description('List of the councils you are involved in.')
             ->columns([
                 TextColumn::make('council.name')
                     ->label('Council')

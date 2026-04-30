@@ -19,6 +19,8 @@ class UsersTable
             ->recordUrl(fn ($record) => $record->role === 'student'
                 ? UserResource::getUrl('portfolio', ['record' => $record])
                 : UserResource::getUrl('edit', ['record' => $record]))
+            ->heading('Users')
+            ->description('List of all registered users in the system.')
             ->columns([
                 ColumnGroup::make('User Information', [
                     ImageColumn::make('pfp')
