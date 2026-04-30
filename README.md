@@ -1,8 +1,142 @@
-# Student Council Ranking System
-
-![Ranking System](public/ranking-sys.png)
+![Ranking System](public/sys-logo.png)
 
 An e-portfolio and ranking system for the Paulinian Student Government built with Laravel 11 and Filament v4. This system manages council evaluations, peer assessments, portfolio management, and leadership award applications.
+
+## Project Architecture
+
+```
+Student Council Ranking System
+├── app/
+│   ├── Models/
+│   │   ├── User.php                         # User accounts (Admin/Adviser/Student)
+│   │   ├── Council.php                      # Student councils/organizations
+│   │   ├── Department.php                   # Departments for councils/users
+│   │   ├── AwardType.php                    # Award type definitions
+│   │   ├── Position.php                     # Position definitions
+│   │   ├── CouncilPosition.php              # Council position assignments
+│   │   ├── Evaluation.php                   # Evaluation sessions
+│   │   ├── EvaluationPositionSlot.php       # Position slots per evaluation
+│   │   ├── EvaluationForm.php               # Form responses & scoring engine
+│   │   ├── EvaluationPeerEvaluator.php      # Peer evaluation assignments
+│   │   ├── EvaluationRank.php               # Final ranking calculations
+│   │   ├── Certificate.php                  # Achievement certificates
+│   │   ├── Help.php                         # Help resource placeholder
+│   │   └── LeadershipAwardApplication.php   # Award applications
+│   │
+│   ├── Http/
+│   │   └── Controllers/
+│   │       └── EvaluationSubmissionController.php # Evaluation submission logic
+│   │
+│   ├── Filament/
+│   │   ├── Resources/
+│   │   │   ├── Users/                       # User management (Admin)
+│   │   │   ├── Departments/                 # Department management (Admin)
+│   │   │   ├── Councils/                    # Council management (Admin)
+│   │   │   ├── AwardTypes/                  # Award type management (Admin)
+│   │   │   ├── Positions/                   # Council position management (Admin)
+│   │   │   ├── Evaluations/                 # Evaluation setup (Admin)
+│   │   │   ├── LeadershipAwardApplications/ # Award applications (Admin)
+│   │   │   ├── MyEvaluations/               # Evaluator interface (Adviser/Student)
+│   │   │   ├── MyPortfolio/                 # Student portfolios (Student)
+│   │   │   ├── Certificates/                # Certificate management (Student)
+│   │   │   └── Helps/                       # In-app help pages
+│   │   │
+│   │   ├── Pages/
+│   │   │   └── Auth/
+│   │   │       └── EditProfile.php          # User profile management
+│   │   │
+│   │   └── Widgets/
+│   │       ├── AccountWidget.php            # Account information widget
+│   │       ├── StatsOverview.php            # Student/Adviser statistics
+│   │       ├── AdminStatsOverview.php       # Admin dashboard statistics
+│   │       ├── CouncilSubmissionProgressWidget.php # Council progress widget
+│   │       └── MySubmissionProgressWidget.php # Personal progress widget
+│   │
+│   └── Providers/
+│       └── Filament/
+│           └── RankingPanelProvider.php     # Filament panel configuration
+│
+├── resources/
+│   └── views/
+│       ├── Help/                            # Help manual pages
+│       ├── EvaluationForm/                  # Custom evaluation interfaces
+│       │   ├── AdviserEvaluation.blade.php
+│       │   ├── PeerEvaluation.blade.php
+│       │   └── SelfEvaluation.blade.php
+│       └── Portfolio/
+│           └── PortfolioView.blade.php      # Portfolio display template
+│
+└── database/
+    └── migrations/                          # Database schema definitions
+```
+
+## Core Evaluation Workflow
+
+1. **Admin Creates Evaluation**
+    - Selects council and adviser
+    - Sets academic year
+    - Evaluation is created in "pending" status
+
+2. **Adviser Manages Students**
+    - Adds student officers to evaluation
+    - Assigns positions to each student
+    - Assigns peer evaluators (1-to-1 mapping)
+
+3. **Evaluators Complete Forms**
+    - **Self**: Students evaluate themselves
+    - **Peer**: Designated peers evaluate assigned students
+    - **Adviser**: Council adviser evaluates all students
+
+4. **Automatic Ranking**
+    - System calculates weighted scores
+    - Generates final rankings
+    - Displays scores in student portfolios
+
+5. **Award Applications**
+    - Graduating students apply for leadership awards
+    - Admin reviews applications and portfolios
+    - Awards are accepted/rejected
+
+## Database Schema
+
+### Core Tables
+
+- `users` - User accounts with roles (admin/adviser/student)
+- `councils` - Student councils with award type associations
+- `departments` - Departments for councils and users
+- `council_department` - Council/department pivot
+- `award_types` - Types of leadership awards
+- `positions` - Available council positions
+- `council_positions` - Position definitions per council
+- `evaluations` - Evaluation sessions
+- `evaluation_user` - Student participation in evaluations (pivot)
+- `evaluation_position_slots` - Position slots per evaluation
+- `evaluation_peer_evaluators` - Peer evaluator assignments
+- `evaluation_forms` - Evaluation responses and scores
+- `evaluation_ranks` - Calculated rankings
+- `certificates` - Student achievement certificates
+- `leadership_award_applications` - Award applications
+- `notifications` - System notifications (Laravel)
+
+### Key Relationships
+
+- Department → Councils (Many-to-Many via pivot)
+- Council → Evaluations (One-to-Many)
+- Council → Positions (One-to-Many via council positions)
+- Evaluation → Users (Many-to-Many via pivot)
+- Evaluation → EvaluationForms (One-to-Many)
+- Evaluation → EvaluationPositionSlots (One-to-Many)
+- User → Certificates (One-to-Many)
+- User → LeadershipAwardApplications (One-to-Many)
+
+## Technology Stack
+
+- **Framework**: Laravel 11
+- **Admin Panel**: Filament v4
+- **Database**: MySQL
+- **Frontend**: Blade Templates, Tailwind CSS (via Filament)
+- **Authentication**: Laravel Breeze (Filament integration)
+- **File Storage**: Laravel Storage (for certificates and profile pictures)
 
 ## System Overview
 
@@ -164,167 +298,3 @@ The following walkthrough mirrors the in-app Help pages and highlights the main 
 - **Applications List**: Review award applications and student ranks.
 
 ![Applications List](public/assets/applications/list.png)
-
-## Project Architecture
-
-```
-Student Council Ranking System
-├── app/
-│   ├── Models/
-│   │   ├── User.php                         # User accounts (Admin/Adviser/Student)
-│   │   ├── Council.php                      # Student councils/organizations
-│   │   ├── AwardType.php                    # Award type definitions
-│   │   ├── Evaluation.php                   # Evaluation sessions
-│   │   ├── EvaluationForm.php               # Form responses & scoring engine
-│   │   ├── EvaluationPeerEvaluator.php      # Peer evaluation assignments
-│   │   ├── EvaluationRank.php               # Final ranking calculations
-│   │   ├── Certificate.php                  # Achievement certificates
-│   │   └── LeadershipAwardApplication.php   # Award applications
-│   │
-│   ├── Http/
-│   │   └── Controllers/
-│   │       └── EvaluationSubmissionController.php # Evaluation submission logic
-│   │
-│   ├── Filament/
-│   │   ├── Resources/
-│   │   │   ├── Users/                       # User management (Admin)
-│   │   │   ├── Councils/                    # Council management (Admin)
-│   │   │   ├── AwardTypes/                  # Award type management (Admin)
-│   │   │   ├── Evaluations/                 # Evaluation setup (Admin)
-│   │   │   ├── LeadershipAwardApplications/ # Award applications (Admin)
-│   │   │   ├── MyEvaluations/               # Evaluator interface (Adviser/Student)
-│   │   │   ├── MyPortfolio/                 # Student portfolios (Student)
-│   │   │   └── Certificates/                # Certificate management (Student)
-│   │   │
-│   │   ├── Pages/
-│   │   │   └── Auth/
-│   │   │       └── EditProfile.php          # User profile management
-│   │   │
-│   │   └── Widgets/
-│   │       ├── AccountWidget.php            # Account information widget
-│   │       ├── StatsOverview.php            # Student/Adviser statistics
-│   │       └── AdminStatsOverview.php       # Admin dashboard statistics
-│   │
-│   └── Providers/
-│       └── Filament/
-│           └── RankingPanelProvider.php     # Filament panel configuration
-│
-├── resources/
-│   └── views/
-│       ├── EvaluationForm/                  # Custom evaluation interfaces
-│       │   ├── AdviserEvaluation.blade.php
-│       │   ├── PeerEvaluation.blade.php
-│       │   └── SelfEvaluation.blade.php
-│       └── Portfolio/
-│           └── PortfolioView.blade.php      # Portfolio display template
-│
-└── database/
-    └── migrations/                          # Database schema definitions
-```
-
-## Core Evaluation Workflow
-
-1. **Admin Creates Evaluation**
-    - Selects council and adviser
-    - Sets academic year
-    - Evaluation is created in "pending" status
-
-2. **Adviser Manages Students**
-    - Adds student officers to evaluation
-    - Assigns positions to each student
-    - Assigns peer evaluators (1-to-1 mapping)
-
-3. **Evaluators Complete Forms**
-    - **Self**: Students evaluate themselves
-    - **Peer**: Designated peers evaluate assigned students
-    - **Adviser**: Council adviser evaluates all students
-
-4. **Automatic Ranking**
-    - System calculates weighted scores
-    - Generates final rankings
-    - Displays scores in student portfolios
-
-5. **Award Applications**
-    - Graduating students apply for leadership awards
-    - Admin reviews applications and portfolios
-    - Awards are accepted/rejected
-
-## Database Schema Highlights
-
-### Core Tables
-
-- `users` - User accounts with roles (admin/adviser/student)
-- `councils` - Student councils with award type associations
-- `award_types` - Types of leadership awards
-- `evaluations` - Evaluation sessions
-- `evaluation_user` - Student participation in evaluations (pivot)
-- `evaluation_peer_evaluators` - Peer evaluator assignments
-- `evaluation_forms` - Evaluation responses and scores
-- `evaluation_ranks` - Calculated rankings
-- `certificates` - Student achievement certificates
-- `leadership_award_applications` - Award applications
-
-### Key Relationships
-
-- Council → Evaluation (One-to-Many)
-- Evaluation → Users (Many-to-Many via pivot)
-- Evaluation → EvaluationForms (One-to-Many)
-- User → Certificates (One-to-Many)
-- User → LeadershipAwardApplications (One-to-Many)
-
-## Technology Stack
-
-- **Framework**: Laravel 11
-- **Admin Panel**: Filament v4
-- **Database**: MySQL
-- **Frontend**: Blade Templates, Tailwind CSS (via Filament)
-- **Authentication**: Laravel Breeze (Filament integration)
-- **File Storage**: Laravel Storage (for certificates and profile pictures)
-
-## Installation
-
-1. **Clone the repository**
-
-    ```bash
-    git clone <repository-url>
-    cd ranking-sys
-    ```
-
-2. **Install dependencies**
-
-    ```bash
-    composer install
-    npm install
-    ```
-
-3. **Configure environment**
-
-    ```bash
-    cp .env.example .env
-    php artisan key:generate
-    ```
-
-4. **Setup database**
-    - Create database
-    - Update `.env` with database credentials
-
-    ```bash
-    php artisan migrate
-    ```
-
-5. **Create storage link**
-
-    ```bash
-    php artisan storage:link
-    ```
-
-6. **Run development server**
-
-    ```bash
-    php artisan serve
-    npm run dev
-    ```
-
-7. **Access the system**
-    - Navigate to `http://localhost:8000/ranking`
-    - Login with your credentials
