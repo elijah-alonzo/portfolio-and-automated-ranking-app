@@ -23,6 +23,8 @@ class EvaluationsTable
 
                 return $query;
             })
+            ->heading('Evaluations')
+            ->description('List of all evaluations conducted for student councils.')
             ->columns([
                 TextColumn::make('council.name')
                     ->label('Council')

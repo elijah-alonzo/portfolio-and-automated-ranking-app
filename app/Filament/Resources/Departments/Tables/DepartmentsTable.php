@@ -10,6 +10,8 @@ class DepartmentsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->heading('Departments')
+            ->description('List of all academic departments in the university.')
             ->columns([
                 TextColumn::make('name')
                     ->label('Department Name')

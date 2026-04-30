@@ -1,4 +1,4 @@
-@import "../../../../vendor/filament/filament/resources/css/theme.css";
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
@@ -33,7 +33,7 @@
 }
 
 .fi-section-header-heading {
-    color: #fae379;
+    color: #ffffff;
 }
 
 .fi-section-header-description {
@@ -50,7 +50,11 @@
 }
 
 .fi-ta-header-heading {
-    color: #fae379;
+    color: #ffffff;
+}
+
+.fi-ta-header-description {
+    color: #f9f9f9;
 }
 
 /* =========================

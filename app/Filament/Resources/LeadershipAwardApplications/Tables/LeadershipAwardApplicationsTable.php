@@ -22,6 +22,8 @@ class LeadershipAwardApplicationsTable
     {
         return $table
             ->recordUrl(null)
+            ->heading('Leadership Award Applications')
+            ->description('List of all leadership award applications submitted by students.')
             ->columns([
                 ColumnGroup::make('Student Information', [
                     ImageColumn::make('user.pfp')
