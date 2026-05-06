@@ -11,6 +11,15 @@ class Position extends Model
 {
     use HasFactory;
 
+    protected static function booted(): void
+    {
+        static::creating(function (Position $position): void {
+            if ($position->hierarchy === null) {
+                $position->hierarchy = (static::max('hierarchy') ?? 0) + 1;
+            }
+        });
+    }
+
     protected $fillable = [
         'title',
         'branch',

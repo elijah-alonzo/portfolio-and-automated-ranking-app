@@ -15,6 +15,7 @@ class PositionsTable
     {
         return $table
             ->recordUrl(fn ($record) => PositionsResource::getUrl('edit', ['record' => $record]))
+            ->defaultSort('hierarchy')
             ->heading('Positions')
             ->description('List of all council positions available for students.')
             ->columns([
@@ -57,12 +58,6 @@ class PositionsTable
                     })
                     ->badge()
                     ->color('warning'),
-                TextColumn::make('hierarchy')
-                    ->label('Hierarchy')
-                    ->numeric()
-                    ->sortable()
-                    ->badge()
-                    ->color('success'),
                 TextColumn::make('branch')
                     ->label('Branch')
                     ->placeholder('No branch'),

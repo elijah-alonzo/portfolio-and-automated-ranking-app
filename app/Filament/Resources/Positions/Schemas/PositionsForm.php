@@ -52,14 +52,6 @@ class PositionsForm
                             ->default(fn ($record) => $record?->branch)
                             ->required()
                             ->columnSpan(1),
-                        TextInput::make('hierarchy')
-                            ->label('Hierarchy')
-                            ->prefixIcon('heroicon-o-chart-bar')
-                            ->numeric()
-                            ->minValue(1)
-                            ->default(fn ($record) => $record?->hierarchy)
-                            ->required()
-                            ->columnSpan(1),
                         TextInput::make('max_slots')
                             ->label('Max Slots')
                             ->prefixIcon('heroicon-o-adjustments-horizontal')
