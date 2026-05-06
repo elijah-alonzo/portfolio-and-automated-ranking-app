@@ -17,15 +17,13 @@ class CreatePositions extends CreateRecord
         $councilIds = $data['council_ids'] ?? [];
         $title = trim($data['title'] ?? '');
         $branch = $data['branch'] ?? null;
-        $hierarchy = $data['hierarchy'] ?? null;
         $isActive = $data['is_active'] ?? true;
 
-        unset($data['council_ids'], $data['title'], $data['branch'], $data['hierarchy']);
+        unset($data['council_ids'], $data['title'], $data['branch']);
 
         $position = Position::create([
             'title' => $title,
             'branch' => $branch,
-            'hierarchy' => $hierarchy,
             'is_active' => $isActive,
         ]);
 

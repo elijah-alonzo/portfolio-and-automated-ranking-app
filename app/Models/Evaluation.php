@@ -84,7 +84,9 @@ class Evaluation extends Model
             $councilPositions = CouncilPosition::query()
                 ->where('council_id', $evaluation->council_id)
                 ->where('is_active', true)
-                ->get(['position_id', 'max_slots']);
+                ->join('positions', 'positions.id', '=', 'council_positions.position_id')
+                ->orderBy('positions.hierarchy')
+                ->get(['council_positions.position_id', 'council_positions.max_slots']);
 
             foreach ($councilPositions as $councilPosition) {
                 for ($slot = 1; $slot <= $councilPosition->max_slots; $slot++) {

@@ -125,7 +125,12 @@ class StudentsRelationManager extends RelationManager
 
     protected function applyStageFilters(Builder $query): Builder
     {
-        $query->with(['position', 'user']);
+        $query->with(['position', 'user'])
+            ->orderBy(
+                Position::select('hierarchy')
+                    ->whereColumn('positions.id', 'evaluation_position_slots.position_id')
+            )
+            ->orderBy('slot_number');
 
         if ($this->isClosedStage()) {
             return $query;
