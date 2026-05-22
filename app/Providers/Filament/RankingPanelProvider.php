@@ -32,7 +32,7 @@ class RankingPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/ranking/theme.css')
             ->login()
             ->profile(EditProfile::class, isSimple: false)
-            ->font('Figtree')
+            ->font('Montserrat')
             ->colors([
                 'primary' => [
                     50 => '#036635',
@@ -52,7 +52,6 @@ class RankingPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->brandLogo(asset('sys-logo.png'))
-            ->topbar(false)
             ->brandLogoHeight('2.5rem')
             ->breadcrumbs()
             ->navigationGroups([
