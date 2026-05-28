@@ -5,7 +5,7 @@ use App\Http\Controllers\EvaluationSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/ranking/login');
+    return view('welcome');
 });
 
 Route::post('/ranking/my-evaluations/{evaluation}/evaluate/{user}/{type}', [EvaluationSubmissionController::class, 'submit'])
