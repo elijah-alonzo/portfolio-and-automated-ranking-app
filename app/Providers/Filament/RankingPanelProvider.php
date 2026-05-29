@@ -54,6 +54,7 @@ class RankingPanelProvider extends PanelProvider
             ->brandLogo(asset('sys-logo.png'))
             ->brandLogoHeight('2.5rem')
             ->breadcrumbs()
+            ->registration()
             ->navigationGroups([
                 'User Management',
                 'Portfolio Management',
