@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\LeadershipAwardApplications\Widgets;
 
-use App\Models\LeadershipAwardApplication;
+use App\Features\Awards\Models\LeadershipAwardApplication;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\MyPortfolio;
 
+use App\Features\Users\Models\User;
 use App\Filament\Resources\MyPortfolio\Pages\ViewMyPortfolio;
-use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;

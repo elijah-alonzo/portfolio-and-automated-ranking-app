@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Evaluations\Tables;
 
+use App\Features\Evaluations\Models\Evaluation;
 use App\Filament\Resources\Evaluations\EvaluationResource;
-use App\Models\Evaluation;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;

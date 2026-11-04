@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Positions;
 
+use App\Features\Positions\Models\Position;
 use App\Filament\Resources\Positions\Pages\CreatePositions;
 use App\Filament\Resources\Positions\Pages\EditPositions;
 use App\Filament\Resources\Positions\Pages\ListPositions;
 use App\Filament\Resources\Positions\Schemas\PositionsForm;
 use App\Filament\Resources\Positions\Tables\PositionsTable;
-use App\Models\Position;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Evaluations;
 
+use App\Features\Evaluations\Models\Evaluation;
 use App\Filament\Resources\Evaluations\Pages\CreateEvaluation;
 use App\Filament\Resources\Evaluations\Pages\EditEvaluation;
 use App\Filament\Resources\Evaluations\Pages\ListEvaluations;
@@ -9,7 +10,6 @@ use App\Filament\Resources\Evaluations\Pages\ViewEvaluation;
 use App\Filament\Resources\Evaluations\Pages\ViewEvaluationForm;
 use App\Filament\Resources\Evaluations\Schemas\EvaluationForm;
 use App\Filament\Resources\Evaluations\Tables\EvaluationsTable;
-use App\Models\Evaluation;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

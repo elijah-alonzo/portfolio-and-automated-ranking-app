@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\MyEvaluations\RelationManagers;
 
-use App\Models\Evaluation;
-use App\Models\EvaluationForm;
-use App\Models\EvaluationPeerEvaluator;
-use App\Models\EvaluationPositionSlot;
-use App\Models\Position;
-use App\Models\User;
+use App\Features\Evaluations\Models\Evaluation;
+use App\Features\Evaluations\Models\EvaluationForm;
+use App\Features\Evaluations\Models\EvaluationPeerEvaluator;
+use App\Features\Evaluations\Models\EvaluationPositionSlot;
+use App\Features\Positions\Models\Position;
+use App\Features\Users\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Select;

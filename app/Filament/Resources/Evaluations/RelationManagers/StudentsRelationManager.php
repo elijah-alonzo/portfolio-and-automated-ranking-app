@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Evaluations\RelationManagers;
 
+use App\Features\Evaluations\Models\EvaluationForm;
+use App\Features\Evaluations\Models\EvaluationRank;
+use App\Features\Positions\Models\Position;
 use App\Filament\Resources\Evaluations\EvaluationResource;
-use App\Models\EvaluationForm;
-use App\Models\EvaluationRank;
-use App\Models\Position;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\ColumnGroup;
 use Filament\Tables\Columns\ImageColumn;

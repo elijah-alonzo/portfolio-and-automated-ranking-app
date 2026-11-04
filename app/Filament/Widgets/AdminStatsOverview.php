@@ -2,12 +2,12 @@
 
 namespace App\Filament\Widgets;
 
+use App\Features\Councils\Models\Council;
+use App\Features\Evaluations\Models\Evaluation;
+use App\Features\Users\Models\User;
 use App\Filament\Resources\Councils\Pages\ListCouncils;
 use App\Filament\Resources\Evaluations\Pages\ListEvaluations;
 use App\Filament\Resources\Users\Pages\ListUsers;
-use App\Models\Council;
-use App\Models\Evaluation;
-use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

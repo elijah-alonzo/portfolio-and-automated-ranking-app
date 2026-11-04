@@ -32,7 +32,7 @@
                 @csrf
 
                 @php
-    $rubric = \App\Models\EvaluationForm::getRubricStructure();
+    $rubric = \App\Features\Evaluations\Models\EvaluationForm::getRubricStructure();
     $questionsByDomainStrand = [];
     foreach ($questions as $qKey => $q) {
         $questionsByDomainStrand[$q['domain_key']][$q['strand_key']][$qKey] = $q;
@@ -60,7 +60,7 @@
                                         </div>
                                         <div class="ef-questions-container">
                                             @foreach ($questionsByDomainStrand[$domainKey][$strandKey] as $questionKey => $question)
-                                                @if ($questionKey !== \App\Models\EvaluationForm::LENGTH_OF_SERVICE_KEY)
+                                                @if ($questionKey !== \App\Features\Evaluations\Models\EvaluationForm::LENGTH_OF_SERVICE_KEY)
                                                     <div
                                                         class="ef-question-item"
                                                     >

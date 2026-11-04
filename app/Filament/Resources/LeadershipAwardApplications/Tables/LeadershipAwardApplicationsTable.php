@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\LeadershipAwardApplications\Tables;
 
+use App\Features\Awards\Models\LeadershipAwardApplication;
+use App\Features\Evaluations\Models\EvaluationRank;
 use App\Filament\Resources\LeadershipAwardApplications\LeadershipAwardApplicationResource;
-use App\Models\EvaluationRank;
-use App\Models\LeadershipAwardApplication;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;

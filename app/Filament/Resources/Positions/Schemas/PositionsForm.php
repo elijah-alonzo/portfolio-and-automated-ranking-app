@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Positions\Schemas;
 
-use App\Models\Council;
-use App\Models\CouncilPosition;
+use App\Features\Councils\Models\Council;
+use App\Features\Councils\Models\CouncilPosition;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;

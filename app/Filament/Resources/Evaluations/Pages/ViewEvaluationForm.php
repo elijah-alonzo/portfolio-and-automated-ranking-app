@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Evaluations\Pages;
 
+use App\Features\Evaluations\Models\Evaluation;
+use App\Features\Evaluations\Models\EvaluationForm;
+use App\Features\Users\Models\User;
 use App\Filament\Resources\Evaluations\EvaluationResource;
-use App\Models\Evaluation;
-use App\Models\EvaluationForm;
-use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;

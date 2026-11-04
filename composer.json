@@ -12,11 +12,13 @@
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "*",
         "filament/filament": "~4.0",
+        "inertiajs/inertia-laravel": "^3.7",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.14",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.29",
         "laravel/sail": "^1.41",
@@ -42,8 +44,9 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
-            "@php artisan migrate --force",
-            "npm install",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --force --seed",
+            "npm ci",
             "npm run build"
         ],
         "dev": [
@@ -52,6 +55,8 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
+            "@lint:check",
+            "@types:check",
             "@php artisan test"
         ],
         "post-autoload-dump": [
@@ -72,6 +77,15 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ],
+        "lint": [
+            "pint --parallel"
+        ],
+        "lint:check": [
+            "pint --parallel --test"
+        ],
+        "types:check": [
+            "php -d memory_limit=512M vendor/bin/phpstan analyse"
         ]
     },
     "extra": {

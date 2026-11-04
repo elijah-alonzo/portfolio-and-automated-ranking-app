@@ -1,22 +1,24 @@
-import { defineConfig } from "vite";
-import laravel from "laravel-vite-plugin";
-import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
         laravel({
             input: [
-                "resources/css/app.css",
-                "resources/js/app.js",
-                "resources/css/filament/ranking/theme.css",
+                'resources/css/app.css',
+                'resources/js/app.jsx',
+                'resources/css/filament/ranking/theme.css',
             ],
             refresh: true,
         }),
+        react(),
         tailwindcss(),
     ],
     server: {
         watch: {
-            ignored: ["**/storage/framework/views/**"],
+            ignored: ['**/storage/framework/views/**'],
         },
     },
 });

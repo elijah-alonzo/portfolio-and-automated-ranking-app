@@ -1,17 +1,16 @@
 <?php
 
-use App\Http\Controllers\EvaluationExportController;
-use App\Http\Controllers\EvaluationSubmissionController;
+use App\Features\Evaluations\Controllers\EvaluationExportController;
+use App\Features\Evaluations\Controllers\EvaluationSubmissionController;
+use App\Features\Landing\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', LandingController::class)->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/ranking/my-evaluations/{evaluation}/evaluate/{user}/{type}', [EvaluationSubmissionController::class, 'submit'])
+        ->name('evaluation.submit');
+
+    Route::get('/ranking/admin/evaluations/{evaluation}/evaluate/{user}/{type}/export/{format}', [EvaluationExportController::class, 'export'])
+        ->name('evaluation.export');
 });
-
-Route::post('/ranking/my-evaluations/{evaluation}/evaluate/{user}/{type}', [EvaluationSubmissionController::class, 'submit'])
-    ->middleware('auth')
-    ->name('evaluation.submit');
-
-Route::get('/ranking/admin/evaluations/{evaluation}/evaluate/{user}/{type}/export/{format}', [EvaluationExportController::class, 'export'])
-    ->middleware('auth')
-    ->name('evaluation.export');

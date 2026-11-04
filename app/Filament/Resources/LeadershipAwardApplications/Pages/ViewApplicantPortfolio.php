@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\LeadershipAwardApplications\Pages;
 
+use App\Features\Awards\Models\LeadershipAwardApplication;
+use App\Features\Users\Models\User;
 use App\Filament\Resources\LeadershipAwardApplications\LeadershipAwardApplicationResource;
-use App\Models\LeadershipAwardApplication;
-use App\Models\User;
 use Filament\Resources\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 

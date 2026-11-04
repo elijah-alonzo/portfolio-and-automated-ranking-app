@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Positions\Pages;
 
+use App\Features\Councils\Models\CouncilPosition;
+use App\Features\Positions\Models\Position;
 use App\Filament\Resources\Positions\PositionsResource;
-use App\Models\CouncilPosition;
-use App\Models\Position;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 

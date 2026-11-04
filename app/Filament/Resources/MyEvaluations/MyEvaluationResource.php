@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\MyEvaluations;
 
+use App\Features\Evaluations\Models\Evaluation;
 use App\Filament\Resources\MyEvaluations\Pages\EvaluateStudentPage;
 use App\Filament\Resources\MyEvaluations\Pages\ListMyEvaluations;
 use App\Filament\Resources\MyEvaluations\Pages\ViewMyEvaluation;
 use App\Filament\Resources\MyEvaluations\Tables\MyEvaluationsTable;
-use App\Models\Evaluation;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

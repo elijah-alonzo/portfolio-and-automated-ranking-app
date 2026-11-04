@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Positions\Pages;
 
+use App\Features\Councils\Models\CouncilPosition;
 use App\Filament\Resources\Positions\PositionsResource;
-use App\Models\CouncilPosition;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;

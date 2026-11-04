@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Departments;
 
+use App\Features\Departments\Models\Department;
 use App\Filament\Resources\Departments\Pages\CreateDepartments;
 use App\Filament\Resources\Departments\Pages\EditDepartments;
 use App\Filament\Resources\Departments\Pages\ListDepartments;
 use App\Filament\Resources\Departments\Schemas\DepartmentsForm;
 use App\Filament\Resources\Departments\Tables\DepartmentsTable;
-use App\Models\Department;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

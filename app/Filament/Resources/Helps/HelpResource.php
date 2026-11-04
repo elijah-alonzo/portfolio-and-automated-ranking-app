@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Helps;
 
+use App\Features\Helps\Models\Help;
 use App\Filament\Resources\Helps\Pages\ApplicationHelp;
 use App\Filament\Resources\Helps\Pages\AwardHelp;
 use App\Filament\Resources\Helps\Pages\CertificateHelp;
@@ -13,7 +14,6 @@ use App\Filament\Resources\Helps\Pages\OverviewHelp;
 use App\Filament\Resources\Helps\Pages\PortfolioHelp;
 use App\Filament\Resources\Helps\Pages\PositionHelp;
 use App\Filament\Resources\Helps\Pages\UserHelp;
-use App\Models\Help;
 use BackedEnum;
 use Filament\Navigation\NavigationItem;
 use Filament\Resources\Pages\Page;

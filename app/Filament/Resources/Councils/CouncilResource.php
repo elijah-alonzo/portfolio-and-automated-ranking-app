@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Councils;
 
+use App\Features\Councils\Models\Council;
 use App\Filament\Resources\Councils\Pages\CreateCouncil;
 use App\Filament\Resources\Councils\Pages\EditCouncil;
 use App\Filament\Resources\Councils\Pages\ListCouncils;
 use App\Filament\Resources\Councils\Schemas\CouncilForm;
 use App\Filament\Resources\Councils\Tables\CouncilsTable;
-use App\Models\Council;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

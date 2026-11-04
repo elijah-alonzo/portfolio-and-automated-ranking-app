@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Positions\Widgets;
 
-use App\Models\Position;
+use App\Features\Positions\Models\Position;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

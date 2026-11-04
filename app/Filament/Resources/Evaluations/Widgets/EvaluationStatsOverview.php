@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Evaluations\Widgets;
 
-use App\Models\Evaluation;
+use App\Features\Evaluations\Models\Evaluation;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

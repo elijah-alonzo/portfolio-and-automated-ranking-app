@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Evaluations\Widgets;
 
-use App\Models\Evaluation;
-use App\Models\EvaluationRank;
+use App\Features\Evaluations\Models\Evaluation;
+use App\Features\Evaluations\Models\EvaluationRank;
 use Filament\Widgets\ChartWidget;
 
 class TopStudentsStatsWidget extends ChartWidget

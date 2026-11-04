@@ -125,7 +125,7 @@
                                         <div class="award-type">
                                             <p class="award-description">Award Type: {{ $evaluation->council->awardType->name }}</p>
                                             @if ($rank)
-                                                <p class="award-description">Rank: {{ ucfirst($rank->rank) }} ({{ number_format($rank->final_score, 2) }})</p>
+                                                <p class="award-description">Rank: {{ $rank->rank?->label() }} ({{ number_format($rank->final_score, 2) }})</p>
                                             @endif
                                         </div>
                                     @endif

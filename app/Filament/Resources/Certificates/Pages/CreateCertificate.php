@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Certificates\Pages;
 
+use App\Features\Certificates\Models\Certificate;
+use App\Features\Users\Models\User;
 use App\Filament\Resources\Certificates\CertificateResource;
-use App\Models\Certificate;
-use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 

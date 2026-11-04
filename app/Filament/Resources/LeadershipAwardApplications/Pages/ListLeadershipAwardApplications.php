@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\LeadershipAwardApplications\Pages;
 
+use App\Features\Awards\Models\LeadershipAwardApplication;
 use App\Filament\Resources\LeadershipAwardApplications\LeadershipAwardApplicationResource;
 use App\Filament\Resources\LeadershipAwardApplications\Widgets\LeadershipAwardApplicationStatsOverview;
-use App\Models\LeadershipAwardApplication;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;

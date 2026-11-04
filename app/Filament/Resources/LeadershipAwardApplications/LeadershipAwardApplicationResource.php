@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\LeadershipAwardApplications;
 
+use App\Features\Awards\Models\LeadershipAwardApplication;
 use App\Filament\Resources\LeadershipAwardApplications\Pages\ListLeadershipAwardApplications;
 use App\Filament\Resources\LeadershipAwardApplications\Pages\ViewApplicantPortfolio;
 use App\Filament\Resources\LeadershipAwardApplications\Schemas\LeadershipAwardApplicationForm;
 use App\Filament\Resources\LeadershipAwardApplications\Tables\LeadershipAwardApplicationsTable;
-use App\Models\LeadershipAwardApplication;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

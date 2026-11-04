@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Users\Widgets;
 
-use App\Models\User;
+use App\Features\Users\Models\User;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

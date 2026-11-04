@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\AwardTypes;
 
+use App\Features\Awards\Models\AwardType;
 use App\Filament\Resources\AwardTypes\Pages\CreateAwardType;
 use App\Filament\Resources\AwardTypes\Pages\EditAwardType;
 use App\Filament\Resources\AwardTypes\Pages\ListAwardTypes;
 use App\Filament\Resources\AwardTypes\Schemas\AwardTypeForm;
 use App\Filament\Resources\AwardTypes\Tables\AwardTypesTable;
-use App\Models\AwardType;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

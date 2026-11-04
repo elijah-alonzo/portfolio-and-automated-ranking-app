@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\AwardType;
-use App\Models\Council;
-use App\Models\CouncilPosition;
-use App\Models\Department;
-use App\Models\Position;
-use App\Models\User;
+use App\Features\Awards\Models\AwardType;
+use App\Features\Councils\Models\Council;
+use App\Features\Councils\Models\CouncilPosition;
+use App\Features\Departments\Models\Department;
+use App\Features\Positions\Models\Position;
+use App\Features\Users\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;

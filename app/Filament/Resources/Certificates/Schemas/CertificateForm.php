@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Certificates\Schemas;
 
-use App\Models\User;
+use App\Features\Users\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;

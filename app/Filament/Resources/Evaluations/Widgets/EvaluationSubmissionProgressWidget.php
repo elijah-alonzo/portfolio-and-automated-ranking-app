@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Evaluations\Widgets;
 
-use App\Models\Evaluation;
-use App\Models\EvaluationForm;
+use App\Features\Evaluations\Models\Evaluation;
+use App\Features\Evaluations\Models\EvaluationForm;
 use Filament\Widgets\ChartWidget;
 
 class EvaluationSubmissionProgressWidget extends ChartWidget

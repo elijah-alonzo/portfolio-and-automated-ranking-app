@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Certificates;
 
+use App\Features\Certificates\Models\Certificate;
 use App\Filament\Resources\Certificates\Pages\CreateCertificate;
 use App\Filament\Resources\Certificates\Pages\EditCertificate;
 use App\Filament\Resources\Certificates\Pages\ListCertificates;
 use App\Filament\Resources\Certificates\Schemas\CertificateForm;
 use App\Filament\Resources\Certificates\Tables\CertificatesTable;
-use App\Models\Certificate;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

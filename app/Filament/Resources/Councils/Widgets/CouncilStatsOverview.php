@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Councils\Widgets;
 
-use App\Models\Council;
+use App\Features\Councils\Models\Council;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 

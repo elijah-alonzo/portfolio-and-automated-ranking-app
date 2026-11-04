@@ -1,0 +1,337 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Features/Evaluations/Controllers/EvaluationExportController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Features/Evaluations/Controllers/EvaluationExportController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$awardType\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Features/Evaluations/Models/EvaluationForm.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$award_type_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Features/Evaluations/Models/EvaluationForm.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int\<0, max\> and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Features/Positions/Models/Position.php
+
+		-
+			message: '#^Call to function in_array\(\) with arguments ''admin''\|''adviser''\|''student'', array\{''admin'', ''adviser'', ''student''\} and true will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Filament/Resources/Certificates/CertificateResource.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Features\\Users\\Models\\User\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/Certificates/CertificateResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$certification_name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Resources/Certificates/Pages/CreateCertificate.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$date_issued\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Certificates/Pages/CreateCertificate.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$file_path\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Certificates/Pages/CreateCertificate.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Resources/Certificates/Pages/CreateCertificate.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type App\\Features\\Users\\Models\\User\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Filament/Resources/Certificates/Schemas/CertificateForm.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Evaluations/Pages/ViewEvaluation.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/Evaluations/Pages/ViewEvaluation.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 2
+			path: app/Filament/Resources/Evaluations/Pages/ViewEvaluationForm.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Filament/Resources/Evaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Method App\\Filament\\Resources\\Evaluations\\RelationManagers\\StudentsRelationManager\:\:getTableColumns\(\) should return array\<Filament\\Tables\\Columns\\Column\|Filament\\Tables\\Columns\\Layout\\Component\> but returns array\<int, Filament\\Tables\\Columns\\ColumnGroup\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/Resources/Evaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/Evaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Evaluations/Widgets/TopStudentsStatsWidget.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/Evaluations/Widgets/TopStudentsStatsWidget.php
+
+		-
+			message: '#^Relation ''certificates'' is not found in App\\Features\\Users\\Models\\User model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Resources/LeadershipAwardApplications/Pages/ViewApplicantPortfolio.php
+
+		-
+			message: '#^Relation ''evaluationRanks'' is not found in App\\Features\\Users\\Models\\User model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Resources/LeadershipAwardApplications/Pages/ViewApplicantPortfolio.php
+
+		-
+			message: '#^Relation ''participatingEvaluations'' is not found in App\\Features\\Users\\Models\\User model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Filament/Resources/LeadershipAwardApplications/Pages/ViewApplicantPortfolio.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Resources/LeadershipAwardApplications/Tables/LeadershipAwardApplicationsTable.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Resources/LeadershipAwardApplications/Tables/LeadershipAwardApplicationsTable.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Filament/Resources/LeadershipAwardApplications/Tables/LeadershipAwardApplicationsTable.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 2
+			path: app/Filament/Resources/MyEvaluations/Pages/EvaluateStudentPage.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/Pages/ViewMyEvaluation.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$academic_year\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$adviser\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$council\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$council_adviser_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$department\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 19
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$pfp\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 7
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:areAllFormsSubmitted\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getEvaluationUrl\(\)\.$#'
+			identifier: method.notFound
+			count: 6
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:users\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Method App\\Filament\\Resources\\MyEvaluations\\RelationManagers\\StudentsRelationManager\:\:getPendingReminderTargets\(\) should return array\<int, array\{user\: App\\Features\\Users\\Models\\User\|null, type\: string, evaluatee_name\: string\}\> but returns list\<array\{user\: Illuminate\\Database\\Eloquent\\Model, type\: ''peer''\|''self'', evaluatee_name\: mixed\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Method App\\Filament\\Resources\\MyEvaluations\\RelationManagers\\StudentsRelationManager\:\:getTableColumns\(\) should return array\<Filament\\Tables\\Columns\\Column\|Filament\\Tables\\Columns\\Layout\\Component\> but returns array\<int, Filament\\Tables\\Columns\\ColumnGroup\|Filament\\Tables\\Columns\\TextColumn\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 6
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>title" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/MyEvaluations/RelationManagers/StudentsRelationManager.php
+
+		-
+			message: '#^Called ''pluck'' on Laravel collection, but could have been retrieved as a query\.$#'
+			identifier: larastan.noUnnecessaryCollectionCall
+			count: 1
+			path: app/Filament/Resources/MyPortfolio/Pages/ViewMyPortfolio.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$branch\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Positions/Pages/EditPositions.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Resources/Positions/Pages/EditPositions.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_active\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Positions/Pages/EditPositions.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Positions/Pages/EditPositions.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/Positions/Schemas/PositionsForm.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>is_active" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/Positions/Schemas/PositionsForm.php
+
+		-
+			message: '#^Cannot access property \$name on Illuminate\\Database\\Eloquent\\Model\|int\<min, \-1\>\|int\<1, max\>\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Resources/Users/Pages/ViewUserPortfolio.php
+
+		-
+			message: '#^Cannot access property \$role on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Resources/Users/Pages/ViewUserPortfolio.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Filament/Resources/Users/Tables/UsersTable.php
