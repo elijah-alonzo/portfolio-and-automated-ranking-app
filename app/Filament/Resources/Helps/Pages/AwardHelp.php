@@ -10,5 +10,5 @@ class AwardHelp extends HelpPage
 
     protected static ?string $title = 'Awards';
 
-    protected string $view = 'Help.Awards';
+    protected string $view = 'help.awards';
 }

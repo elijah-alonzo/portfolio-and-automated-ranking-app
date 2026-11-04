@@ -29,7 +29,7 @@ class RankingPanelProvider extends PanelProvider
             ->default()
             ->id('ranking')
             ->path('ranking')
-            ->viteTheme('resources/css/filament/ranking/theme.css')
+            ->viteTheme('resources/css/admin/app.css')
             ->login()
             ->profile(EditProfile::class, isSimple: false)
             ->font('Montserrat')

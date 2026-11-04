@@ -23,4 +23,13 @@ evaluation/
 Homestead.json
 Homestead.yaml
 Thumbs.db
-/documentation//CLAUDE.md
+/documentation/
+CLAUDE.md
+
+/public/css/filament
+/public/js/filament
+/public/fonts/filament
+desktop.ini
+02-dashboar.png
+03-evaluation form.png
+04-portfolio.png

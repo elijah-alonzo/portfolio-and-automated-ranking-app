@@ -13,7 +13,7 @@ class ViewUserPortfolio extends ViewRecord
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected string $view = 'Portfolio.AdminPortfolioView';
+    protected string $view = 'portfolio.admin-portfolio-view';
 
     public function mount(int|string $record): void
     {

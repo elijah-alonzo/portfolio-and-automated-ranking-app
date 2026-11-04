@@ -10,5 +10,5 @@ class UserHelp extends HelpPage
 
     protected static ?string $title = 'Users';
 
-    protected string $view = 'Help.Users';
+    protected string $view = 'help.users';
 }

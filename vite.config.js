@@ -7,9 +7,9 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css',
+                'resources/css/public/app.css',
+                'resources/css/admin/app.css',
                 'resources/js/app.jsx',
-                'resources/css/filament/ranking/theme.css',
             ],
             refresh: true,
         }),

@@ -18,7 +18,7 @@ class EvaluateStudentPage extends Page
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected string $view = 'EvaluationForm.AdviserEvaluation';
+    protected string $view = 'evaluation-form.adviser-evaluation';
 
     public ?Evaluation $evaluation = null;
 

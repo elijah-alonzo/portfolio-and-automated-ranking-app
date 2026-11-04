@@ -10,5 +10,5 @@ class CertificateHelp extends HelpPage
 
     protected static ?string $title = 'Certificates';
 
-    protected string $view = 'Help.Certificates';
+    protected string $view = 'help.certificates';
 }

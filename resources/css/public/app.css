@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+@source '../../views';
+
+/* Defaults: shared Tailwind theme tokens used by the landing page */
+
+@theme {
+    /* Typography */
+    --font-sans: 'Figtree', 'Trebuchet MS', ui-sans-serif, system-ui, sans-serif;
+
+    /* Brand colors */
+    --color-brand: #036635;
+    --color-brand-dark: #024427;
+    --color-brand-deep: #01331d;
+    --color-brand-soft: #e6f2ec;
+    --color-gold: #d6b44c;
+
+    /* Text colors */
+    --color-ink: #0f1a14;
+    --color-muted: #4b5a52;
+
+    /* Page colors used by the base layer */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-border: var(--border);
+}
+
+/* Default light-mode colors */
+:root {
+    --background: #ffffff;
+    --foreground: #0f1a14;
+    --border: rgb(15 26 20 / 10%);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 5rem;
+    }
+
+    body {
+        @apply bg-background font-sans text-foreground;
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--color-gold);
+        outline-offset: 3px;
+    }
+}
+
+/* Layout: shared page container */
+
+@utility container-page {
+    @apply mx-auto w-[min(1200px,92vw)] px-6;
+}
+
+/* Buttons: shared base. Colors are set per use with Tailwind classes. */
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-transparent px-5 py-3 font-semibold transition duration-200 motion-safe:hover:scale-105 hover:shadow-[0_8px_18px_rgb(15_26_20/12%)] [&_svg]:size-[18px];
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}

@@ -10,5 +10,5 @@ class OverviewHelp extends HelpPage
 
     protected static ?string $title = 'Introduction';
 
-    protected string $view = 'Help.Overview';
+    protected string $view = 'help.overview';
 }

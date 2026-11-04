@@ -10,5 +10,5 @@ class CouncilEvaluationHelp extends HelpPage
 
     protected static ?string $title = 'Council Evaluation';
 
-    protected string $view = 'Help.CouncilEvaluation';
+    protected string $view = 'help.council-evaluation';
 }

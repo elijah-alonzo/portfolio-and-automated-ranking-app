@@ -16,7 +16,7 @@ class ViewEvaluationForm extends Page
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected string $view = 'EvaluationForm.AdviserEvaluation';
+    protected string $view = 'evaluation-form.adviser-evaluation';
 
     public ?Evaluation $evaluation = null;
 
@@ -47,10 +47,10 @@ class ViewEvaluationForm extends Page
         $this->evaluation->loadMissing('council.awardType');
 
         $this->view = match ($this->evaluationType) {
-            'self' => 'EvaluationForm.SelfEvaluation',
-            'peer' => 'EvaluationForm.PeerEvaluation',
-            'adviser' => 'EvaluationForm.AdviserEvaluation',
-            default => 'EvaluationForm.AdviserEvaluation'
+            'self' => 'evaluation-form.self-evaluation',
+            'peer' => 'evaluation-form.peer-evaluation',
+            'adviser' => 'evaluation-form.adviser-evaluation',
+            default => 'evaluation-form.adviser-evaluation'
         };
 
         if (! $this->evaluation) {

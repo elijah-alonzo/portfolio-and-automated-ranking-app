@@ -10,5 +10,5 @@ class CouncilHelp extends HelpPage
 
     protected static ?string $title = 'Councils';
 
-    protected string $view = 'Help.Councils';
+    protected string $view = 'help.councils';
 }

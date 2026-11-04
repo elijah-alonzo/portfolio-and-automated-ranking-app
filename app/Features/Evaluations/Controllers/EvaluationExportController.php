@@ -107,7 +107,7 @@ class EvaluationExportController extends Controller
     {
         $filename = $this->buildFilename($evaluation, $evaluatee, $type, 'pdf');
 
-        $pdf = Pdf::loadView('EvaluationForm.EvaluationExportPdf', [
+        $pdf = Pdf::loadView('evaluation-form.evaluation-export-pdf', [
             'evaluation' => $evaluation,
             'evaluatee' => $evaluatee,
             'evaluator' => $form->evaluator,

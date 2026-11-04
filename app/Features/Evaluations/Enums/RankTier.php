@@ -9,13 +9,32 @@ enum RankTier: string
     case Bronze = 'bronze';
     case None = 'none';
 
+    /**
+     * Highest final score an officer can reach.
+     */
+    public const MAX_SCORE = 3.0;
+
     public static function fromScore(float $score): self
     {
-        return match (true) {
-            $score >= 2.41 => self::Gold,
-            $score >= 1.81 => self::Silver,
-            $score >= 1.21 => self::Bronze,
-            default => self::None,
+        foreach ([self::Gold, self::Silver, self::Bronze] as $tier) {
+            if ($score >= $tier->threshold()) {
+                return $tier;
+            }
+        }
+
+        return self::None;
+    }
+
+    /**
+     * Lowest final score that earns this tier.
+     */
+    public function threshold(): float
+    {
+        return match ($this) {
+            self::Gold => 2.41,
+            self::Silver => 1.81,
+            self::Bronze => 1.21,
+            self::None => 0.0,
         };
     }
 

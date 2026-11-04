@@ -10,5 +10,5 @@ class PortfolioHelp extends HelpPage
 
     protected static ?string $title = 'Portfolio';
 
-    protected string $view = 'Help.Portfolio';
+    protected string $view = 'help.portfolio';
 }

@@ -10,5 +10,5 @@ class ApplicationHelp extends HelpPage
 
     protected static ?string $title = 'Applications';
 
-    protected string $view = 'Help.Applications';
+    protected string $view = 'help.applications';
 }

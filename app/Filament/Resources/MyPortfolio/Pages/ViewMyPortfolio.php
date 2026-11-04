@@ -20,7 +20,7 @@ class ViewMyPortfolio extends Page
 
     protected static ?string $title = 'My Portfolio';
 
-    protected string $view = 'Portfolio.PortfolioView';
+    protected string $view = 'portfolio.portfolio-view';
 
     public ?User $record = null;
 

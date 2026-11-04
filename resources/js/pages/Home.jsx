@@ -1,19 +1,15 @@
 import { Head } from '@inertiajs/react';
 
-import HomeCouncils from '../components/sections/HomeCouncils';
-import HomeFeatures from '../components/sections/HomeFeatures';
+import HomeAbout from '../components/sections/HomeAbout';
 import HomeHero from '../components/sections/HomeHero';
-import HomeRanking from '../components/sections/HomeRanking';
 import PublicLayout from '../components/shared/PublicLayout';
 
 export default function Home({ stats }) {
     return (
         <PublicLayout>
-            <Head title="Leadership evaluation and ranking" />
+            <Head title="Home" />
             <HomeHero stats={stats} />
-            <HomeFeatures />
-            <HomeRanking />
-            <HomeCouncils />
+            <HomeAbout />
         </PublicLayout>
     );
 }

@@ -10,5 +10,5 @@ class DepartmentHelp extends HelpPage
 
     protected static ?string $title = 'Departments';
 
-    protected string $view = 'Help.Departments';
+    protected string $view = 'help.departments';
 }

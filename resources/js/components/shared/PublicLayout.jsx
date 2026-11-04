@@ -1,10 +1,10 @@
 import Footer from './Footer';
-import Navigation from './Navigation';
+import Header from './Header';
 
 export default function PublicLayout({ children }) {
     return (
         <>
-            <Navigation />
+            <Header />
             <main>{children}</main>
             <Footer />
         </>

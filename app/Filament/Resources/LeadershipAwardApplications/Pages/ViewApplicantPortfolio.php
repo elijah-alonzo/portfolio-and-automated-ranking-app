@@ -16,7 +16,7 @@ class ViewApplicantPortfolio extends Page
 
     protected static bool $shouldRegisterNavigation = false;
 
-    protected string $view = 'Portfolio.AdminPortfolioView';
+    protected string $view = 'portfolio.admin-portfolio-view';
 
     public ?User $record = null;
 
