@@ -18,11 +18,13 @@ class Department extends Model
         'description',
     ];
 
+    /** @return HasMany<User, $this> */
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
 
+    /** @return BelongsToMany<Council, $this> */
     public function councils(): BelongsToMany
     {
         return $this->belongsToMany(Council::class, 'council_department');

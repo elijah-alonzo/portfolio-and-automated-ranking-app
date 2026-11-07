@@ -22,14 +22,11 @@ class EditPositions extends EditRecord
 
         unset($data['council_ids'], $data['title'], $data['branch']);
 
-        $record->title = $title;
-        $record->branch = $branch;
-        $record->is_active = $isActive;
-        $record->save();
+        $record->fill(['title' => $title, 'branch' => $branch, 'is_active' => $isActive])->save();
 
         foreach ($councilIds as $councilId) {
             CouncilPosition::updateOrCreate(
-                ['council_id' => $councilId, 'position_id' => $record->id],
+                ['council_id' => $councilId, 'position_id' => $record->getKey()],
                 [
                     'max_slots' => $maxSlots,
                     'is_active' => $isActive,
@@ -37,7 +34,7 @@ class EditPositions extends EditRecord
             );
         }
 
-        CouncilPosition::where('position_id', $record->id)
+        CouncilPosition::where('position_id', $record->getKey())
             ->whereNotIn('council_id', $councilIds)
             ->delete();
 

@@ -19,16 +19,19 @@ class EvaluationPositionSlot extends Model
         'user_id',
     ];
 
+    /** @return BelongsTo<Evaluation, $this> */
     public function evaluation(): BelongsTo
     {
         return $this->belongsTo(Evaluation::class);
     }
 
+    /** @return BelongsTo<Position, $this> */
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

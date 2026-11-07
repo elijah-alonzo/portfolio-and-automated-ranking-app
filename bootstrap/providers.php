@@ -1,9 +1,9 @@
 <?php
 
 use App\Providers\AppServiceProvider;
-use App\Providers\Filament\RankingPanelProvider;
+use App\Providers\Filament\AdminPanelProvider;
 
 return [
     AppServiceProvider::class,
-    RankingPanelProvider::class,
+    AdminPanelProvider::class,
 ];

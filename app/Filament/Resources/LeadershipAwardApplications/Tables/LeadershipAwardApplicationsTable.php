@@ -30,20 +30,12 @@ class LeadershipAwardApplicationsTable
                         ->label('Picture')
                         ->circular()
                         ->size(40)
-                        ->getStateUsing(function ($record) {
-                            $name = $record->user?->name ?? 'Student';
-
-                            return $record->user?->pfp
-                                ? (str_starts_with($record->user->pfp, 'http')
-                                    ? $record->user->pfp
-                                    : asset('storage/'.$record->user->pfp))
-                                : 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
-                        }),
+                        ->getStateUsing(fn ($record) => $record->user->avatarOrInitialsUrl()),
                     TextColumn::make('user.name')
                         ->label('Student')
                         ->weight('medium')
                         ->searchable()
-                        ->description(fn ($record) => $record->user?->department?->name ?? 'No department'),
+                        ->description(fn ($record) => $record->user->department->name),
                 ]),
                 TextColumn::make('awardType.name')
                     ->label('Award Type')
@@ -122,8 +114,8 @@ class LeadershipAwardApplicationsTable
                                     ->sendToDatabase($record->user);
 
                                 if (filled($record->user->email)) {
-                                    $studentName = $record->user->name ?? 'Student';
-                                    $awardTypeName = $record->awardType?->name ?? 'Leadership Award';
+                                    $studentName = $record->user->name;
+                                    $awardTypeName = $record->awardType->name;
 
                                     $message = <<<EOT
                                         Greetings {$studentName}!
@@ -162,8 +154,8 @@ class LeadershipAwardApplicationsTable
                                     ->sendToDatabase($record->user);
 
                                 if (filled($record->user->email)) {
-                                    $studentName = $record->user->name ?? 'Student';
-                                    $awardTypeName = $record->awardType?->name ?? 'Leadership Award';
+                                    $studentName = $record->user->name;
+                                    $awardTypeName = $record->awardType->name;
 
                                     $message = <<<EOT
 Greetings {$studentName}!

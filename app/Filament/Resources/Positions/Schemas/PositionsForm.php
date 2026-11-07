@@ -26,7 +26,7 @@ class PositionsForm
                             ->default(fn ($record) => $record?->title)
                             ->required()
                             ->maxLength(255)
-                            ->rule(fn ($record) => 'unique:positions,title,'.($record?->id ?? 'NULL').',id')
+                            ->unique(ignoreRecord: true)
                             ->columnSpan(1),
                         Select::make('council_ids')
                             ->label('Councils')
@@ -66,7 +66,7 @@ class PositionsForm
                             ->label('Active')
                             ->inline(false)
                             ->helperText('Activate or deactivate this position')
-                            ->default(fn ($record) => $record?->is_active ?? true)
+                            ->default(true)
                             ->columnSpan(1),
                     ])
                     ->columns(2)

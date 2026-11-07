@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "strict": true,
+        "noImplicitAny": true,
+        "noEmit": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "types": ["vite/client"],
+        "paths": {
+            "@/*": ["./resources/js/*"]
+        }
+    },
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.d.ts",
+        "resources/js/**/*.tsx"
+    ],
+    "exclude": [
+        "resources/js/routes/filament",
+        "resources/js/routes/livewire",
+        "resources/js/routes/default-livewire",
+        "resources/js/routes/storage"
+    ]
+}

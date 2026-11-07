@@ -29,24 +29,22 @@ class EvaluationRank extends Model
         'rank' => RankTier::class,
     ];
 
+    /** @return BelongsTo<Evaluation, $this> */
     public function evaluation(): BelongsTo
     {
         return $this->belongsTo(Evaluation::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /** @return BelongsTo<Council, $this> */
     public function council(): BelongsTo
     {
         return $this->belongsTo(Council::class, 'council_id');
-    }
-
-    public function getRankColorAttribute(): string
-    {
-        return ($this->rank ?? RankTier::None)->color();
     }
 
     public function getRankDisplayAttribute(): string

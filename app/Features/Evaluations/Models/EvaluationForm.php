@@ -31,7 +31,7 @@ class EvaluationForm extends Model
 
     public static function getLengthOfServiceData(Evaluation $evaluation, int $userId): array
     {
-        $awardTypeId = $evaluation->council?->award_type_id;
+        $awardTypeId = $evaluation->council->award_type_id;
         if (! $awardTypeId) {
             return [
                 'years' => 0,
@@ -64,7 +64,7 @@ class EvaluationForm extends Model
         return [
             'years' => $years,
             'score' => $score,
-            'award_type' => $evaluation->council?->awardType?->name,
+            'award_type' => $evaluation->council->awardType?->name,
         ];
     }
 
@@ -81,16 +81,19 @@ class EvaluationForm extends Model
         return null;
     }
 
+    /** @return BelongsTo<Evaluation, $this> */
     public function evaluation(): BelongsTo
     {
         return $this->belongsTo(Evaluation::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function evaluator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'evaluator_id');
@@ -167,30 +170,6 @@ class EvaluationForm extends Model
         }
 
         return $keys;
-    }
-
-    protected static function getPeerQuestions(array $allQuestions): array
-    {
-        return [
-            'domain_2_strand_1_q1' => $allQuestions['domain_2_strand_1_q1'],
-            'domain_2_strand_2_q1' => $allQuestions['domain_2_strand_2_q1'],
-            'domain_2_strand_2_q2' => $allQuestions['domain_2_strand_2_q2'],
-            'domain_2_strand_3_q1' => $allQuestions['domain_2_strand_3_q1'],
-            'domain_2_strand_3_q2' => $allQuestions['domain_2_strand_3_q2'],
-            'domain_3_strand_1_q1' => $allQuestions['domain_3_strand_1_q1'],
-            'domain_3_strand_2_q1' => $allQuestions['domain_3_strand_2_q1'],
-        ];
-    }
-
-    protected static function getSelfQuestions(array $allQuestions): array
-    {
-        return [
-            'domain_2_strand_1_q1' => $allQuestions['domain_2_strand_1_q1'],
-            'domain_2_strand_2_q1' => $allQuestions['domain_2_strand_2_q1'],
-            'domain_2_strand_2_q2' => $allQuestions['domain_2_strand_2_q2'],
-            'domain_3_strand_1_q1' => $allQuestions['domain_3_strand_1_q1'],
-            'domain_3_strand_2_q1' => $allQuestions['domain_3_strand_2_q1'],
-        ];
     }
 
     public static function getRubricStructure(): array

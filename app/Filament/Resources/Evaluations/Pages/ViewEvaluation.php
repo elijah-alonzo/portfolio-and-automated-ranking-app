@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Evaluations\Pages;
 
+use App\Features\Evaluations\Models\Evaluation;
 use App\Filament\Resources\Evaluations\EvaluationResource;
 use App\Filament\Resources\Evaluations\Widgets\EvaluationRecommendationsOverview;
 use App\Filament\Resources\Evaluations\Widgets\EvaluationSubmissionProgressWidget;
@@ -18,7 +19,7 @@ class ViewEvaluation extends ViewRecord
     protected function getHeaderActions(): array
     {
         $record = $this->getRecord();
-        if ($record->status === 'completed') {
+        if ($record instanceof Evaluation && $record->status === Evaluation::STATUS_COMPLETED) {
             return [];
         }
 
@@ -31,7 +32,7 @@ class ViewEvaluation extends ViewRecord
     public function getTitle(): string|Htmlable
     {
         $record = $this->getRecord();
-        $councilName = $record->council?->name ?? 'Council';
+        $councilName = $record instanceof Evaluation ? $record->council->name : 'Council';
         $academicYear = $record->academic_year ?? null;
 
         if ($academicYear) {

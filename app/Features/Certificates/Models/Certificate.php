@@ -22,8 +22,17 @@ class Certificate extends Model
         'date_issued' => 'date',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Root-relative link to the PDF, so it opens on any host and port.
+     */
+    public function fileUrl(): ?string
+    {
+        return $this->file_path ? '/storage/'.ltrim($this->file_path, '/') : null;
     }
 }

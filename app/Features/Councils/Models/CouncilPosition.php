@@ -25,11 +25,13 @@ class CouncilPosition extends Model
         ];
     }
 
+    /** @return BelongsTo<Council, $this> */
     public function council(): BelongsTo
     {
         return $this->belongsTo(Council::class);
     }
 
+    /** @return BelongsTo<Position, $this> */
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);

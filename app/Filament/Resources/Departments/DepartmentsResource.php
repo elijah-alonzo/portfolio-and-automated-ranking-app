@@ -13,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class DepartmentsResource extends Resource
@@ -27,13 +26,6 @@ class DepartmentsResource extends Resource
     protected static ?string $navigationLabel = 'Departments';
 
     protected static ?int $navigationSort = 6;
-
-    public static function canAccess(): bool
-    {
-        $user = Auth::user();
-
-        return $user && $user->role === 'admin';
-    }
 
     public static function form(Schema $schema): Schema
     {

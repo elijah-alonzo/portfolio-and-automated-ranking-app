@@ -18,6 +18,8 @@ class AwardType extends Model
 
     /**
      * Get the leadership award applications for this award type.
+     *
+     * @return HasMany<LeadershipAwardApplication, $this>
      */
     public function leadershipAwardApplications(): HasMany
     {
@@ -26,6 +28,8 @@ class AwardType extends Model
 
     /**
      * Get the councils for this award type.
+     *
+     * @return HasMany<Council, $this>
      */
     public function councils(): HasMany
     {

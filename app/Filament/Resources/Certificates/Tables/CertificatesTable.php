@@ -6,7 +6,6 @@ use App\Filament\Resources\Certificates\CertificateResource;
 use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Storage;
 
 class CertificatesTable
 {
@@ -40,7 +39,7 @@ class CertificatesTable
                     ->label(' ')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('gray')
-                    ->url(fn ($record) => url(Storage::disk('public')->url($record->file_path)), true)
+                    ->url(fn ($record) => $record->fileUrl(), true)
                     ->openUrlInNewTab(),
             ])
             ->filters([]);

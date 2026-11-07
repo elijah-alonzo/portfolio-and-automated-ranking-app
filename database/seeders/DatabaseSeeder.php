@@ -8,29 +8,30 @@ use App\Features\Councils\Models\CouncilPosition;
 use App\Features\Departments\Models\Department;
 use App\Features\Positions\Models\Position;
 use App\Features\Users\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
 
+/**
+ * What a fresh deployment needs: PSG's departments, award types, councils and positions, and one admin.
+ * Safe to run again: it fills in what is missing and never deletes.
+ *
+ * Sample people and evaluations live in DemoDataSeeder and only run when asked for.
+ */
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        Schema::disableForeignKeyConstraints();
-        CouncilPosition::query()->delete();
-        Position::query()->delete();
-        User::query()->delete();
-        Council::query()->delete();
-        Department::query()->delete();
-        AwardType::query()->delete();
-        Schema::enableForeignKeyConstraints();
+        $departments = $this->departments();
+        $awardTypes = $this->awardTypes();
+        $this->councils($departments, $awardTypes);
+        $this->positions();
+        $this->admin($departments['University Administration']);
+    }
 
+    /**
+     * @return array<string, Department>
+     */
+    private function departments(): array
+    {
         $departments = [
             'University Administration' => 'Administrative and campus-wide oversight functions.',
             'School of Information Technology and Engineering' => 'Programs and initiatives under the School of Information Technology and Engineering.',
@@ -39,253 +40,127 @@ class DatabaseSeeder extends Seeder
             'School of Nursing and Allied Health Services' => 'Programs and initiatives under the School of Nursing and Allied Health Services.',
         ];
 
-        $departmentModels = [];
-        foreach ($departments as $name => $description) {
-            $departmentModels[$name] = Department::create([
-                'name' => $name,
-                'description' => $description,
-            ]);
-        }
+        return collect($departments)
+            ->map(fn (string $description, string $name) => Department::firstOrCreate(['name' => $name], ['description' => $description]))
+            ->all();
+    }
 
+    /**
+     * @return array<string, AwardType>
+     */
+    private function awardTypes(): array
+    {
         $awardTypes = [
-            'Campus Leadership Award' => 'Recognizes an outstanding student leader within a specific school or college. This award honors individuals who have demonstrated exceptional service, initiative, and the ability to drive progress and engagement within their specialized academic department.',
-            'Departmental Leadership Award' => 'A university-wide distinction awarded to a student leader who has demonstrated exemplary governance and impact across the entire campus. This honor recognizes those who have fostered institutional unity and led initiatives that benefit the entire Paulinian community.',
+            'Campus Leadership Award' => 'A university-wide distinction for a student leader who has shown exemplary governance and impact across the entire campus, fostering institutional unity and leading initiatives that benefit the whole Paulinian community.',
+            'Departmental Leadership Award' => 'Recognizes an outstanding student leader within a specific school, honoring exceptional service, initiative, and the ability to drive progress and engagement in their department.',
         ];
 
-        $awardTypeModels = [];
-        foreach ($awardTypes as $name => $description) {
-            $awardTypeModels[$name] = AwardType::create([
-                'name' => $name,
-                'description' => $description,
+        return collect($awardTypes)
+            ->map(fn (string $description, string $name) => AwardType::firstOrCreate(['name' => $name], ['description' => $description]))
+            ->all();
+    }
+
+    /**
+     * The campus-wide PSG and one departmental PSG per school, each linked to the departments its officers come from.
+     *
+     * @param  array<string, Department>  $departments
+     * @param  array<string, AwardType>  $awardTypes
+     */
+    private function councils(array $departments, array $awardTypes): void
+    {
+        $schools = [
+            'SITE' => 'School of Information Technology and Engineering',
+            'SASTE' => 'School of Art Sciences and Teacher Education',
+            'SBAHM' => 'School of Business, Accountancy, and Hospitality Management',
+            'SNAHS' => 'School of Nursing and Allied Health Services',
+        ];
+
+        $campus = Council::firstOrCreate(['code' => 'PSG'], [
+            'name' => 'Paulinian Student Government',
+            'is_active' => true,
+            'award_type_id' => $awardTypes['Campus Leadership Award']->id,
+            'description' => 'The primary student governing body. Exercises campus-wide jurisdiction and oversees university-wide initiatives and student representation.',
+        ]);
+        $campus->departments()->syncWithoutDetaching(collect($schools)->map(fn (string $school) => $departments[$school]->id)->values()->all());
+
+        foreach ($schools as $code => $school) {
+            $council = Council::firstOrCreate(['code' => "PSG-{$code}"], [
+                'name' => "Paulinian Student Government - {$code}",
+                'is_active' => true,
+                'award_type_id' => $awardTypes['Departmental Leadership Award']->id,
+                'description' => "The departmental student governing body for the {$school}.",
             ]);
+            $council->departments()->syncWithoutDetaching([$departments[$school]->id]);
         }
+    }
 
-        $campusLeadership = $awardTypeModels['Campus Leadership Award'];
-        $departmentalLeadership = $awardTypeModels['Departmental Leadership Award'];
+    /**
+     * Every PSG position, in order of rank, attached to the councils that have it.
+     */
+    private function positions(): void
+    {
+        $campus = Council::where('code', 'PSG')->get();
+        $departmental = Council::where('code', '!=', 'PSG')->get();
 
-        $councils = [
-            [
-                'name' => 'Paulinian Student Government',
-                'code' => 'PSG',
-                'is_active' => true,
-                'award_type_id' => $campusLeadership->id,
-                'description' => 'The primary student governing body. Exercises campus-wide jurisdiction and oversees university-wide initiatives and student representation.',
-            ],
-            [
-                'name' => 'Paulinian Student Government - SITE',
-                'code' => 'PSG-SITE',
-                'is_active' => true,
-                'award_type_id' => $departmentalLeadership->id,
-                'description' => 'The departmental student governing body for the School of Information Technology and Engineering.',
-            ],
-            [
-                'name' => 'Paulinian Student Government - SASTE',
-                'code' => 'PSG-SASTE',
-                'is_active' => true,
-                'award_type_id' => $departmentalLeadership->id,
-                'description' => 'The departmental student governing body for the School of Art Sciences and Teacher Education.',
-            ],
-            [
-                'name' => 'Paulinian Student Government - SBAHM',
-                'code' => 'PSG-SBAHM',
-                'is_active' => true,
-                'award_type_id' => $departmentalLeadership->id,
-                'description' => 'The departmental student governing body for the School of Business, Accountancy, and Hospitality Management.',
-            ],
-            [
-                'name' => 'Paulinian Student Government - SNAHS',
-                'code' => 'PSG-SNAHS',
-                'is_active' => true,
-                'award_type_id' => $departmentalLeadership->id,
-                'description' => 'The departmental student governing body for the School of Nursing and Allied Health Services.',
-            ],
-        ];
-
-        foreach ($councils as $council) {
-            Council::create($council);
-        }
-
-        $councilModels = Council::all()->keyBy('code');
-        $studentDepartments = collect([
-            'School of Information Technology and Engineering',
-            'School of Art Sciences and Teacher Education',
-            'School of Business, Accountancy, and Hospitality Management',
-            'School of Nursing and Allied Health Services',
-        ])->map(fn ($name) => $departmentModels[$name]->id)->all();
-
-        if (isset($councilModels['PSG'])) {
-            $councilModels['PSG']->departments()->sync($studentDepartments);
-        }
-
-        $departmentCouncilMap = [
-            'PSG-SITE' => 'School of Information Technology and Engineering',
-            'PSG-SASTE' => 'School of Art Sciences and Teacher Education',
-            'PSG-SBAHM' => 'School of Business, Accountancy, and Hospitality Management',
-            'PSG-SNAHS' => 'School of Nursing and Allied Health Services',
-        ];
-
-        foreach ($departmentCouncilMap as $code => $departmentName) {
-            if (! isset($councilModels[$code])) {
-                continue;
-            }
-
-            $departmentId = $departmentModels[$departmentName]->id ?? null;
-            if ($departmentId) {
-                $councilModels[$code]->departments()->sync([$departmentId]);
-            }
-        }
-
-        $defaultPassword = Hash::make('password');
-
-        $users = [
-            [
-                'name' => 'Rucelj Pugeda',
-                'email' => 'admin@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'admin',
-                'department_name' => 'University Administration',
-                'bio' => 'A system user with administrative privileges. Responsible for managing core data, configuring system settings, and overseeing the overall integrity of the platform\'s workflows.',
-            ],
-            [
-                'name' => 'Luigie Cagurangan',
-                'email' => 'siteadviser@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'adviser',
-                'department_name' => 'School of Information Technology and Engineering',
-                'bio' => 'A system user with supervisory privileges. Responsible for reviewing submissions, verifying departmental records, and providing guidance within their assigned jurisdiction.',
-            ],
-            [
-                'name' => 'Krisha Berbano',
-                'email' => 'psgstudent1@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Information Technology and Engineering',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-            [
-                'name' => 'Yowelle Sedano',
-                'email' => 'psgstudent2@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Art Sciences and Teacher Education',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-            [
-                'name' => 'Angel Perez',
-                'email' => 'psgstudent3@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Art Sciences and Teacher Education',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-            [
-                'name' => 'Queen Cabiao',
-                'email' => 'psgstudent4@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Art Sciences and Teacher Education',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-            [
-                'name' => 'Biegh Alonzo',
-                'email' => 'sitestudent1@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Information Technology and Engineering',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-            [
-                'name' => 'Nathalee Bautista',
-                'email' => 'sitestudent2@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Information Technology and Engineering',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-            [
-                'name' => 'Joshua Cabalza',
-                'email' => 'sitestudent3@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Information Technology and Engineering',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-            [
-                'name' => 'Elijah Alonzo',
-                'email' => 'sitestudent4@psg.com',
-                'contact_number' => '123456789',
-                'role' => 'student',
-                'department_name' => 'School of Information Technology and Engineering',
-                'bio' => 'A system user with standard privileges. Responsible for managing personal submissions, tracking leadership involvement, and maintaining an updated record of their academic and extracurricular activities.',
-            ],
-        ];
-
-        foreach ($users as $user) {
-            $departmentId = $departmentModels[$user['department_name']]->id ?? null;
-            User::create([
-                ...collect($user)->except('department_name')->all(),
-                'is_active' => true,
-                'password' => $defaultPassword,
-                'department_id' => $departmentId,
-            ]);
-        }
-
-        $campusCouncils = Council::where('code', 'PSG')->get();
-        $departmentalCouncils = Council::where('code', '!=', 'PSG')->get();
-
+        // [title, branch, slots per council, which councils have it]
         $positions = [
-            ['title' => 'President', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 1, 'availability' => 'campus'],
-            ['title' => 'Vice President', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 2, 'availability' => 'campus'],
-            ['title' => 'Governor', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 3, 'availability' => 'departmental'],
-            ['title' => 'Vice Governor', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 4, 'availability' => 'departmental'],
-            ['title' => 'Secretary', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 5, 'availability' => 'both'],
-            ['title' => 'Assistant Secretary', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 6, 'availability' => 'both'],
-            ['title' => 'Treasurer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 7, 'availability' => 'both'],
-            ['title' => 'Assistant Treasurer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 8, 'availability' => 'both'],
-            ['title' => 'Auditor', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 9, 'availability' => 'both'],
-            ['title' => 'Public Relations Officer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 10, 'availability' => 'both'],
-            ['title' => 'Assistant Public Relations Officer', 'branch' => 'Executive', 'max_slots' => 1, 'hierarchy' => 11, 'availability' => 'both'],
-            ['title' => 'Senate President', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 12, 'availability' => 'campus'],
-            ['title' => 'Senate Secretary', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 13, 'availability' => 'campus'],
-            ['title' => 'Senator', 'branch' => 'Legislative', 'max_slots' => 10, 'hierarchy' => 14, 'availability' => 'campus'],
-            ['title' => 'Speaker of the House', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 15, 'availability' => 'campus'],
-            ['title' => 'Secretary General', 'branch' => 'Legislative', 'max_slots' => 1, 'hierarchy' => 16, 'availability' => 'campus'],
-            ['title' => 'Congress', 'branch' => 'Legislative', 'max_slots' => 6, 'hierarchy' => 17, 'availability' => 'campus'],
-            ['title' => 'Councilors', 'branch' => 'Legislative', 'max_slots' => 8, 'hierarchy' => 18, 'availability' => 'departmental'],
-            ['title' => 'Chief Justice', 'branch' => 'Judiciary', 'max_slots' => 1, 'hierarchy' => 19, 'availability' => 'campus'],
-            ['title' => 'Justice Secretary', 'branch' => 'Judiciary', 'max_slots' => 1, 'hierarchy' => 20, 'availability' => 'campus'],
-            ['title' => 'Associate Justices', 'branch' => 'Judiciary', 'max_slots' => 4, 'hierarchy' => 21, 'availability' => 'campus'],
-            ['title' => 'Mayor', 'branch' => 'Mayoral', 'max_slots' => 4, 'hierarchy' => 22, 'availability' => 'departmental'],
+            ['President', 'Executive', 1, 'campus'],
+            ['Vice President', 'Executive', 1, 'campus'],
+            ['Governor', 'Executive', 1, 'departmental'],
+            ['Vice Governor', 'Executive', 1, 'departmental'],
+            ['Secretary', 'Executive', 1, 'both'],
+            ['Assistant Secretary', 'Executive', 1, 'both'],
+            ['Treasurer', 'Executive', 1, 'both'],
+            ['Assistant Treasurer', 'Executive', 1, 'both'],
+            ['Auditor', 'Executive', 1, 'both'],
+            ['Public Relations Officer', 'Executive', 1, 'both'],
+            ['Assistant Public Relations Officer', 'Executive', 1, 'both'],
+            ['Senate President', 'Legislative', 1, 'campus'],
+            ['Senate Secretary', 'Legislative', 1, 'campus'],
+            ['Senator', 'Legislative', 10, 'campus'],
+            ['Speaker of the House', 'Legislative', 1, 'campus'],
+            ['Secretary General', 'Legislative', 1, 'campus'],
+            ['Congress', 'Legislative', 6, 'campus'],
+            ['Councilors', 'Legislative', 8, 'departmental'],
+            ['Chief Justice', 'Judiciary', 1, 'campus'],
+            ['Justice Secretary', 'Judiciary', 1, 'campus'],
+            ['Associate Justices', 'Judiciary', 4, 'campus'],
+            ['Mayor', 'Mayoral', 4, 'departmental'],
         ];
 
-        foreach ($positions as $positionData) {
-            $position = Position::firstOrCreate(
-                ['title' => $positionData['title']],
-                [
-                    'branch' => $positionData['branch'],
-                    'hierarchy' => $positionData['hierarchy'],
-                    'is_active' => true,
-                ]
-            );
+        foreach ($positions as $index => [$title, $branch, $maxSlots, $availability]) {
+            $position = Position::firstOrCreate(['title' => $title], [
+                'branch' => $branch,
+                'hierarchy' => $index + 1,
+                'is_active' => true,
+            ]);
 
-            $targetCouncils = match ($positionData['availability']) {
-                'departmental' => $departmentalCouncils,
-                'both' => $campusCouncils->merge($departmentalCouncils),
-                default => $campusCouncils,
+            $councils = match ($availability) {
+                'campus' => $campus,
+                'departmental' => $departmental,
+                default => $campus->merge($departmental),
             };
 
-            foreach ($targetCouncils as $council) {
-                CouncilPosition::updateOrCreate(
-                    [
-                        'council_id' => $council->id,
-                        'position_id' => $position->id,
-                    ],
-                    [
-                        'max_slots' => $positionData['max_slots'],
-                        'is_active' => true,
-                    ]
+            foreach ($councils as $council) {
+                CouncilPosition::firstOrCreate(
+                    ['council_id' => $council->id, 'position_id' => $position->id],
+                    ['max_slots' => $maxSlots, 'is_active' => true],
                 );
             }
         }
+    }
+
+    /**
+     * The first admin, from config/app.php (ADMIN_EMAIL, ADMIN_PASSWORD). Set them before seeding a real deployment.
+     */
+    private function admin(Department $department): void
+    {
+        User::firstOrCreate(['email' => config('app.admin.email')], [
+            'name' => config('app.admin.name'),
+            'password' => config('app.admin.password'),
+            'role' => 'admin',
+            'department_id' => $department->id,
+            'is_active' => true,
+        ]);
     }
 }

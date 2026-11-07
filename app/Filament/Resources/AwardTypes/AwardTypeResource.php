@@ -13,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class AwardTypeResource extends Resource
@@ -27,13 +26,6 @@ class AwardTypeResource extends Resource
     protected static UnitEnum|string|null $navigationGroup = 'Award Management';
 
     protected static ?int $navigationSort = 5;
-
-    public static function canAccess(): bool
-    {
-        $user = Auth::user();
-
-        return $user && $user->role === 'admin';
-    }
 
     public static function form(Schema $schema): Schema
     {

@@ -14,8 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class UserResource extends Resource
@@ -27,75 +25,6 @@ class UserResource extends Resource
     protected static UnitEnum|string|null $navigationGroup = 'User Management';
 
     protected static ?int $navigationSort = 3;
-
-    public static function canAccess(): bool
-    {
-        $user = Auth::user();
-
-        return $user && in_array($user->role, ['admin', 'adviser'], true);
-    }
-
-    public static function canViewAny(): bool
-    {
-        $user = Auth::user();
-
-        return $user && in_array($user->role, ['admin', 'adviser'], true);
-    }
-
-    public static function canCreate(): bool
-    {
-        $user = Auth::user();
-
-        return $user && in_array($user->role, ['admin', 'adviser'], true);
-    }
-
-    public static function canEdit($record): bool
-    {
-        $user = Auth::user();
-
-        if (! $user) {
-            return false;
-        }
-
-        if ($user->role === 'admin') {
-            return true;
-        }
-
-        if ($user->role === 'adviser') {
-            return $record->role === 'student'
-                && $record->department_id === $user->department_id;
-        }
-
-        return false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        $user = Auth::user();
-
-        return $user && $user->role === 'admin';
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        $user = Auth::user();
-
-        return $user && $user->role === 'admin';
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery();
-        $user = Auth::user();
-
-        if ($user && $user->role === 'adviser') {
-            return $query
-                ->where('role', 'student')
-                ->where('department_id', $user->department_id);
-        }
-
-        return $query;
-    }
 
     public static function form(Schema $schema): Schema
     {

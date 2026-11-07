@@ -13,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class PositionsResource extends Resource
@@ -31,13 +30,6 @@ class PositionsResource extends Resource
     protected static ?string $pluralModelLabel = 'Positions';
 
     protected static ?int $navigationSort = 6;
-
-    public static function canAccess(): bool
-    {
-        $user = Auth::user();
-
-        return $user && $user->role === 'admin';
-    }
 
     public static function form(Schema $schema): Schema
     {

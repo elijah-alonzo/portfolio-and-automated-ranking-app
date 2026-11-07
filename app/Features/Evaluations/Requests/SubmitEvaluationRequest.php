@@ -2,24 +2,15 @@
 
 namespace App\Features\Evaluations\Requests;
 
-use App\Features\Evaluations\Enums\EvaluatorType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 final class SubmitEvaluationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $user = $this->user();
-        $evaluation = $this->route('evaluation');
-        $evaluatee = $this->route('user');
-
-        return match ($this->route('type')) {
-            EvaluatorType::Adviser => $evaluation->council_adviser_id === $user?->id,
-            EvaluatorType::Self => $evaluatee->id === $user?->id,
-            EvaluatorType::Peer => true,
-            default => false,
-        };
+        return Gate::allows('fill', [$this->route('evaluation'), $this->route('user'), $this->route('type')]);
     }
 
     /**
@@ -29,6 +20,7 @@ final class SubmitEvaluationRequest extends FormRequest
     {
         return [
             'answers' => ['array'],
+            'answers.*' => ['nullable', 'integer', 'between:0,3'],
             'submission_action' => ['nullable', Rule::in(['draft', 'submitted'])],
         ];
     }

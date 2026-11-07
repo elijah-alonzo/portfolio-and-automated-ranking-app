@@ -5,7 +5,6 @@ namespace App\Features\Evaluations\Models;
 use App\Features\Councils\Models\Council;
 use App\Features\Councils\Models\CouncilPosition;
 use App\Features\Users\Models\User;
-use App\Filament\Resources\MyEvaluations\MyEvaluationResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,11 +32,13 @@ class Evaluation extends Model
 
     public const STATUS_COMPLETED = 'completed';
 
+    /** @return BelongsTo<Council, $this> */
     public function council(): BelongsTo
     {
         return $this->belongsTo(Council::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function adviser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'council_adviser_id');
@@ -45,6 +46,8 @@ class Evaluation extends Model
 
     /**
      * The users that belong to this evaluation with their positions
+     *
+     * @return BelongsToMany<User, $this>
      */
     public function users(): BelongsToMany
     {
@@ -55,30 +58,18 @@ class Evaluation extends Model
 
     /**
      * All peer evaluator assignments for this evaluation
+     *
+     * @return HasMany<EvaluationPeerEvaluator, $this>
      */
     public function peerEvaluators(): HasMany
     {
         return $this->hasMany(EvaluationPeerEvaluator::class);
     }
 
+    /** @return HasMany<EvaluationPositionSlot, $this> */
     public function positionSlots(): HasMany
     {
         return $this->hasMany(EvaluationPositionSlot::class);
-    }
-
-    /**
-     * Generate URL for evaluating a specific user with the unified evaluation page
-     */
-    public function getEvaluationUrl(int $userId, string $evaluatorType): string
-    {
-        return MyEvaluationResource::getUrl(
-            'evaluate-student',
-            [
-                'evaluation' => $this->id,
-                'user' => $userId,
-                'type' => $evaluatorType,
-            ]
-        );
     }
 
     protected static function booted(): void
@@ -141,10 +132,5 @@ class Evaluation extends Model
     public function isOngoing(): bool
     {
         return $this->status === self::STATUS_ONGOING;
-    }
-
-    public function isCompleted(): bool
-    {
-        return $this->status === self::STATUS_COMPLETED;
     }
 }

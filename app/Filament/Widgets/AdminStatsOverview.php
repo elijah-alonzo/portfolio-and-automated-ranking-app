@@ -15,13 +15,6 @@ class AdminStatsOverview extends StatsOverviewWidget
 {
     protected static ?int $sort = 3;
 
-    public static function canView(): bool
-    {
-        $user = auth()->user();
-
-        return $user && $user->role === 'admin';
-    }
-
     protected function getStats(): array
     {
         return [

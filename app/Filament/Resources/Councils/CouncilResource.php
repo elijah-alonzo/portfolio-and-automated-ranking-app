@@ -13,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class CouncilResource extends Resource
@@ -21,13 +20,6 @@ class CouncilResource extends Resource
     protected static ?string $model = Council::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
-
-    public static function canAccess(): bool
-    {
-        $user = Auth::user();
-
-        return $user && $user->role === 'admin';
-    }
 
     protected static UnitEnum|string|null $navigationGroup = 'Council Management';
 

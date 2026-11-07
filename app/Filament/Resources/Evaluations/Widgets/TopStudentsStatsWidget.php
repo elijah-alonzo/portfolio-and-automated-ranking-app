@@ -77,7 +77,7 @@ class TopStudentsStatsWidget extends ChartWidget
             ->with('user')
             ->get();
 
-        $labels = $topRanks->map(fn ($rank) => $rank->user?->name ?? 'Student')->toArray();
+        $labels = $topRanks->map(fn ($rank) => $rank->user->name)->toArray();
         $scores = $topRanks->map(fn ($rank) => (float) $rank->final_score)->toArray();
 
         return [

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Pages;
 
+use App\Features\Users\Models\User;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
@@ -19,7 +20,7 @@ class ViewUserPortfolio extends ViewRecord
     {
         parent::mount($record);
 
-        if ($this->record->role !== 'student') {
+        if (! $this->record instanceof User || ! $this->record->isStudent()) {
             $this->redirect(UserResource::getUrl('edit', ['record' => $this->record]));
 
             return;
@@ -35,7 +36,7 @@ class ViewUserPortfolio extends ViewRecord
 
     public function getHeading(): string|Htmlable
     {
-        return $this->record ? $this->record->name."'s Portfolio" : 'Student Portfolio';
+        return $this->record instanceof User ? $this->record->name."'s Portfolio" : 'Student Portfolio';
     }
 
     protected function getHeaderActions(): array

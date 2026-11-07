@@ -123,4 +123,20 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | First Admin
+    |--------------------------------------------------------------------------
+    |
+    | The account DatabaseSeeder creates on a fresh deployment. Set these
+    | before the first seed; change the password after signing in.
+    |
+    */
+
+    'admin' => [
+        'name' => env('ADMIN_NAME', 'Rucelj Pugeda'),
+        'email' => env('ADMIN_EMAIL', 'admin@psg.com'),
+        'password' => env('ADMIN_PASSWORD', 'password'),
+    ],
+
 ];

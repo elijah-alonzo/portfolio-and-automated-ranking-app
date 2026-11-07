@@ -187,3 +187,30 @@
 .fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-chart-border-color {
     color: color-mix(in oklab, #024427 55%, white);
 }
+
+/* =========================
+   HEADINGS
+   Times New Roman, medium weight, to match the React app's headings.
+   Body text stays Montserrat. The `.fi-body` prefix outranks the inline
+   styles in the admin Blade views (portfolio, help, evaluation form).
+========================= */
+.fi-header-heading,
+.fi-simple-header-heading,
+.fi-section-header-heading,
+.fi-ta-header-heading,
+.fi-modal-heading,
+.fi-body .help-manual-title,
+.fi-body .help-section-title,
+.fi-body .profile-name,
+.fi-body .section-header,
+.fi-body .ef-evaluation-title,
+.fi-body .ef-domain-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 500;
+    letter-spacing: 0;
+}
+
+.fi-section-header-heading,
+.fi-ta-header-heading {
+    font-size: 1.125rem;
+}

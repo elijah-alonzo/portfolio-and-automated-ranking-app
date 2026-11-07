@@ -41,7 +41,8 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL'), '/').'/storage',
+            // Root-relative, so photos and PDFs load on whatever host and port serves the app.
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

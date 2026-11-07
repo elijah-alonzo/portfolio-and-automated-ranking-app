@@ -8,20 +8,15 @@ use App\Features\Users\Models\User;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EvaluationExportController extends Controller
 {
     public function export(Request $request, Evaluation $evaluation, User $user, string $type, string $format)
     {
-        $authUser = $request->user();
-
-        $isAdmin = $authUser && $authUser->role === 'admin';
-        $isAssignedAdviser = $authUser
-            && $authUser->role === 'adviser'
-            && $evaluation->council_adviser_id === $authUser->id;
-
-        if (! $isAdmin && ! $isAssignedAdviser) {
+        // Admins export from the admin panel; advisers export forms in the councils they advise.
+        if (! $request->user()?->isAdmin() && Gate::denies('manage', $evaluation)) {
             abort(403, 'You are not authorized to export this evaluation.');
         }
 
@@ -62,7 +57,7 @@ class EvaluationExportController extends Controller
                 'options' => $options,
                 'answer' => $form->answers[$key] ?? '',
                 'evaluatee' => $evaluatee->name ?? 'Unknown',
-                'evaluator' => $form->evaluator?->name ?? 'Unknown',
+                'evaluator' => $form->evaluator->name,
             ];
         }
 
@@ -121,7 +116,7 @@ class EvaluationExportController extends Controller
 
     private function buildFilename(Evaluation $evaluation, User $evaluatee, string $type, string $extension): string
     {
-        $council = $evaluation->council?->name ?? 'council';
+        $council = $evaluation->council->name;
         $council = preg_replace('/[^A-Za-z0-9_-]+/', '_', $council);
         $name = $evaluatee->name ?? 'student';
         $name = preg_replace('/[^A-Za-z0-9_-]+/', '_', $name);

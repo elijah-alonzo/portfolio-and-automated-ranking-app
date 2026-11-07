@@ -105,7 +105,7 @@
 <div class="help-manual-card">
     <div class="help-logo">
         <img
-            src="{{ asset('sys-logo.png') }}"
+            src="{{ asset('logo-02.png') }}"
             alt="Paulinian Student Government logo"
         />
     </div>
@@ -115,6 +115,6 @@
 
     <div class="help-manual-body">{{ $slot }}</div>
     <div class="help-footer-logo">
-        <img src="{{ asset('sys-footer.png') }}" alt="System footer logo" />
+        <img src="{{ asset('logo-03.png') }}" alt="System footer logo" />
     </div>
 </div>

@@ -16,7 +16,7 @@ class Position extends Model
     protected static function booted(): void
     {
         static::creating(function (Position $position): void {
-            if ($position->hierarchy === null) {
+            if (! $position->isDirty('hierarchy')) {
                 $position->hierarchy = (static::max('hierarchy') ?? 0) + 1;
             }
         });
@@ -36,11 +36,13 @@ class Position extends Model
         ];
     }
 
+    /** @return HasMany<CouncilPosition, $this> */
     public function councilAssignments(): HasMany
     {
         return $this->hasMany(CouncilPosition::class);
     }
 
+    /** @return BelongsToMany<Council, $this> */
     public function councils(): BelongsToMany
     {
         return $this->belongsToMany(Council::class, 'council_positions')

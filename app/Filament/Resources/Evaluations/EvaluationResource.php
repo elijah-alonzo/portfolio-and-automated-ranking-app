@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
 class EvaluationResource extends Resource
@@ -24,13 +23,6 @@ class EvaluationResource extends Resource
     protected static ?string $model = Evaluation::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
-
-    public static function canAccess(): bool
-    {
-        $user = Auth::user();
-
-        return $user && $user->role === 'admin';
-    }
 
     protected static UnitEnum|string|null $navigationGroup = 'Council Management';
 
@@ -44,13 +36,6 @@ class EvaluationResource extends Resource
     }
 
     protected static ?int $navigationSort = 5;
-
-    public static function shouldRegisterNavigation(): bool
-    {
-        $user = auth()->user();
-
-        return $user && $user->role === 'admin';
-    }
 
     public static function form(Schema $schema): Schema
     {

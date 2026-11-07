@@ -1,20 +1,23 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "elijah-alonzo/portfolio-and-automated-ranking-app",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "PSG e-Portfolio and Ranking System: council evaluations, weighted officer ranking, portfolios and leadership awards for the Paulinian Student Government.",
     "keywords": [
         "laravel",
-        "framework"
+        "filament",
+        "inertia",
+        "react"
     ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "barryvdh/laravel-dompdf": "*",
+        "barryvdh/laravel-dompdf": "^3.1",
         "filament/filament": "~4.0",
         "inertiajs/inertia-laravel": "^3.7",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/tinker": "^2.10.1",
+        "laravel/wayfinder": "^0.1.23"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -46,6 +49,7 @@
             "@php artisan key:generate",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --force --seed",
+            "@php artisan wayfinder:generate --no-interaction",
             "npm ci",
             "npm run build"
         ],

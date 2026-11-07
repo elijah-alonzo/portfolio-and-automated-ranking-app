@@ -9,6 +9,7 @@ use App\Features\Positions\Models\Position;
 use App\Features\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -34,6 +35,8 @@ class Council extends Model
 
     /**
      * Get the users for the council.
+     *
+     * @return HasManyThrough<User, Evaluation, $this>
      */
     public function users(): HasManyThrough
     {
@@ -49,27 +52,23 @@ class Council extends Model
 
     /**
      * Get the evaluations for the council.
+     *
+     * @return HasMany<Evaluation, $this>
      */
-    public function evaluations()
+    public function evaluations(): HasMany
     {
         return $this->hasMany(Evaluation::class);
     }
 
-    /**
-     * Get the predefined positions for this council.
-     */
-    public function positionAssignments(): HasMany
-    {
-        return $this->hasMany(CouncilPosition::class);
-    }
-
-    public function positions()
+    /** @return BelongsToMany<Position, $this> */
+    public function positions(): BelongsToMany
     {
         return $this->belongsToMany(Position::class, 'council_positions')
             ->withPivot(['max_slots', 'is_active'])
             ->withTimestamps();
     }
 
+    /** @return BelongsToMany<Department, $this> */
     public function departments(): BelongsToMany
     {
         return $this->belongsToMany(Department::class, 'council_department')
@@ -78,8 +77,10 @@ class Council extends Model
 
     /**
      * Get the award type for this council.
+     *
+     * @return BelongsTo<AwardType, $this>
      */
-    public function awardType()
+    public function awardType(): BelongsTo
     {
         return $this->belongsTo(AwardType::class);
     }

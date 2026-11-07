@@ -53,14 +53,6 @@ class ViewEvaluationForm extends Page
             default => 'evaluation-form.adviser-evaluation'
         };
 
-        if (! $this->evaluation) {
-            abort(404, 'Evaluation not found');
-        }
-
-        if (! $this->evaluatee) {
-            abort(404, 'User not specified');
-        }
-
         if (auth()->user()->role !== 'admin') {
             abort(403, 'Admin access required');
         }
@@ -126,7 +118,7 @@ class ViewEvaluationForm extends Page
             Action::make('download_csv')
                 ->label('Download CSV')
                 ->color('info')
-                ->url(fn () => route('evaluation.export', [
+                ->url(fn () => route('councils.forms.export', [
                     'evaluation' => $this->evaluation->id,
                     'user' => $this->evaluatee->id,
                     'type' => $this->evaluationType,
@@ -135,7 +127,7 @@ class ViewEvaluationForm extends Page
             Action::make('download_pdf')
                 ->label('Download PDF')
                 ->color('gray')
-                ->url(fn () => route('evaluation.export', [
+                ->url(fn () => route('councils.forms.export', [
                     'evaluation' => $this->evaluation->id,
                     'user' => $this->evaluatee->id,
                     'type' => $this->evaluationType,

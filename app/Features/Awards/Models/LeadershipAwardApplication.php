@@ -23,6 +23,8 @@ class LeadershipAwardApplication extends Model
 
     /**
      * Get the user that owns this application.
+     *
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -31,6 +33,8 @@ class LeadershipAwardApplication extends Model
 
     /**
      * Get the award type for this application.
+     *
+     * @return BelongsTo<AwardType, $this>
      */
     public function awardType(): BelongsTo
     {

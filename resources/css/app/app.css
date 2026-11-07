@@ -1,0 +1,89 @@
+@import 'tailwindcss';
+
+/*
+==========================================================================
+   TOKENS
+   Semantic colors for the sign-in page and the React app. Components use
+   the Tailwind names (`bg-surface`, `text-muted`...), never the hex values.
+   Light only. The brand is PSG green, with the seal's gold as the accent.
+==========================================================================
+*/
+
+:root {
+    /* Page colors */
+    --paper: #f5f7f6;
+    --surface: #ffffff;
+    --ink: #0f1a14;
+    --muted: #57655d;
+    --line: #e2e7e4;
+
+    /* Brand */
+    --brand: #036635;
+    --brand-strong: #024427;
+    --brand-deep: #01331d;
+    --brand-tint: #e8f2ec;
+    --on-brand: #ffffff;
+    --gold: #d6b44c;
+    --gold-tint: #faf3dc;
+
+    /* Status */
+    --ok: #1a7f4b;
+    --ok-tint: #e1f4ea;
+    --bad: #c4314b;
+    --bad-tint: #fbe6ea;
+    --wait: #9a6700;
+    --wait-tint: #fbf0d9;
+}
+
+@theme inline {
+    /* Typography: Montserrat matches the admin panel; Times New Roman is for display headings. */
+    --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Times New Roman', Times, serif;
+
+    /* Page colors */
+    --color-paper: var(--paper);
+    --color-surface: var(--surface);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+
+    /* Brand */
+    --color-brand: var(--brand);
+    --color-brand-strong: var(--brand-strong);
+    --color-brand-deep: var(--brand-deep);
+    --color-brand-tint: var(--brand-tint);
+    --color-on-brand: var(--on-brand);
+    --color-gold: var(--gold);
+    --color-gold-tint: var(--gold-tint);
+
+    /* Status */
+    --color-ok: var(--ok);
+    --color-ok-tint: var(--ok-tint);
+    --color-bad: var(--bad);
+    --color-bad-tint: var(--bad-tint);
+    --color-wait: var(--wait);
+    --color-wait-tint: var(--wait-tint);
+}
+
+@layer base {
+    * {
+        @apply border-line;
+    }
+
+    body {
+        @apply bg-paper font-sans text-ink antialiased;
+    }
+
+    :focus-visible {
+        outline-color: var(--brand);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

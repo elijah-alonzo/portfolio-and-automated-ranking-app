@@ -23,7 +23,7 @@ class StudentsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->columns($this->getTableColumns())
+            ->columns($this->officerColumns())
             ->headerActions($this->getHeaderActions())
             ->actions($this->getTableActions())
             ->filters([])
@@ -31,7 +31,7 @@ class StudentsRelationManager extends RelationManager
             ->striped();
     }
 
-    protected function getTableColumns(): array
+    protected function officerColumns(): array
     {
         return [
             ColumnGroup::make('Student', [
@@ -39,20 +39,12 @@ class StudentsRelationManager extends RelationManager
                     ->label('Picture')
                     ->circular()
                     ->size(40)
-                    ->getStateUsing(function ($record) {
-                        $name = $record->name ?? 'Unassigned';
-
-                        return $record->pfp
-                            ? (str_starts_with($record->pfp, 'http')
-                                ? $record->pfp
-                                : asset('storage/'.$record->pfp))
-                            : 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
-                    }),
+                    ->getStateUsing(fn ($record) => $record->avatarOrInitialsUrl()),
                 TextColumn::make('name')
                     ->label('Student')
                     ->weight('medium')
                     ->searchable()
-                    ->description(fn ($record) => $record->department?->name ?? 'No department'),
+                    ->description(fn ($record) => $record->department->name),
                 TextColumn::make('pivot.position')
                     ->label('Position')
                     ->placeholder('No position assigned')
@@ -99,7 +91,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getEvaluationRankValue(int $userId, string $field): string
     {
-        $rank = EvaluationRank::where('evaluation_id', $this->ownerRecord->id)
+        $rank = EvaluationRank::where('evaluation_id', $this->ownerRecord->getKey())
             ->where('user_id', $userId)
             ->first();
         if (! $rank) {
@@ -127,7 +119,7 @@ class StudentsRelationManager extends RelationManager
 
     protected function getEvaluationScore(int $userId, string $evaluatorType): string
     {
-        $score = EvaluationForm::where('evaluation_id', $this->ownerRecord->id)
+        $score = EvaluationForm::where('evaluation_id', $this->ownerRecord->getKey())
             ->where('user_id', $userId)
             ->where('evaluator_type', $evaluatorType)
             ->value('evaluator_score');
@@ -138,7 +130,7 @@ class StudentsRelationManager extends RelationManager
     protected function getAdminEvaluationUrl(int $userId, string $evaluatorType): string
     {
         return EvaluationResource::getUrl('view-evaluation-form', [
-            'evaluation' => $this->ownerRecord->id,
+            'evaluation' => $this->ownerRecord->getKey(),
             'user' => $userId,
             'type' => $evaluatorType,
         ]);

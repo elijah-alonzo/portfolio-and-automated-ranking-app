@@ -27,7 +27,7 @@
             <form
                 method="POST"
                 id="evaluation-form"
-                action="{{ route('evaluation.submit', [$evaluation->id, $evaluatee->id, $evaluationType]) }}"
+                action="{{ route('councils.forms.store', [$evaluation->id, $evaluatee->id, $evaluationType]) }}"
             >
                 @csrf
 
